@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 import "./globals.css";
 
 const displayFont = Cormorant_Garamond({
@@ -49,7 +51,9 @@ export default function RootLayout({
       className={`${displayFont.variable} ${bodyFont.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-body">
-        {children}
+        <Header />
+        <main className="flex-1">{children}</main>
+        <Footer />
         <Toaster position="bottom-right" richColors />
       </body>
     </html>

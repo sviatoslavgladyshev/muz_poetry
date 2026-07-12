@@ -144,14 +144,14 @@ function PriceCard({ item, isAdult }: { item: PriceItem; isAdult: boolean }) {
       )}
 
       <Button
-        asChild
+        render={<a href="#kontakty" />}
         className={`mt-7 w-full ${
           item.featured
             ? "bg-accent text-accent-foreground hover:bg-accent/90"
             : "bg-primary text-primary-foreground hover:bg-primary/90"
         }`}
       >
-        <a href="#kontakty">Записаться на пробное занятие</a>
+        Записаться на пробное занятие
       </Button>
     </div>
   );

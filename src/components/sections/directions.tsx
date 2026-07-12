@@ -53,10 +53,10 @@ export function Directions() {
                           {direction.forWhom}
                         </p>
                         <Button
-                          asChild
+                          render={<a href="#tseny" />}
                           className="mt-auto w-full bg-primary text-primary-foreground hover:bg-primary/90"
                         >
-                          <a href="#tseny">Узнать контакты и цены</a>
+                          Узнать контакты и цены
                         </Button>
                       </div>
                     </article>

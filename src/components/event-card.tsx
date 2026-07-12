@@ -42,10 +42,10 @@ export function EventCard({ event }: { event: StudioEvent }) {
         <h3 className="font-display text-xl italic text-primary">{event.title}</h3>
         <p className="flex-1 text-sm leading-relaxed text-foreground/75">{event.description}</p>
         <Button
-          asChild
+          render={<a href="#kontakty" />}
           className="mt-2 w-full bg-primary text-primary-foreground hover:bg-primary/90"
         >
-          <a href="#kontakty">Записаться</a>
+          Записаться
         </Button>
       </div>
     </article>

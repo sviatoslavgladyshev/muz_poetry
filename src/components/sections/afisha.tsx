@@ -37,12 +37,12 @@ export function Afisha() {
         <Reveal delay={120}>
           <div className="mt-12 text-center">
             <Button
-              asChild
+              render={<Link href="/afisha" />}
               size="lg"
               variant="outline"
               className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
             >
-              <Link href="/afisha">Смотреть полную афишу</Link>
+              Смотреть полную афишу
             </Button>
           </div>
         </Reveal>

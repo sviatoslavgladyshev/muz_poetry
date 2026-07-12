@@ -53,16 +53,22 @@ export function Header() {
         </nav>
 
         <div className="hidden lg:block">
-          <Button asChild size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
-            <a href="#kontakty">Записаться</a>
+          <Button
+            render={<a href="#kontakty" />}
+            size="sm"
+            className="bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            Записаться
           </Button>
         </div>
 
         <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Открыть меню">
-              <Menu className="h-6 w-6" />
-            </Button>
+          <SheetTrigger
+            render={
+              <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Открыть меню" />
+            }
+          >
+            <Menu className="h-6 w-6" />
           </SheetTrigger>
           <SheetContent side="right" className="bg-cream">
             <SheetHeader>
@@ -72,22 +78,27 @@ export function Header() {
             </SheetHeader>
             <nav className="mt-4 flex flex-col gap-1 px-4">
               {navLinks.map((link) => (
-                <SheetClose asChild key={link.href}>
-                  <a
-                    href={link.href}
-                    className="rounded-md px-2 py-3 text-base font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-primary"
-                  >
-                    {link.label}
-                  </a>
+                <SheetClose
+                  key={link.href}
+                  render={
+                    <a
+                      href={link.href}
+                      className="rounded-md px-2 py-3 text-base font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-primary"
+                    />
+                  }
+                >
+                  {link.label}
                 </SheetClose>
               ))}
-              <SheetClose asChild>
-                <a
-                  href="#kontakty"
-                  className="mt-3 rounded-md bg-primary px-3 py-3 text-center text-base font-semibold text-primary-foreground"
-                >
-                  Записаться
-                </a>
+              <SheetClose
+                render={
+                  <a
+                    href="#kontakty"
+                    className="mt-3 rounded-md bg-primary px-3 py-3 text-center text-base font-semibold text-primary-foreground"
+                  />
+                }
+              >
+                Записаться
               </SheetClose>
             </nav>
           </SheetContent>

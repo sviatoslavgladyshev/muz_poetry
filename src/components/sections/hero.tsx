@@ -46,19 +46,19 @@ export function Hero() {
         <Reveal delay={320}>
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
             <Button
-              asChild
+              render={<a href="#kontakty" />}
               size="lg"
               className="bg-accent text-accent-foreground hover:bg-accent/90"
             >
-              <a href="#kontakty">Записаться на пробное занятие</a>
+              Записаться на пробное занятие
             </Button>
             <Button
-              asChild
+              render={<a href="#afisha" />}
               size="lg"
               variant="outline"
               className="border-cream/40 bg-transparent text-cream hover:bg-cream/10 hover:text-cream"
             >
-              <a href="#afisha">Смотреть афишу событий</a>
+              Смотреть афишу событий
             </Button>
           </div>
           <a
