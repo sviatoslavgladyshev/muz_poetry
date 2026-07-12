@@ -1,0 +1,20 @@
+<svg width="1000" height="800" viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Академический вокал">
+  <defs>
+    <linearGradient id="grad-directionvocalacademicsvg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3c1224"/>
+      <stop offset="100%" stop-color="#1f0a14"/>
+    </linearGradient>
+    <pattern id="notes-directionvocalacademicsvg" width="120" height="120" patternUnits="userSpaceOnUse" patternTransform="rotate(8)">
+      <text x="10" y="60" font-size="46" fill="#fbf7f0" opacity="0.06" font-family="Georgia, serif">&#9834;</text>
+      <text x="70" y="110" font-size="30" fill="#fbf7f0" opacity="0.05" font-family="Georgia, serif">&#9835;</text>
+    </pattern>
+  </defs>
+  <rect width="1000" height="800" fill="url(#grad-directionvocalacademicsvg)"/>
+  <rect width="1000" height="800" fill="url(#notes-directionvocalacademicsvg)"/>
+  <circle cx="820" cy="144" r="224.00000000000003" fill="#fbf7f0" opacity="0.05"/>
+  <circle cx="120" cy="704" r="176" fill="#c6963d" opacity="0.10"/>
+  <g transform="translate(500, 400)" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif">
+    <text y="-6" font-size="56.00000000000001" fill="#fbf7f0" font-style="italic">Академический вокал</text>
+    <text y="72" font-size="25.6" fill="#e3c789" font-family="Helvetica, Arial, sans-serif" letter-spacing="1">DIRECTION-VOCAL-ACADEMIC</text>
+  </g>
+</svg>

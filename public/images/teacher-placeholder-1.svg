@@ -1,0 +1,20 @@
+<svg width="900" height="1100" viewBox="0 0 900 1100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Новый мастер">
+  <defs>
+    <linearGradient id="grad-teacherplaceholder1svg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8a5a70"/>
+      <stop offset="100%" stop-color="#5c1f36"/>
+    </linearGradient>
+    <pattern id="notes-teacherplaceholder1svg" width="120" height="120" patternUnits="userSpaceOnUse" patternTransform="rotate(8)">
+      <text x="10" y="60" font-size="46" fill="#fbf7f0" opacity="0.06" font-family="Georgia, serif">&#9834;</text>
+      <text x="70" y="110" font-size="30" fill="#fbf7f0" opacity="0.05" font-family="Georgia, serif">&#9835;</text>
+    </pattern>
+  </defs>
+  <rect width="900" height="1100" fill="url(#grad-teacherplaceholder1svg)"/>
+  <rect width="900" height="1100" fill="url(#notes-teacherplaceholder1svg)"/>
+  <circle cx="738" cy="198" r="252.00000000000003" fill="#fbf7f0" opacity="0.05"/>
+  <circle cx="108" cy="968" r="198" fill="#c6963d" opacity="0.10"/>
+  <g transform="translate(450, 550)" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif">
+    <text y="-6" font-size="63.00000000000001" fill="#fbf7f0" font-style="italic">Новый мастер</text>
+    <text y="81" font-size="28.8" fill="#e3c789" font-family="Helvetica, Arial, sans-serif" letter-spacing="1">TEACHER-SLOT-2 · скоро</text>
+  </g>
+</svg>

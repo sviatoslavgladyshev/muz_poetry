@@ -1,0 +1,20 @@
+<svg width="1200" height="900" viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Лекторий">
+  <defs>
+    <linearGradient id="grad-clublecturesvg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6b4a2e"/>
+      <stop offset="100%" stop-color="#3c1224"/>
+    </linearGradient>
+    <pattern id="notes-clublecturesvg" width="120" height="120" patternUnits="userSpaceOnUse" patternTransform="rotate(8)">
+      <text x="10" y="60" font-size="46" fill="#fbf7f0" opacity="0.06" font-family="Georgia, serif">&#9834;</text>
+      <text x="70" y="110" font-size="30" fill="#fbf7f0" opacity="0.05" font-family="Georgia, serif">&#9835;</text>
+    </pattern>
+  </defs>
+  <rect width="1200" height="900" fill="url(#grad-clublecturesvg)"/>
+  <rect width="1200" height="900" fill="url(#notes-clublecturesvg)"/>
+  <circle cx="983.9999999999999" cy="162" r="252.00000000000003" fill="#fbf7f0" opacity="0.05"/>
+  <circle cx="144" cy="792" r="198" fill="#c6963d" opacity="0.10"/>
+  <g transform="translate(600, 450)" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif">
+    <text y="-6" font-size="63.00000000000001" fill="#fbf7f0" font-style="italic">Лекторий</text>
+    <text y="81" font-size="28.8" fill="#e3c789" font-family="Helvetica, Arial, sans-serif" letter-spacing="1">CLUB-LECTURE · беседа за чаем</text>
+  </g>
+</svg>

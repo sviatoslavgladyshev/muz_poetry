@@ -1,0 +1,20 @@
+<svg width="1600" height="1200" viewBox="0 0 1600 1200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Поэзия звука">
+  <defs>
+    <linearGradient id="grad-herostudiosvg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3c1224"/>
+      <stop offset="100%" stop-color="#5c1f36"/>
+    </linearGradient>
+    <pattern id="notes-herostudiosvg" width="120" height="120" patternUnits="userSpaceOnUse" patternTransform="rotate(8)">
+      <text x="10" y="60" font-size="46" fill="#fbf7f0" opacity="0.06" font-family="Georgia, serif">&#9834;</text>
+      <text x="70" y="110" font-size="30" fill="#fbf7f0" opacity="0.05" font-family="Georgia, serif">&#9835;</text>
+    </pattern>
+  </defs>
+  <rect width="1600" height="1200" fill="url(#grad-herostudiosvg)"/>
+  <rect width="1600" height="1200" fill="url(#notes-herostudiosvg)"/>
+  <circle cx="1312" cy="216" r="336.00000000000006" fill="#fbf7f0" opacity="0.05"/>
+  <circle cx="192" cy="1056" r="264" fill="#c6963d" opacity="0.10"/>
+  <g transform="translate(800, 600)" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif">
+    <text y="-6" font-size="84.00000000000001" fill="#fbf7f0" font-style="italic">Поэзия звука</text>
+    <text y="108" font-size="38.4" fill="#e3c789" font-family="Helvetica, Arial, sans-serif" letter-spacing="1">HERO-STUDIO · замените на фото зала мастерской</text>
+  </g>
+</svg>

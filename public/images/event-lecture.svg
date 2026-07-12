@@ -1,0 +1,20 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Лекция">
+  <defs>
+    <linearGradient id="grad-eventlecturesvg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6b4a2e"/>
+      <stop offset="100%" stop-color="#3c1224"/>
+    </linearGradient>
+    <pattern id="notes-eventlecturesvg" width="120" height="120" patternUnits="userSpaceOnUse" patternTransform="rotate(8)">
+      <text x="10" y="60" font-size="46" fill="#fbf7f0" opacity="0.06" font-family="Georgia, serif">&#9834;</text>
+      <text x="70" y="110" font-size="30" fill="#fbf7f0" opacity="0.05" font-family="Georgia, serif">&#9835;</text>
+    </pattern>
+  </defs>
+  <rect width="800" height="600" fill="url(#grad-eventlecturesvg)"/>
+  <rect width="800" height="600" fill="url(#notes-eventlecturesvg)"/>
+  <circle cx="656" cy="108" r="168.00000000000003" fill="#fbf7f0" opacity="0.05"/>
+  <circle cx="96" cy="528" r="132" fill="#c6963d" opacity="0.10"/>
+  <g transform="translate(400, 300)" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif">
+    <text y="-6" font-size="42.00000000000001" fill="#fbf7f0" font-style="italic">Лекция</text>
+    <text y="54" font-size="19.2" fill="#e3c789" font-family="Helvetica, Arial, sans-serif" letter-spacing="1">EVENT-LECTURE</text>
+  </g>
+</svg>
