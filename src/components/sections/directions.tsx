@@ -1,30 +1,41 @@
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/reveal";
-import { directions, directionGroups } from "@/content/directions";
+import { directions, directionGroups, type DirectionGroup } from "@/content/directions";
+import type { AppLocale } from "@/i18n/routing";
 
-export function Directions() {
+export async function Directions({ locale }: { locale: AppLocale }) {
+  const t = await getTranslations({ locale, namespace: "directions" });
+
+  const groupLabels: Record<DirectionGroup, string> = {
+    instruments: t("groupInstruments"),
+    vocal: t("groupVocal"),
+  };
+
   return (
     <section id="obuchenie" className="bg-cream py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <Reveal>
           <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-gold">
-            Обучение
+            {t("eyebrow")}
           </p>
         </Reveal>
         <Reveal delay={80}>
           <h2 className="mx-auto mt-4 max-w-2xl text-center font-display text-3xl italic text-primary sm:text-4xl md:text-5xl">
-            Направления мастерской
+            {t("heading")}
           </h2>
         </Reveal>
 
         {directionGroups.map((group) => (
           <div key={group} className="mt-16 first:mt-16">
             <Reveal>
-              <h3 className="mb-7 font-display text-2xl italic text-primary">{group}</h3>
+              <h3 className="mb-7 font-display text-2xl italic text-primary">
+                {groupLabels[group]}
+              </h3>
             </Reveal>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {directions
+              {directions[locale]
                 .filter((d) => d.group === group)
                 .map((direction, i) => (
                   <Reveal key={direction.id} delay={i * 100} className="h-full">
@@ -45,18 +56,22 @@ export function Directions() {
                           {direction.description}
                         </p>
                         <p className="text-sm leading-relaxed text-foreground/75">
-                          <span className="font-semibold text-foreground">Результат: </span>
+                          <span className="font-semibold text-foreground">
+                            {t("resultLabel")}{" "}
+                          </span>
                           {direction.result}
                         </p>
                         <p className="text-sm leading-relaxed text-foreground/60">
-                          <span className="font-semibold text-foreground/80">Для кого: </span>
+                          <span className="font-semibold text-foreground/80">
+                            {t("forWhomLabel")}{" "}
+                          </span>
                           {direction.forWhom}
                         </p>
                         <Button
                           render={<a href="#tseny" />}
                           className="mt-auto w-full bg-primary text-primary-foreground hover:bg-primary/90"
                         >
-                          Узнать контакты и цены
+                          {t("cta")}
                         </Button>
                       </div>
                     </article>

@@ -1,7 +1,9 @@
+import { getTranslations } from "next-intl/server";
 import { MapPin, Phone, Send, MessageCircle } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { TrialForm } from "@/components/trial-form";
 import { siteConfig } from "@/content/site";
+import type { AppLocale } from "@/i18n/routing";
 
 function VkIcon({ className }: { className?: string }) {
   return (
@@ -28,18 +30,20 @@ function InstagramIcon({ className }: { className?: string }) {
   );
 }
 
-export function Contacts() {
+export async function Contacts({ locale }: { locale: AppLocale }) {
+  const t = await getTranslations({ locale, namespace: "contacts" });
+
   return (
     <section id="kontakty" className="bg-plum-deep py-24 text-cream md:py-32">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <Reveal>
           <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-gold-soft">
-            Контакты
+            {t("eyebrow")}
           </p>
         </Reveal>
         <Reveal delay={80}>
           <h2 className="mx-auto mt-4 max-w-2xl text-center font-display text-3xl italic sm:text-4xl md:text-5xl">
-            Приходите на пробное занятие
+            {t("heading")}
           </h2>
         </Reveal>
 
@@ -49,15 +53,15 @@ export function Contacts() {
               <div className="flex items-start gap-3">
                 <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-gold-soft" />
                 <div>
-                  <p className="font-semibold">Адрес</p>
-                  <p className="text-cream/75">{siteConfig.address}</p>
+                  <p className="font-semibold">{t("addressLabel")}</p>
+                  <p className="text-cream/75">{siteConfig.address[locale]}</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
                 <Phone className="mt-0.5 h-5 w-5 shrink-0 text-gold-soft" />
                 <div>
-                  <p className="font-semibold">Телефон / WhatsApp</p>
+                  <p className="font-semibold">{t("phoneLabel")}</p>
                   <a
                     href={siteConfig.phoneHref}
                     className="text-cream/75 transition-colors hover:text-gold-soft"
@@ -121,14 +125,10 @@ export function Contacts() {
 
           <Reveal delay={200} className="lg:col-span-3">
             <div className="rounded-3xl bg-cream p-7 text-foreground shadow-xl md:p-9">
-              <h3 className="font-display text-2xl italic text-primary">
-                Запись на пробное занятие
-              </h3>
-              <p className="mt-2 text-sm text-foreground/70">
-                Оставьте контакты — мы перезвоним и подберём удобное время.
-              </p>
+              <h3 className="font-display text-2xl italic text-primary">{t("formHeading")}</h3>
+              <p className="mt-2 text-sm text-foreground/70">{t("formSubtext")}</p>
               <div className="mt-6">
-                <TrialForm />
+                <TrialForm locale={locale} />
               </div>
             </div>
           </Reveal>

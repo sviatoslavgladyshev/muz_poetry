@@ -1,12 +1,15 @@
+import type { AppLocale } from "@/i18n/routing";
+
 export const siteConfig = {
   name: "«Поэзия звука»",
-  fullName: "Вокально-акустическая мастерская «Поэзия звука»",
   domain: "muzpoetry.ru",
   phoneDisplay: "8 900 538 78 70",
   phoneHref: "tel:+79005387870",
   contactPerson: "Александра",
-  address: "Казань, улица Гоголя, 25 (Вахитовский район)",
-  addressShort: "ул. Гоголя, 25, Казань",
+  address: {
+    ru: "Казань, улица Гоголя, 25 (Вахитовский район)",
+    tt: "Казан, Гоголь урамы, 25 (Вахитов районы)",
+  } satisfies Record<AppLocale, string>,
   vk: "https://vk.ru/club240133150",
   telegram: "https://t.me/muzpoetry",
   instagram: "https://instagram.com/muzpoetry",
@@ -18,11 +21,11 @@ export const siteConfig = {
 } as const;
 
 export const navLinks = [
-  { href: "#o-masterskoy", label: "О мастерской" },
-  { href: "#mastera", label: "Мастера" },
-  { href: "#obuchenie", label: "Обучение" },
-  { href: "#klub", label: "Клуб" },
-  { href: "#tseny", label: "Цены" },
-  { href: "#afisha", label: "Афиша" },
-  { href: "#kontakty", label: "Контакты" },
+  { href: "#o-masterskoy", key: "about" },
+  { href: "#mastera", key: "teachers" },
+  { href: "#obuchenie", key: "directions" },
+  { href: "#klub", key: "club" },
+  { href: "#tseny", key: "pricing" },
+  { href: "#afisha", key: "afisha" },
+  { href: "#kontakty", key: "contacts" },
 ] as const;

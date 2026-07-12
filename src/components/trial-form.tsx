@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useTranslations } from "next-intl";
 import { CheckCircle2, Loader2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,7 @@ import {
 import { toast } from "sonner";
 import { directions } from "@/content/directions";
 import { siteConfig } from "@/content/site";
+import type { AppLocale } from "@/i18n/routing";
 
 type FormState = {
   name: string;
@@ -29,7 +31,8 @@ const initialState: FormState = { name: "", phone: "", direction: "", time: "" }
 
 const phonePattern = /^[+\d][\d\s\-()]{9,17}$/;
 
-export function TrialForm() {
+export function TrialForm({ locale }: { locale: AppLocale }) {
+  const t = useTranslations("form");
   const [values, setValues] = useState<FormState>(initialState);
   const [errors, setErrors] = useState<FormErrors>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle");
@@ -37,13 +40,13 @@ export function TrialForm() {
   function validate(): FormErrors {
     const next: FormErrors = {};
     if (values.name.trim().length < 2) {
-      next.name = "Укажите, пожалуйста, имя (минимум 2 буквы)";
+      next.name = t("nameError");
     }
     if (!phonePattern.test(values.phone.trim())) {
-      next.phone = "Проверьте номер телефона, например +7 900 000 00 00";
+      next.phone = t("phoneError");
     }
     if (!values.direction) {
-      next.direction = "Выберите направление";
+      next.direction = t("directionError");
     }
     return next;
   }
@@ -66,9 +69,7 @@ export function TrialForm() {
       setValues(initialState);
     } catch {
       setStatus("idle");
-      toast.error(
-        "Не удалось отправить заявку. Позвоните нам напрямую — мы обязательно ответим.",
-      );
+      toast.error(t("toastError"));
     }
   }
 
@@ -76,17 +77,16 @@ export function TrialForm() {
     return (
       <div className="flex flex-col items-center gap-4 rounded-3xl border border-gold/30 bg-gold/10 px-8 py-14 text-center">
         <CheckCircle2 className="h-12 w-12 text-gold" />
-        <h3 className="font-display text-2xl italic text-primary">Заявка отправлена!</h3>
+        <h3 className="font-display text-2xl italic text-primary">{t("successHeading")}</h3>
         <p className="max-w-sm text-sm leading-relaxed text-foreground/75">
-          Спасибо! Мы свяжемся с вами в ближайшее время, чтобы согласовать удобную дату
-          пробного занятия.
+          {t("successMessage")}
         </p>
         <Button
           variant="outline"
           className="mt-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
           onClick={() => setStatus("idle")}
         >
-          Отправить ещё одну заявку
+          {t("successRetry")}
         </Button>
       </div>
     );
@@ -95,11 +95,11 @@ export function TrialForm() {
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
-        <Label htmlFor="name">Имя</Label>
+        <Label htmlFor="name">{t("nameLabel")}</Label>
         <Input
           id="name"
           name="name"
-          placeholder="Как к вам обращаться"
+          placeholder={t("namePlaceholder")}
           value={values.name}
           onChange={(e) => setValues((v) => ({ ...v, name: e.target.value }))}
           aria-invalid={!!errors.name}
@@ -108,12 +108,12 @@ export function TrialForm() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="phone">Телефон</Label>
+        <Label htmlFor="phone">{t("phoneLabel")}</Label>
         <Input
           id="phone"
           name="phone"
           type="tel"
-          placeholder="+7 900 000 00 00"
+          placeholder={t("phonePlaceholder")}
           value={values.phone}
           onChange={(e) => setValues((v) => ({ ...v, phone: e.target.value }))}
           aria-invalid={!!errors.phone}
@@ -122,34 +122,32 @@ export function TrialForm() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="direction">Направление</Label>
+        <Label htmlFor="direction">{t("directionLabel")}</Label>
         <Select
           value={values.direction}
           onValueChange={(val) => setValues((v) => ({ ...v, direction: val ?? "" }))}
         >
           <SelectTrigger id="direction" className="w-full" aria-invalid={!!errors.direction}>
-            <SelectValue placeholder="Выберите направление" />
+            <SelectValue placeholder={t("directionPlaceholder")} />
           </SelectTrigger>
           <SelectContent>
-            {directions.map((d) => (
+            {directions[locale].map((d) => (
               <SelectItem key={d.id} value={d.title}>
                 {d.title}
               </SelectItem>
             ))}
-            <SelectItem value="Не уверен(а), нужна консультация">
-              Не уверен(а), нужна консультация
-            </SelectItem>
+            <SelectItem value={t("consultOption")}>{t("consultOption")}</SelectItem>
           </SelectContent>
         </Select>
         {errors.direction && <p className="text-sm text-destructive">{errors.direction}</p>}
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="time">Удобное время</Label>
+        <Label htmlFor="time">{t("timeLabel")}</Label>
         <Input
           id="time"
           name="time"
-          placeholder="Например, будни после 17:00"
+          placeholder={t("timePlaceholder")}
           value={values.time}
           onChange={(e) => setValues((v) => ({ ...v, time: e.target.value }))}
         />
@@ -163,11 +161,11 @@ export function TrialForm() {
       >
         {status === "submitting" ? (
           <>
-            <Loader2 className="h-4 w-4 animate-spin" /> Отправляем…
+            <Loader2 className="h-4 w-4 animate-spin" /> {t("submitting")}
           </>
         ) : (
           <>
-            <Send className="h-4 w-4" /> Записаться на пробное занятие
+            <Send className="h-4 w-4" /> {t("submit")}
           </>
         )}
       </Button>

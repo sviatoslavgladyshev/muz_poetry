@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Menu, Music2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,10 +12,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { Link } from "@/i18n/navigation";
 import { navLinks } from "@/content/site";
+import type { AppLocale } from "@/i18n/routing";
 
-export function Header() {
+export function Header({ locale }: { locale: AppLocale }) {
   const [scrolled, setScrolled] = useState(false);
+  const t = useTranslations("nav");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -36,7 +40,7 @@ export function Header() {
         <Link href="/" className="flex items-center gap-2 group">
           <Music2 className="h-5 w-5 text-primary transition-transform group-hover:-rotate-12" />
           <span className="font-display text-xl italic tracking-tight text-primary">
-            Поэзия звука
+            {t("brand")}
           </span>
         </Link>
 
@@ -47,62 +51,66 @@ export function Header() {
               href={link.href}
               className="text-sm font-medium text-foreground/75 transition-colors hover:text-primary"
             >
-              {link.label}
+              {t(link.key)}
             </a>
           ))}
         </nav>
 
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-5 lg:flex">
+          <LanguageSwitcher locale={locale} />
           <Button
             render={<a href="#kontakty" />}
             size="sm"
             className="bg-primary text-primary-foreground hover:bg-primary/90"
           >
-            Записаться
+            {t("cta")}
           </Button>
         </div>
 
-        <Sheet>
-          <SheetTrigger
-            render={
-              <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Открыть меню" />
-            }
-          >
-            <Menu className="h-6 w-6" />
-          </SheetTrigger>
-          <SheetContent side="right" className="bg-cream">
-            <SheetHeader>
-              <SheetTitle className="font-display text-2xl italic text-primary">
-                Поэзия звука
-              </SheetTitle>
-            </SheetHeader>
-            <nav className="mt-4 flex flex-col gap-1 px-4">
-              {navLinks.map((link) => (
+        <div className="flex items-center gap-2 lg:hidden">
+          <LanguageSwitcher locale={locale} />
+          <Sheet>
+            <SheetTrigger
+              render={
+                <Button variant="ghost" size="icon" aria-label={t("openMenu")} />
+              }
+            >
+              <Menu className="h-6 w-6" />
+            </SheetTrigger>
+            <SheetContent side="right" className="bg-cream">
+              <SheetHeader>
+                <SheetTitle className="font-display text-2xl italic text-primary">
+                  {t("brand")}
+                </SheetTitle>
+              </SheetHeader>
+              <nav className="mt-4 flex flex-col gap-1 px-4">
+                {navLinks.map((link) => (
+                  <SheetClose
+                    key={link.href}
+                    render={
+                      <a
+                        href={link.href}
+                        className="rounded-md px-2 py-3 text-base font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-primary"
+                      />
+                    }
+                  >
+                    {t(link.key)}
+                  </SheetClose>
+                ))}
                 <SheetClose
-                  key={link.href}
                   render={
                     <a
-                      href={link.href}
-                      className="rounded-md px-2 py-3 text-base font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-primary"
+                      href="#kontakty"
+                      className="mt-3 rounded-md bg-primary px-3 py-3 text-center text-base font-semibold text-primary-foreground"
                     />
                   }
                 >
-                  {link.label}
+                  {t("cta")}
                 </SheetClose>
-              ))}
-              <SheetClose
-                render={
-                  <a
-                    href="#kontakty"
-                    className="mt-3 rounded-md bg-primary px-3 py-3 text-center text-base font-semibold text-primary-foreground"
-                  />
-                }
-              >
-                Записаться
-              </SheetClose>
-            </nav>
-          </SheetContent>
-        </Sheet>
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </header>
   );

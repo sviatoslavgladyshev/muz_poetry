@@ -1,27 +1,30 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Check, ShieldCheck } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/reveal";
 import { singleVisits, subscriptions, pricingTrustLine, type PriceItem } from "@/content/pricing";
+import type { AppLocale } from "@/i18n/routing";
 
-export function Pricing() {
+export function Pricing({ locale }: { locale: AppLocale }) {
   const [isAdult, setIsAdult] = useState(false);
+  const t = useTranslations("pricing");
 
   return (
     <section id="tseny" className="bg-secondary/60 py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <Reveal>
           <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-gold">
-            Стоимость обучения
+            {t("eyebrow")}
           </p>
         </Reveal>
         <Reveal delay={80}>
           <h2 className="mx-auto mt-4 max-w-2xl text-center font-display text-3xl italic text-primary sm:text-4xl md:text-5xl">
-            Разовые встречи и клубные карты
+            {t("heading")}
           </h2>
         </Reveal>
 
@@ -30,43 +33,43 @@ export function Pricing() {
             <span
               className={`text-sm font-semibold transition-colors ${!isAdult ? "text-primary" : "text-foreground/50"}`}
             >
-              Цены для детей
+              {t("toggleChildren")}
             </span>
             <Switch
               checked={isAdult}
               onCheckedChange={setIsAdult}
-              aria-label="Переключить цены между детьми и взрослыми"
+              aria-label={t("toggleAdults")}
             />
             <span
               className={`text-sm font-semibold transition-colors ${isAdult ? "text-primary" : "text-foreground/50"}`}
             >
-              Цены для взрослых
+              {t("toggleAdults")}
             </span>
           </div>
         </Reveal>
 
         <Reveal delay={180}>
           <h3 className="mb-6 mt-16 text-center font-display text-2xl italic text-primary">
-            Разовые встречи
+            {t("singleVisitsHeading")}
           </h3>
         </Reveal>
         <div className="grid gap-6 md:grid-cols-3">
-          {singleVisits.map((item, i) => (
+          {singleVisits[locale].map((item, i) => (
             <Reveal key={item.id} delay={i * 100} className="h-full">
-              <PriceCard item={item} isAdult={isAdult} />
+              <PriceCard item={item} isAdult={isAdult} cta={t("cta")} />
             </Reveal>
           ))}
         </div>
 
         <Reveal delay={100}>
           <h3 className="mb-6 mt-16 text-center font-display text-2xl italic text-primary">
-            Абонементы
+            {t("subscriptionsHeading")}
           </h3>
         </Reveal>
         <div className="grid gap-6 md:grid-cols-2">
-          {subscriptions.map((item, i) => (
+          {subscriptions[locale].map((item, i) => (
             <Reveal key={item.id} delay={i * 120} className="h-full">
-              <PriceCard item={item} isAdult={isAdult} />
+              <PriceCard item={item} isAdult={isAdult} cta={t("cta")} />
             </Reveal>
           ))}
         </div>
@@ -74,7 +77,7 @@ export function Pricing() {
         <Reveal delay={140}>
           <div className="mx-auto mt-14 flex max-w-2xl items-start gap-3 rounded-2xl border border-gold/30 bg-gold/10 p-5 text-sm leading-relaxed text-foreground/80">
             <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-gold" />
-            <p>{pricingTrustLine}</p>
+            <p>{pricingTrustLine[locale]}</p>
           </div>
         </Reveal>
       </div>
@@ -82,7 +85,15 @@ export function Pricing() {
   );
 }
 
-function PriceCard({ item, isAdult }: { item: PriceItem; isAdult: boolean }) {
+function PriceCard({
+  item,
+  isAdult,
+  cta,
+}: {
+  item: PriceItem;
+  isAdult: boolean;
+  cta: string;
+}) {
   const price = isAdult ? item.priceAdults : item.priceChildren;
 
   return (
@@ -151,7 +162,7 @@ function PriceCard({ item, isAdult }: { item: PriceItem; isAdult: boolean }) {
             : "bg-primary text-primary-foreground hover:bg-primary/90"
         }`}
       >
-        Записаться на пробное занятие
+        {cta}
       </Button>
     </div>
   );

@@ -1,8 +1,12 @@
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/reveal";
+import type { AppLocale } from "@/i18n/routing";
 
-export function Hero() {
+export async function Hero({ locale }: { locale: AppLocale }) {
+  const t = await getTranslations({ locale, namespace: "hero" });
+
   return (
     <section className="relative overflow-hidden bg-primary text-primary-foreground">
       <div className="absolute inset-0">
@@ -19,27 +23,26 @@ export function Hero() {
       <div className="relative mx-auto flex max-w-5xl flex-col items-center px-5 pt-28 pb-24 text-center md:pt-36 md:pb-32">
         <Reveal>
           <p className="mb-4 text-sm font-semibold tracking-[0.25em] text-gold-soft uppercase">
-            Казань · с 6 лет и для взрослых
+            {t("eyebrow")}
           </p>
         </Reveal>
 
         <Reveal delay={80}>
           <h1 className="font-display text-4xl italic leading-tight sm:text-5xl md:text-6xl">
-            Вокально-акустическая мастерская
+            {t("brandDescriptor")}
             <span className="block not-italic text-gold-soft">«Поэзия звука»</span>
           </h1>
         </Reveal>
 
         <Reveal delay={160}>
           <p className="mt-6 max-w-2xl text-lg text-primary-foreground/85 md:text-xl">
-            Пространство музыки, культуры и искусства для детей от 6 лет и взрослых.
+            {t("subtitle")}
           </p>
         </Reveal>
 
         <Reveal delay={240}>
           <p className="mt-8 max-w-2xl font-display text-xl italic leading-relaxed text-cream/95 md:text-2xl">
-            «Музыка как способ мыслить, звук как способ чувствовать: учим понимать классику
-            и звучать свободно».
+            {t("slogan")}
           </p>
         </Reveal>
 
@@ -50,7 +53,7 @@ export function Hero() {
               size="lg"
               className="bg-accent text-accent-foreground hover:bg-accent/90"
             >
-              Записаться на пробное занятие
+              {t("ctaTrial")}
             </Button>
             <Button
               render={<a href="#afisha" />}
@@ -58,14 +61,14 @@ export function Hero() {
               variant="outline"
               className="border-cream/40 bg-transparent text-cream hover:bg-cream/10 hover:text-cream"
             >
-              Смотреть афишу событий
+              {t("ctaAfisha")}
             </Button>
           </div>
           <a
             href="#tseny"
             className="mt-5 inline-block text-sm font-medium text-cream/70 underline underline-offset-4 transition-colors hover:text-cream"
           >
-            Купить абонемент
+            {t("ctaSubscription")}
           </a>
         </Reveal>
       </div>
