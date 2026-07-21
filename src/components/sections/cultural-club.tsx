@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Ticket, Sparkle } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Reveal } from "@/components/reveal";
 import { clubIntro, clubOfferings, type ClubOffering } from "@/content/club";
 import { siteConfig } from "@/content/site";
@@ -37,7 +38,8 @@ export async function CulturalClub({ locale }: { locale: AppLocale }) {
             const Icon = icons[offering.icon];
             return (
               <Reveal key={offering.title} delay={i * 120} className="h-full">
-                <div className="flex h-full flex-col rounded-3xl border border-cream/15 bg-cream/5 p-8 backdrop-blur-sm">
+                <Card className="flex h-full flex-col gap-0 rounded-[8px] border border-cream/15 bg-cream/5 py-0 text-primary-foreground ring-0 backdrop-blur-sm">
+                  <CardContent className="flex h-full flex-col p-8">
                   <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-gold/20">
                     <Icon className="h-6 w-6 text-gold-soft" />
                   </div>
@@ -46,7 +48,8 @@ export async function CulturalClub({ locale }: { locale: AppLocale }) {
                     {offering.description}
                   </p>
                   <p className="mt-6 text-sm font-medium text-gold-soft">{offering.forWhom}</p>
-                </div>
+                  </CardContent>
+                </Card>
               </Reveal>
             );
           })}

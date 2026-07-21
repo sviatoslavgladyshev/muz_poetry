@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { MapPin, Phone, Send, MessageCircle } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Reveal } from "@/components/reveal";
 import { TrialForm } from "@/components/trial-form";
 import { siteConfig } from "@/content/site";
@@ -124,13 +125,17 @@ export async function Contacts({ locale }: { locale: AppLocale }) {
           </Reveal>
 
           <Reveal delay={200} className="lg:col-span-3">
-            <div className="rounded-3xl bg-cream p-7 text-foreground shadow-xl md:p-9">
-              <h3 className="font-display text-2xl italic text-primary">{t("formHeading")}</h3>
-              <p className="mt-2 text-sm text-foreground/70">{t("formSubtext")}</p>
-              <div className="mt-6">
+            <Card className="gap-0 rounded-[8px] bg-cream py-0 text-foreground shadow-xl ring-0">
+              <CardHeader className="gap-2 p-7 pb-0 md:p-9 md:pb-0">
+                <CardTitle className="font-display text-2xl italic text-primary">
+                  {t("formHeading")}
+                </CardTitle>
+                <p className="text-sm text-foreground/70">{t("formSubtext")}</p>
+              </CardHeader>
+              <CardContent className="p-7 pt-6 md:p-9 md:pt-6">
                 <TrialForm locale={locale} />
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </Reveal>
         </div>
       </div>

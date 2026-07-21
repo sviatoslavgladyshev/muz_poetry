@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Heart, Sparkles, BookOpen, Drama } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Reveal } from "@/components/reveal";
 import { missionText, historyText, values, type ValueCard } from "@/content/values";
 import type { AppLocale } from "@/i18n/routing";
@@ -40,7 +41,8 @@ export async function About({ locale }: { locale: AppLocale }) {
             const Icon = icons[value.icon];
             return (
               <Reveal key={value.title} delay={i * 100}>
-                <div className="flex h-full flex-col rounded-2xl border border-border bg-card p-7 shadow-sm transition-shadow hover:shadow-md">
+                <Card className="flex h-full flex-col gap-0 rounded-[8px] border border-border bg-card py-0 shadow-sm ring-0 transition-shadow hover:shadow-md">
+                  <CardContent className="flex h-full flex-col p-7">
                   <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
                     <Icon className="h-6 w-6 text-primary" />
                   </div>
@@ -48,7 +50,8 @@ export async function About({ locale }: { locale: AppLocale }) {
                   <p className="mt-3 text-sm leading-relaxed text-foreground/75">
                     {value.description}
                   </p>
-                </div>
+                  </CardContent>
+                </Card>
               </Reveal>
             );
           })}

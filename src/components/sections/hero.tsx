@@ -52,6 +52,7 @@ export async function Hero({ locale }: { locale: AppLocale }) {
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
             <Button
               render={<a href="#kontakty" />}
+              nativeButton={false}
               size="lg"
               className="bg-accent text-accent-foreground hover:bg-accent/90"
             >
@@ -59,6 +60,7 @@ export async function Hero({ locale }: { locale: AppLocale }) {
             </Button>
             <Button
               render={<a href="#afisha" />}
+              nativeButton={false}
               size="lg"
               variant="outline"
               className="border-cream/40 bg-transparent text-cream hover:bg-cream/10 hover:text-cream"

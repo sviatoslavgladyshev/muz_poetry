@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { CalendarDays, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import type { StudioEvent } from "@/content/events";
 import { formatEventDate } from "@/content/events";
 import type { AppLocale } from "@/i18n/routing";
@@ -25,7 +26,7 @@ export async function EventCard({
   const t = await getTranslations({ locale, namespace: "afisha" });
 
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-shadow hover:shadow-lg">
+    <Card className="flex h-full flex-col gap-0 overflow-hidden rounded-[8px] border border-border bg-card py-0 shadow-sm ring-0 transition-shadow hover:shadow-lg">
       <div className="relative aspect-[4/3] w-full">
         <Image
           src={publicAssetPath(event.image)}
@@ -37,7 +38,7 @@ export async function EventCard({
           {t(`eventTypes.${event.type}`)}
         </Badge>
       </div>
-      <div className="flex flex-1 flex-col gap-3 p-6">
+      <CardContent className="flex flex-1 flex-col gap-3 p-6">
         <div className="flex items-center gap-4 text-sm text-foreground/60">
           <span className="flex items-center gap-1.5">
             <CalendarDays className="h-4 w-4 text-gold" />
@@ -52,11 +53,12 @@ export async function EventCard({
         <p className="flex-1 text-sm leading-relaxed text-foreground/75">{event.description}</p>
         <Button
           render={<a href="#kontakty" />}
+          nativeButton={false}
           className="mt-2 w-full bg-primary text-primary-foreground hover:bg-primary/90"
         >
           {t("cta")}
         </Button>
-      </div>
-    </article>
+      </CardContent>
+    </Card>
   );
 }

@@ -63,6 +63,7 @@ export default async function AfishaPage({
           <div className="mt-16 text-center">
             <Button
               render={<Link href="/#kontakty" />}
+              nativeButton={false}
               size="lg"
               className="bg-primary text-primary-foreground hover:bg-primary/90"
             >

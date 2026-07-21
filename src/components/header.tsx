@@ -60,6 +60,7 @@ export function Header({ locale }: { locale: AppLocale }) {
           <LanguageSwitcher locale={locale} />
           <Button
             render={<Link href="/#kontakty" />}
+            nativeButton={false}
             size="sm"
             className="bg-primary text-primary-foreground hover:bg-primary/90"
           >

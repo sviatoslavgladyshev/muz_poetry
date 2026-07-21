@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Quote, Sparkles, Compass, GraduationCap } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Reveal } from "@/components/reveal";
 import { teachers, teachersIntro, type Teacher, type TeacherSlot } from "@/content/teachers";
 import type { AppLocale } from "@/i18n/routing";
@@ -65,7 +66,7 @@ function TeacherCard({
   credentialsLabel: string;
 }) {
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-shadow hover:shadow-lg">
+    <Card className="flex h-full flex-col gap-0 overflow-hidden rounded-[8px] border border-border bg-card py-0 shadow-sm ring-0 transition-shadow hover:shadow-lg">
       <div className="relative aspect-[4/5] w-full">
         <Image
           src={publicAssetPath(teacher.photo)}
@@ -78,7 +79,7 @@ function TeacherCard({
           {teacher.alias && <p className="text-xs text-cream/70">({teacher.alias})</p>}
         </div>
       </div>
-      <div className="flex flex-1 flex-col gap-4 p-6">
+      <CardContent className="flex flex-1 flex-col gap-4 p-6">
         <p className="text-sm font-semibold text-primary">{teacher.role}</p>
 
         <div className="flex gap-2 text-sm leading-relaxed text-foreground/75">
@@ -109,19 +110,19 @@ function TeacherCard({
             {teacher.route}
           </p>
         </div>
-      </div>
-    </article>
+      </CardContent>
+    </Card>
   );
 }
 
 function EmptySlot({ label, hint }: { label: string; hint: string }) {
   return (
-    <div className="flex h-full min-h-[26rem] flex-col items-center justify-center rounded-3xl border-2 border-dashed border-border bg-card/40 p-8 text-center">
+    <Card className="flex h-full min-h-[26rem] flex-col items-center justify-center gap-0 rounded-[8px] border-2 border-dashed border-border bg-card/40 p-8 py-8 text-center ring-0">
       <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
         <Sparkles className="h-6 w-6 text-primary" />
       </div>
       <p className="font-display text-xl italic text-primary">{label}</p>
       <p className="mt-2 text-sm text-foreground/60">{hint}</p>
-    </div>
+    </Card>
   );
 }

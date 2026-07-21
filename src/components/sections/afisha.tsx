@@ -41,6 +41,7 @@ export async function Afisha({ locale }: { locale: AppLocale }) {
           <div className="mt-12 text-center">
             <Button
               render={<Link href="/afisha" />}
+              nativeButton={false}
               size="lg"
               variant="outline"
               className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
