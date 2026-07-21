@@ -52,38 +52,38 @@ export function Header({ locale }: { locale: AppLocale }) {
       // Exposed as an attribute so pages with a dark hero can restyle the
       // pre-scroll state from CSS (see globals.css).
       data-scrolled={scrolled ? "" : undefined}
-      className={`pointer-events-none sticky top-0 z-50 h-[68px] w-full ${
+      className={`pointer-events-none sticky top-0 z-50 h-14 w-full ${
         scrolled ? "" : "border-b border-border/60 bg-cream"
       }`}
     >
       <div
         className={`pointer-events-auto mx-auto flex transform-gpu items-center justify-between transition-[max-width,border-radius,box-shadow,padding,transform] duration-200 ease-out ${
           scrolled
-            ? "mt-2 w-[calc(100%-1rem)] max-w-4xl rounded-full border border-border/80 bg-cream px-3 py-2 shadow-md md:w-[calc(100%-3rem)] md:px-4"
-            : "w-full max-w-6xl px-5 py-4 md:px-8"
+            ? "mt-1.5 h-10 w-[calc(100%-1rem)] max-w-4xl rounded-full border border-border/80 bg-cream px-3 shadow-md md:w-[calc(100%-3rem)] md:px-4"
+            : "h-14 w-full max-w-6xl px-5 md:px-8"
         }`}
       >
-        <Link href="/" className="flex items-center gap-2 group">
+        <Link href="/" className="group flex h-full items-center gap-2 leading-none">
           <Music2 className="h-5 w-5 text-primary transition-transform group-hover:-rotate-12" />
-          <span className="font-display text-xl italic tracking-tight text-primary">
+          <span className="font-display text-xl italic leading-none tracking-tight text-primary">
             {t("brand")}
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-4 lg:flex">
+        <nav className="hidden h-full items-center gap-4 lg:flex">
           {primaryNavLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-foreground/75 transition-colors hover:text-primary"
+              className="inline-flex h-full items-center text-sm font-medium leading-none text-foreground/75 transition-colors hover:text-primary"
             >
               {t(link.key)}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
-          <LanguageSwitcher locale={locale} />
+        <div className="hidden h-full items-center gap-3 lg:flex">
+          <LanguageSwitcher locale={locale} className="h-full leading-none" />
           <Button
             render={<Link href="/#kontakty" />}
             nativeButton={false}
@@ -94,8 +94,8 @@ export function Header({ locale }: { locale: AppLocale }) {
           </Button>
         </div>
 
-        <div className="flex items-center gap-2 lg:hidden">
-          <LanguageSwitcher locale={locale} />
+        <div className="flex h-full items-center gap-2 lg:hidden">
+          <LanguageSwitcher locale={locale} className="h-full leading-none" />
           <Sheet>
             <SheetTrigger
               render={

@@ -16,9 +16,9 @@ export function LanguageSwitcher({
   const pathname = usePathname();
 
   return (
-    <div className={cn("flex items-center gap-1 text-sm font-semibold", className)}>
+    <div className={cn("flex items-center gap-1 text-sm font-semibold leading-none", className)}>
       {routing.locales.map((loc, i) => (
-        <span key={loc} className="flex items-center gap-1">
+        <span key={loc} className="flex items-center gap-1 leading-none">
           {i > 0 && <span className="text-foreground/30">/</span>}
           <Link
             href={pathname}
