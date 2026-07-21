@@ -151,6 +151,12 @@
     transition-duration: 180ms;
   }
 
+  .door-loader-progress {
+    animation: door-loader-progress 900ms ease-in-out infinite;
+    transform: translateX(-110%);
+    will-change: transform;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .door-hero {
       height: 100svh;
@@ -165,6 +171,20 @@
     .door-about-preview {
       transition: none;
     }
+
+    .door-loader-progress {
+      animation: none;
+      transform: translateX(75%);
+    }
+  }
+}
+
+@keyframes door-loader-progress {
+  0% {
+    transform: translateX(-110%);
+  }
+  100% {
+    transform: translateX(360%);
   }
 }
 

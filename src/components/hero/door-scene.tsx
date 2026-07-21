@@ -107,7 +107,7 @@ function SceneLighting({ motionRef }: { motionRef: RefObject<HeroMotion> }) {
         to reflect — long vertical highlights down the stiles and handles — without
         downloading an HDRI. Baked once on mount, never re-rendered.
       */}
-      <Environment resolution={128} frames={1} environmentIntensity={1.45}>
+      <Environment resolution={64} frames={1} environmentIntensity={1.45}>
         <Lightformer form="rect" intensity={4} position={[0, 5, 4]} scale={[10, 4, 1]} color="#fff4e4" />
         <Lightformer form="rect" intensity={6} position={[-5, 0, 3]} scale={[1, 8, 1]} color="#e8ecf5" />
         <Lightformer form="rect" intensity={6} position={[5, 0, 3]} scale={[1, 8, 1]} color="#e8ecf5" />
@@ -189,7 +189,7 @@ function RenderGate({
     };
 
     const onScroll = () => wake(2);
-    const onPointerMove = () => wake(24);
+    const onPointerMove = () => wake(18);
 
     window.addEventListener("scroll", onScroll, { passive: true });
     if (parallax) window.addEventListener("pointermove", onPointerMove, { passive: true });
@@ -227,22 +227,46 @@ function SettleOnMount() {
   return null;
 }
 
+/** Reports readiness after the first WebGL frame has reached the browser paint. */
+function FirstFrameReady({ onReady }: { onReady: () => void }) {
+  const reported = useRef(false);
+  const paintFrame = useRef(0);
+
+  useEffect(
+    () => () => {
+      cancelAnimationFrame(paintFrame.current);
+    },
+    [],
+  );
+
+  useFrame(() => {
+    if (reported.current) return;
+    reported.current = true;
+    paintFrame.current = requestAnimationFrame(onReady);
+  });
+
+  return null;
+}
+
 function Scene({
   progressRef,
   lite,
   reducedMotion,
+  onReady,
 }: {
   progressRef: RefObject<number>;
   lite: boolean;
   reducedMotion: boolean;
+  onReady: () => void;
 }) {
   const motionRef = useHeroMotion(reducedMotion ? REDUCED_MOTION_POSE : 0);
-  const { brushedRoughness, lacquerColor } = useHeroTextures();
+  const { brushedRoughness, lacquerColor } = useHeroTextures(!lite);
 
   return (
     <>
       {/* Mounted first so its useFrame runs before anything reads the motion values. */}
       <MotionDriver motionRef={motionRef} progressRef={progressRef} enabled={!reducedMotion} />
+      <FirstFrameReady onReady={onReady} />
       <SettleOnMount />
       {!reducedMotion && (
         <RenderGate motionRef={motionRef} progressRef={progressRef} parallax={!lite} />
@@ -274,10 +298,12 @@ export default function DoorScene({
   progressRef,
   lite,
   reducedMotion,
+  onReady,
 }: {
   progressRef: RefObject<number>;
   lite: boolean;
   reducedMotion: boolean;
+  onReady: () => void;
 }) {
   return (
     <Canvas
@@ -289,6 +315,7 @@ export default function DoorScene({
       gl={{
         antialias: !lite,
         alpha: true,
+        precision: "mediump",
         powerPreference: "high-performance",
       }}
       style={{ position: "absolute", inset: 0 }}
@@ -298,7 +325,12 @@ export default function DoorScene({
         gl.toneMappingExposure = 1.34;
       }}
     >
-      <Scene progressRef={progressRef} lite={lite} reducedMotion={reducedMotion} />
+      <Scene
+        progressRef={progressRef}
+        lite={lite}
+        reducedMotion={reducedMotion}
+        onReady={onReady}
+      />
     </Canvas>
   );
 }

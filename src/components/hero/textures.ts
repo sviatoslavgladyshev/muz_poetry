@@ -28,7 +28,7 @@ function createCanvas(size: number) {
  * CG plastic; with it the key light smears along the grain like real anodised metal.
  */
 function createBrushedRoughness() {
-  const size = 256;
+  const size = 128;
   const canvas = createCanvas(size);
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
@@ -37,7 +37,7 @@ function createBrushedRoughness() {
   ctx.fillRect(0, 0, size, size);
 
   ctx.globalAlpha = 0.16;
-  for (let i = 0; i < 900; i += 1) {
+  for (let i = 0; i < 450; i += 1) {
     const seed = Math.sin(i * 91.731) * 43758.5453;
     const noise = seed - Math.floor(seed);
     const nextSeed = Math.sin((i + 17) * 53.117) * 17341.219;
@@ -61,7 +61,7 @@ function createBrushedRoughness() {
 
 /** Deep plum lacquer with quiet vertical grain and warmer figure toward the light. */
 function createLacquerColor() {
-  const size = 256;
+  const size = 128;
   const canvas = createCanvas(size);
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
@@ -98,12 +98,20 @@ export type HeroTextures = {
   lacquerColor: Texture | null;
 };
 
-export function useHeroTextures(): HeroTextures {
+const EMPTY_TEXTURES: HeroTextures = {
+  brushedRoughness: null,
+  lacquerColor: null,
+};
+
+export function useHeroTextures(enabled = true): HeroTextures {
   return useMemo(
-    () => ({
-      brushedRoughness: createBrushedRoughness(),
-      lacquerColor: createLacquerColor(),
-    }),
-    []
+    () =>
+      enabled
+        ? {
+            brushedRoughness: createBrushedRoughness(),
+            lacquerColor: createLacquerColor(),
+          }
+        : EMPTY_TEXTURES,
+    [enabled],
   );
 }

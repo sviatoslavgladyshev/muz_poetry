@@ -1,10 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { clamp01, easeInOutSine, range } from "./easing";
 import { applyMotion, createHeroMotion, type HeroMotion } from "./motion";
 import { DoorHeroFallback } from "./door-hero-fallback";
+import { DoorHeroLoader } from "./door-hero-loader";
 import { HeroCopyOverlay, type DoorHeroCopy } from "./hero-copy-overlay";
 import {
   NextSectionReveal,
@@ -115,6 +116,7 @@ export function DoorHeroSection({
   const trackRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const quality = useHeroQuality();
+  const [sceneReady, setSceneReady] = useState(false);
 
   const lite = quality.lite;
   // Scratch object the overlay evaluates the timeline into, reused every frame.
@@ -139,8 +141,38 @@ export function DoorHeroSection({
     progressRef.current = REDUCED_MOTION_POSE;
   }, [quality.reducedMotion, progressRef]);
 
+  const markSceneReady = useCallback(() => setSceneReady(true), []);
+
+  // The CSS door is already painted when WebGL is unavailable. Wait one browser
+  // paint before dismissing the loader so the visitor never sees an empty frame.
+  useEffect(() => {
+    if (quality.pending || quality.webgl) return;
+    let secondFrame = 0;
+    const firstFrame = window.requestAnimationFrame(() => {
+      secondFrame = window.requestAnimationFrame(markSceneReady);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      window.cancelAnimationFrame(secondFrame);
+    };
+  }, [markSceneReady, quality.pending, quality.webgl]);
+
+  // A slow or broken graphics driver must never leave the visitor behind a loader.
+  useEffect(() => {
+    const timeoutId = window.setTimeout(markSceneReady, 4500);
+    return () => window.clearTimeout(timeoutId);
+  }, [markSceneReady]);
+
   return (
-    <section ref={trackRef} className="door-hero relative bg-[#120609]" aria-label={copy.brandName}>
+    <section
+      ref={trackRef}
+      className="door-hero relative bg-[#120609]"
+      aria-label={copy.brandName}
+      aria-busy={!sceneReady}
+    >
+      <DoorHeroLoader brandName={copy.brandName} ready={sceneReady} />
+
       <div ref={stageRef} className="door-hero-stage overflow-hidden">
         {/* What lies beyond the doors, painted underneath the canvas. The canvas
             clears to transparent and the wall around the doorway is opaque, so this
@@ -156,6 +188,7 @@ export function DoorHeroSection({
             progressRef={progressRef}
             lite={quality.lite}
             reducedMotion={quality.reducedMotion}
+            onReady={markSceneReady}
           />
         )}
 

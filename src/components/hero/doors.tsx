@@ -131,7 +131,7 @@ function MetalSurface({
   );
 }
 
-/** Polished plum lacquer used on the leaves, with enough clear coat to catch the room. */
+/** Polished plum lacquer with a lean standard shader for the large door surfaces. */
 function LacquerSurface({
   colorMap,
   roughnessMap,
@@ -142,17 +142,15 @@ function LacquerSurface({
   roughness?: number;
 }) {
   return (
-    <meshPhysicalMaterial
+    <meshStandardMaterial
       color={PALETTE.panel}
       map={colorMap}
       roughness={roughness}
       roughnessMap={roughnessMap}
       bumpMap={roughnessMap}
       bumpScale={0.012}
-      metalness={0.08}
-      clearcoat={0.62}
-      clearcoatRoughness={0.24}
-      envMapIntensity={1.35}
+      metalness={0.12}
+      envMapIntensity={1.2}
     />
   );
 }
