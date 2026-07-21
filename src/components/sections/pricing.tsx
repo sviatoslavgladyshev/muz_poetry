@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   ArrowRight,
@@ -551,59 +550,23 @@ function PricingNav({
   label: string;
   items: [string, string][];
 }) {
-  const sentinelRef = useRef<HTMLDivElement>(null);
-  const [floating, setFloating] = useState(false);
-
-  useEffect(() => {
-    const updateFloatingState = () => {
-      const top = sentinelRef.current?.getBoundingClientRect().top ?? 1000;
-      setFloating(top <= 72);
-    };
-
-    updateFloatingState();
-    window.addEventListener("scroll", updateFloatingState, { passive: true });
-    window.addEventListener("resize", updateFloatingState);
-    return () => {
-      window.removeEventListener("scroll", updateFloatingState);
-      window.removeEventListener("resize", updateFloatingState);
-    };
-  }, []);
-
   return (
-    <>
-      <div ref={sentinelRef} className="h-px" aria-hidden="true" />
-      <div className="sticky top-[68px] z-40 h-16 pointer-events-none">
-        <nav
-          aria-label={label}
-          className={`pointer-events-auto transition-all duration-300 ${
-            floating
-              ? "mx-auto mt-2 w-[calc(100%-2rem)] max-w-fit rounded-full border border-border/80 bg-card/95 p-1 shadow-lg backdrop-blur-md"
-              : "w-full border-b border-border bg-card"
-          }`}
-        >
-          <div
-            className={`flex overflow-x-auto ${
-              floating ? "gap-1" : "mx-auto max-w-6xl gap-4 px-5 py-3 md:px-8"
-            }`}
+    <nav aria-label={label} className="w-full border-b border-border bg-card">
+      <div className="mx-auto flex max-w-6xl gap-4 overflow-x-auto px-5 py-3 md:px-8">
+        {items.map(([href, itemLabel]) => (
+          <Button
+            key={href}
+            render={<a href={href} />}
+            nativeButton={false}
+            size="sm"
+            variant="ghost"
+            className="shrink-0 rounded-full px-2 text-xs font-bold uppercase tracking-[0.08em] text-foreground/60 hover:bg-secondary hover:text-primary"
           >
-            {items.map(([href, itemLabel]) => (
-              <Button
-                key={href}
-                render={<a href={href} />}
-                nativeButton={false}
-                size="sm"
-                variant="ghost"
-                className={`shrink-0 rounded-full text-xs font-bold uppercase tracking-[0.08em] text-foreground/60 hover:bg-secondary hover:text-primary ${
-                  floating ? "px-4" : "px-2"
-                }`}
-              >
-                {itemLabel}
-              </Button>
-            ))}
-          </div>
-        </nav>
+            {itemLabel}
+          </Button>
+        ))}
       </div>
-    </>
+    </nav>
   );
 }
 

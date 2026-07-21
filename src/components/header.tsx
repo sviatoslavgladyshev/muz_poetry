@@ -30,21 +30,33 @@ export function Header({ locale }: { locale: AppLocale }) {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full border-b transition-colors duration-300 ${
-        scrolled
-          ? "border-border/70 bg-cream/90 backdrop-blur-md"
-          : "border-transparent bg-transparent"
+      className={`pointer-events-none sticky top-0 z-50 w-full transition-all duration-300 ${
+        scrolled ? "pt-2 md:pt-3" : "border-b border-border/60 bg-cream"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
+      <div
+        className={`pointer-events-auto mx-auto flex items-center justify-between transition-all duration-300 ${
+          scrolled
+            ? "w-[calc(100%-1rem)] max-w-5xl rounded-full border border-border/80 bg-cream/95 px-3 py-2 shadow-lg backdrop-blur-md md:w-[calc(100%-3rem)] md:px-5"
+            : "w-full max-w-7xl px-5 py-4 md:px-8"
+        }`}
+      >
         <Link href="/" className="flex items-center gap-2 group">
           <Music2 className="h-5 w-5 text-primary transition-transform group-hover:-rotate-12" />
-          <span className="font-display text-xl italic tracking-tight text-primary">
+          <span
+            className={`font-display italic tracking-tight text-primary transition-all duration-300 ${
+              scrolled ? "text-lg" : "text-xl"
+            }`}
+          >
             {t("brand")}
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex">
+        <nav
+          className={`hidden items-center transition-all duration-300 lg:flex ${
+            scrolled ? "gap-4" : "gap-7"
+          }`}
+        >
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -56,7 +68,7 @@ export function Header({ locale }: { locale: AppLocale }) {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-5 lg:flex">
+        <div className={`hidden items-center lg:flex ${scrolled ? "gap-3" : "gap-5"}`}>
           <LanguageSwitcher locale={locale} />
           <Button
             render={<Link href="/#kontakty" />}
