@@ -25,7 +25,8 @@ function fitDistance(aspect: number, halfWidth: number, halfHeight: number) {
 export function heroCameraStartZ(aspect: number, lite: boolean) {
   // Narrow screens frame to the leaves alone; wide screens include the trim.
   const halfWidth = lite ? HINGE_X * 1.05 : TRIM_INNER_X + 0.24;
-  return fitDistance(aspect, halfWidth, (OPENING_HEIGHT / 2) * 1.14);
+  // The carved crown sits above the clear opening and must remain in the first frame.
+  return fitDistance(aspect, halfWidth, (OPENING_HEIGHT / 2) * 1.55);
 }
 
 /**

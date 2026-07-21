@@ -1,12 +1,15 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
+  ClampToEdgeWrapping,
   CanvasTexture,
   RepeatWrapping,
   SRGBColorSpace,
+  TextureLoader,
   type Texture,
 } from "three";
+import { publicAssetPath } from "@/lib/utils";
 
 /**
  * Small procedural textures, drawn on a 2D canvas at mount time.
@@ -59,8 +62,8 @@ function createBrushedRoughness() {
   return texture;
 }
 
-/** Deep plum lacquer with quiet vertical grain and warmer figure toward the light. */
-function createLacquerColor() {
+/** Warm aged walnut with quiet vertical grain and irregular hand-finished figure. */
+function createWoodColor() {
   const size = 128;
   const canvas = createCanvas(size);
   const ctx = canvas.getContext("2d");
@@ -77,9 +80,9 @@ function createLacquerColor() {
       const pore = (poreSeed - Math.floor(poreSeed) - 0.5) * 4;
       const lift = figure * 7 + pore;
 
-      image.data[index] = Math.max(24, Math.min(64, 43 + lift));
-      image.data[index + 1] = Math.max(8, Math.min(34, 16 + lift * 0.35));
-      image.data[index + 2] = Math.max(15, Math.min(46, 29 + lift * 0.65));
+      image.data[index] = Math.max(82, Math.min(142, 112 + lift * 1.1));
+      image.data[index + 1] = Math.max(54, Math.min(112, 82 + lift * 0.72));
+      image.data[index + 2] = Math.max(42, Math.min(96, 67 + lift * 0.58));
       image.data[index + 3] = 255;
     }
   }
@@ -95,23 +98,61 @@ function createLacquerColor() {
 
 export type HeroTextures = {
   brushedRoughness: Texture | null;
-  lacquerColor: Texture | null;
+  woodColor: Texture | null;
+  leftDoorFace: Texture | null;
+  rightDoorFace: Texture | null;
 };
 
-const EMPTY_TEXTURES: HeroTextures = {
-  brushedRoughness: null,
-  lacquerColor: null,
-};
+function cropDoorFace(source: Texture, x: number, width: number) {
+  const texture = source.clone();
+  const imageWidth = 995;
+  const imageHeight = 1581;
+  const top = 148;
+  const height = 1328;
+
+  texture.colorSpace = SRGBColorSpace;
+  texture.wrapS = ClampToEdgeWrapping;
+  texture.wrapT = ClampToEdgeWrapping;
+  texture.repeat.set(width / imageWidth, height / imageHeight);
+  texture.offset.set(x / imageWidth, 1 - (top + height) / imageHeight);
+  texture.needsUpdate = true;
+  return texture;
+}
 
 export function useHeroTextures(enabled = true): HeroTextures {
-  return useMemo(
-    () =>
-      enabled
-        ? {
-            brushedRoughness: createBrushedRoughness(),
-            lacquerColor: createLacquerColor(),
-          }
-        : EMPTY_TEXTURES,
+  const [doorFaces, setDoorFaces] = useState<Pick<
+    HeroTextures,
+    "leftDoorFace" | "rightDoorFace"
+  >>({ leftDoorFace: null, rightDoorFace: null });
+
+  useEffect(() => {
+    let active = true;
+    const loader = new TextureLoader();
+    loader.load(publicAssetPath("/images/historic-door.webp"), (reference) => {
+      if (!active) return;
+      setDoorFaces({
+        leftDoorFace: cropDoorFace(reference, 165, 265),
+        rightDoorFace: cropDoorFace(reference, 430, 387),
+      });
+    });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const procedural = useMemo(
+    () => ({
+      brushedRoughness: enabled ? createBrushedRoughness() : null,
+      woodColor: enabled ? createWoodColor() : null,
+    }),
     [enabled],
   );
+
+  return useMemo(() => {
+    return {
+      ...procedural,
+      ...doorFaces,
+    };
+  }, [doorFaces, procedural]);
 }

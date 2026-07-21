@@ -66,16 +66,16 @@ function SceneLighting({ motionRef }: { motionRef: RefObject<HeroMotion> }) {
     // Warm light spilling out of the widening gap, onto the inner door edges.
     if (spill.current) spill.current.intensity = motionRef.current.reveal * 11;
     // The key light eases off as the space beyond takes over as the light source.
-    if (key.current) key.current.intensity = MathUtils.lerp(2.8, 1.4, motionRef.current.reveal);
+    if (key.current) key.current.intensity = MathUtils.lerp(2.15, 1.15, motionRef.current.reveal);
   });
 
   return (
     <>
       {/* Tinted cool-plum so the shadow side of the metal never goes flat black —
           this replaces a second fill light, one less term in every fragment. */}
-      <ambientLight intensity={0.8} color="#7d6a82" />
+      <ambientLight intensity={0.64} color="#806f68" />
 
-      <directionalLight ref={key} position={[3.4, 5.2, 6.4]} intensity={2.8} color="#fff2df" />
+      <directionalLight ref={key} position={[3.4, 5.2, 6.4]} intensity={2.15} color="#fff0df" />
 
       {/*
         A wide soft light grazing the door faces from above and in front. This is the
@@ -86,7 +86,7 @@ function SceneLighting({ motionRef }: { motionRef: RefObject<HeroMotion> }) {
         position={[0, 4.6, 5.2]}
         angle={0.62}
         penumbra={1}
-        intensity={26}
+        intensity={17}
         distance={16}
         decay={1.4}
         color="#ffe9cd"
@@ -260,7 +260,8 @@ function Scene({
   onReady: () => void;
 }) {
   const motionRef = useHeroMotion(reducedMotion ? REDUCED_MOTION_POSE : 0);
-  const { brushedRoughness, lacquerColor } = useHeroTextures(!lite);
+  const { brushedRoughness, woodColor, leftDoorFace, rightDoorFace } =
+    useHeroTextures(!lite);
 
   return (
     <>
@@ -275,11 +276,13 @@ function Scene({
       <CameraRig motionRef={motionRef} lite={lite} />
       <SceneLighting motionRef={motionRef} />
 
-      <DoorFrame roughnessMap={brushedRoughness} />
+      <DoorFrame roughnessMap={brushedRoughness} colorMap={woodColor} />
       <Doors
         motionRef={motionRef}
         roughnessMap={brushedRoughness}
-        colorMap={lacquerColor}
+        colorMap={woodColor}
+        leftDoorFace={leftDoorFace}
+        rightDoorFace={rightDoorFace}
       />
       {!lite && <ContactPool motionRef={motionRef} />}
     </>
@@ -322,7 +325,7 @@ export default function DoorScene({
       onCreated={({ gl }) => {
         // Lifted slightly above neutral: the palette is almost entirely shadow, and
         // the default exposure crushes the door detail into flat black.
-        gl.toneMappingExposure = 1.34;
+        gl.toneMappingExposure = 1.08;
       }}
     >
       <Scene

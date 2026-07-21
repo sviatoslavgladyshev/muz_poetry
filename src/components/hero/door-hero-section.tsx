@@ -6,6 +6,7 @@ import { clamp01, easeInOutSine, range } from "./easing";
 import { applyMotion, createHeroMotion, type HeroMotion } from "./motion";
 import { DoorHeroFallback } from "./door-hero-fallback";
 import { DoorHeroLoader } from "./door-hero-loader";
+import { DoorReferenceFacade } from "./door-reference-facade";
 import { HeroCopyOverlay, type DoorHeroCopy } from "./hero-copy-overlay";
 import {
   NextSectionReveal,
@@ -45,6 +46,7 @@ function writeStaticOverlayVars(stage: HTMLElement | null) {
   stage.style.setProperty("--hero-beyond-y", "0px");
   stage.style.setProperty("--hero-beyond-copy-opacity", "1");
   stage.style.setProperty("--hero-hint-opacity", "0");
+  stage.style.setProperty("--hero-reference-opacity", "0");
 }
 
 /**
@@ -92,6 +94,8 @@ function writeOverlayVars(
   stage.style.setProperty("--hero-beyond-copy-opacity", "1");
 
   stage.style.setProperty("--hero-hint-opacity", (1 - range(progress, 0, 0.07)).toFixed(3));
+  const referenceOpacity = 1 - easeInOutSine(range(progress, 0.015, 0.11));
+  stage.style.setProperty("--hero-reference-opacity", referenceOpacity.toFixed(3));
 
   // Exposed for anything that wants to react to the reveal (and useful when debugging).
   stage.style.setProperty("--hero-reveal", reveal.toFixed(3));
@@ -117,6 +121,7 @@ export function DoorHeroSection({
   const stageRef = useRef<HTMLDivElement>(null);
   const quality = useHeroQuality();
   const [sceneReady, setSceneReady] = useState(false);
+  const [referenceReady, setReferenceReady] = useState(false);
 
   const lite = quality.lite;
   // Scratch object the overlay evaluates the timeline into, reused every frame.
@@ -142,6 +147,8 @@ export function DoorHeroSection({
   }, [quality.reducedMotion, progressRef]);
 
   const markSceneReady = useCallback(() => setSceneReady(true), []);
+  const markReferenceReady = useCallback(() => setReferenceReady(true), []);
+  const pageReady = sceneReady && referenceReady;
 
   // The CSS door is already painted when WebGL is unavailable. Wait one browser
   // paint before dismissing the loader so the visitor never sees an empty frame.
@@ -158,20 +165,23 @@ export function DoorHeroSection({
     };
   }, [markSceneReady, quality.pending, quality.webgl]);
 
-  // A slow or broken graphics driver must never leave the visitor behind a loader.
+  // A slow graphics driver or failed image decode must never trap the visitor.
   useEffect(() => {
-    const timeoutId = window.setTimeout(markSceneReady, 4500);
+    const timeoutId = window.setTimeout(() => {
+      markSceneReady();
+      markReferenceReady();
+    }, 4500);
     return () => window.clearTimeout(timeoutId);
-  }, [markSceneReady]);
+  }, [markReferenceReady, markSceneReady]);
 
   return (
     <section
       ref={trackRef}
       className="door-hero relative bg-[#120609]"
       aria-label={copy.brandName}
-      aria-busy={!sceneReady}
+      aria-busy={!pageReady}
     >
-      <DoorHeroLoader brandName={copy.brandName} ready={sceneReady} />
+      <DoorHeroLoader brandName={copy.brandName} ready={pageReady} />
 
       <div ref={stageRef} className="door-hero-stage overflow-hidden">
         {/* What lies beyond the doors, painted underneath the canvas. The canvas
@@ -191,6 +201,8 @@ export function DoorHeroSection({
             onReady={markSceneReady}
           />
         )}
+
+        <DoorReferenceFacade onReady={markReferenceReady} />
 
         <HeroCopyOverlay copy={copy} />
       </div>

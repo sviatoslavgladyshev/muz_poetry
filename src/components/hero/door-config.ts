@@ -20,8 +20,9 @@ export const OPENING_HEIGHT = 3.4;
 /** Hinge axes sit on the outer edges of the opening: x = -HINGE_X and x = +HINGE_X. */
 export const HINGE_X = OPENING_WIDTH / 2;
 
-/** One leaf. Slightly narrower than half the opening so seams stay visible. */
-export const LEAF_WIDTH = 1.13;
+/** The reference entrance uses a narrow pedestrian leaf and a wider two-panel leaf. */
+export const LEFT_LEAF_WIDTH = 0.8;
+export const RIGHT_LEAF_WIDTH = 1.47;
 /**
  * Slightly taller than the clear opening. The leaves sit in front of the wall, so
  * the extra 2cm at top and bottom laps over the reveal the way a real door does —
@@ -33,13 +34,6 @@ export const LEAF_THICKNESS = 0.14;
 
 /** Gap between the hinge axis and the leaf's outer edge — reads as a shadow reveal. */
 export const LEAF_HINGE_GAP = 0.01;
-
-/**
- * Distance from the hinge axis to the centre of the leaf. The leaf mesh is offset
- * by this much inside its pivot group, which is what makes the leaf rotate around
- * its outer hinge instead of around its own centre.
- */
-export const LEAF_OFFSET_X = LEAF_HINGE_GAP + LEAF_WIDTH / 2;
 
 /** Leaves sit just in front of the wall face so they can swing outward without clipping it. */
 export const LEAF_CENTER_Z = LEAF_THICKNESS / 2 + 0.02;
@@ -66,12 +60,15 @@ export const FLOOR_Y = -OPENING_HEIGHT / 2;
 
 /** Brand palette, mirrored from globals.css so the 3D scene stays on-brand. */
 export const PALETTE = {
-  /** Near-black plum — the doors and wall. */
+  /** Dark plum wall with aged walnut architecture and muted antique brass. */
   ink: "#180b11",
-  panel: "#2a1920",
-  panelEdge: "#4a2c3a",
-  plumDeep: "#3c1224",
-  gold: "#c6963d",
-  goldSoft: "#e3c789",
+  wood: "#4f352e",
+  woodDark: "#3c211c",
+  woodLight: "#9a6850",
+  panel: "#5a3027",
+  panelEdge: "#8a5945",
+  plumDeep: "#3b1723",
+  gold: "#a87936",
+  goldSoft: "#d5b06a",
   cream: "#fbf7f0",
 } as const;
