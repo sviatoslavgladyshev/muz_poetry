@@ -21,9 +21,10 @@ export type NextSectionCopy = {
 
 /**
  * Width the copy is laid out at. It never changes, so the text never re-flows while
- * scrolling; the fit to the doorway is done with a transform instead.
+ * scrolling; the fit to the doorway is done with a transform instead. Exported so
+ * the scroll driver can work out the scale factor that makes it fit.
  */
-const COPY_WIDTH_PX = 460;
+export const REVEAL_COPY_WIDTH_PX = 460;
 
 export function NextSectionReveal({ copy }: { copy: NextSectionCopy }) {
   return (
@@ -43,10 +44,14 @@ export function NextSectionReveal({ copy }: { copy: NextSectionCopy }) {
         <div
           className="text-center"
           style={{
-            width: `${COPY_WIDTH_PX}px`,
-            // Shrink to whatever the doorway currently allows, so the door leaves
-            // never crop the copy. Capped at 1 so it never blows up past its design size.
-            transform: `scale(min(1, calc(var(--hero-aperture, ${COPY_WIDTH_PX}px) * 0.86 / ${COPY_WIDTH_PX})))`,
+            width: `${REVEAL_COPY_WIDTH_PX}px`,
+            opacity: "var(--hero-beyond-copy-opacity, 1)",
+            // Shrunk to whatever gap the doors currently leave, so the leaves never
+            // crop the copy, then travelling up and out of frame as we pass through.
+            // The scale arrives as a plain number from the scroll driver — CSS cannot
+            // compare a length against a unitless 1, so doing this arithmetic in
+            // `min()` here silently invalidates the whole transform.
+            transform: "translateY(var(--hero-beyond-y, 0px)) scale(var(--hero-beyond-copy-scale, 1))",
           }}
         >
           <p className="text-xs font-semibold tracking-[0.25em] text-gold uppercase sm:text-sm">

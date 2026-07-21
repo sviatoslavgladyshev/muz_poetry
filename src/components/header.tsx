@@ -90,7 +90,7 @@ export function Header({ locale }: { locale: AppLocale }) {
             <Link
               key={link.href}
               href={link.href}
-              className="inline-flex h-full items-center text-sm font-medium leading-none text-foreground/75 transition-colors hover:text-primary"
+              className="inline-flex h-full items-center text-sm font-medium leading-none text-foreground/90 transition-colors hover:text-primary"
             >
               {t(link.key)}
             </Link>
@@ -98,7 +98,7 @@ export function Header({ locale }: { locale: AppLocale }) {
           <NavigationMenu align="end" className="h-full flex-none">
             <NavigationMenuList className="h-full">
               <NavigationMenuItem className="flex h-full items-center">
-                <NavigationMenuTrigger className="h-8 rounded-full bg-transparent px-2 text-foreground/75 hover:bg-primary/8 hover:text-primary data-open:bg-primary/8">
+                <NavigationMenuTrigger className="h-8 rounded-full bg-transparent px-2 text-foreground/90 hover:bg-primary/8 hover:text-primary data-open:bg-primary/8">
                   {t("more")}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="w-56 p-1.5">

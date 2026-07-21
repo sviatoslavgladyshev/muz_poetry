@@ -3,10 +3,15 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef } from "react";
 import { apertureWidthPx } from "./camera";
-import { clamp01, easeInOutCubic, easeInOutSine, range } from "./easing";
+import { clamp01, easeInOutSine, range } from "./easing";
+import { applyMotion, createHeroMotion, type HeroMotion } from "./motion";
 import { DoorHeroFallback } from "./door-hero-fallback";
 import { HeroCopyOverlay, type DoorHeroCopy } from "./hero-copy-overlay";
-import { NextSectionReveal, type NextSectionCopy } from "./next-section-reveal";
+import {
+  NextSectionReveal,
+  REVEAL_COPY_WIDTH_PX,
+  type NextSectionCopy,
+} from "./next-section-reveal";
 import { useHeroQuality } from "./use-hero-quality";
 import { useScrollProgress } from "./use-scroll-progress";
 
@@ -38,8 +43,10 @@ function writeStaticOverlayVars(stage: HTMLElement | null) {
   stage.style.setProperty("--hero-lead-opacity", "1");
   stage.style.setProperty("--hero-lead-y", "0px");
   stage.style.setProperty("--hero-beyond-scale", "1");
+  stage.style.setProperty("--hero-beyond-y", "0px");
+  stage.style.setProperty("--hero-beyond-copy-scale", "1");
+  stage.style.setProperty("--hero-beyond-copy-opacity", "1");
   stage.style.setProperty("--hero-hint-opacity", "0");
-  stage.style.setProperty("--hero-exit-opacity", "0");
 }
 
 /**
@@ -49,31 +56,54 @@ function writeStaticOverlayVars(stage: HTMLElement | null) {
  * whole hero at zero re-renders while scrolling. The curves intentionally mirror
  * the ones in `motion.ts` so the copy and the doors stay in step.
  */
-function writeOverlayVars(stage: HTMLElement | null, progress: number, lite: boolean) {
+function writeOverlayVars(
+  stage: HTMLElement | null,
+  progress: number,
+  lite: boolean,
+  scratch: HeroMotion,
+) {
   if (!stage) return;
 
-  const reveal = easeInOutSine(range(progress, 0.2, 0.82));
+  // Run the progress through the same timeline the scene uses, so the overlay is
+  // working from exactly the values the doors and camera are.
+  applyMotion(scratch, progress);
+
+  const reveal = scratch.reveal;
   // Lead copy clears out before the opening gets wide enough to compete with it,
   // but not so early that there is a dead beat while the doors are still shut.
   const lead = 1 - easeInOutSine(range(progress, 0.1, 0.38));
   stage.style.setProperty("--hero-lead-opacity", lead.toFixed(3));
   stage.style.setProperty("--hero-lead-y", `${(-52 * (1 - lead)).toFixed(1)}px`);
 
-  // The section beyond the doors grows as the camera closes on the threshold.
-  stage.style.setProperty("--hero-beyond-scale", (1 + reveal * 0.14).toFixed(3));
+  // How far past the doorway we are. Once the camera is through, the wall no longer
+  // covers any of the frame and the section behind it is simply what you are looking
+  // at — there is no cross-fade anywhere in the hand-off.
+  const throughDoorway = range(progress, 0.82, 0.96);
 
-  // How wide the doorway currently reads on screen. The copy behind the doors is
-  // scaled to fit inside it, so the leaves never crop it mid-word. Applied as a
-  // transform rather than a width so nothing re-flows while scrolling.
-  const approach = easeInOutCubic(range(progress, 0.22, 1));
-  const aperture = apertureWidthPx(window.innerWidth, window.innerHeight, lite, approach);
-  stage.style.setProperty("--hero-aperture", `${Math.round(aperture)}px`);
+  // The section beyond grows as the camera closes on the threshold, then settles back
+  // to 1:1 once we are through it, so it matches the real section that follows.
+  const beyondScale = 1 + reveal * 0.2 * (1 - throughDoorway);
+  stage.style.setProperty("--hero-beyond-scale", beyondScale.toFixed(3));
+
+  // Its copy travels up and out of frame as we pass it, rather than dissolving —
+  // and so that it does not sit on top of the real heading arriving underneath.
+  stage.style.setProperty("--hero-beyond-y", `${(-70 * throughDoorway).toFixed(1)}px`);
+  stage.style.setProperty("--hero-beyond-copy-opacity", (1 - throughDoorway).toFixed(3));
+
+  // How wide a gap the doors currently leave. The copy behind them is scaled to fit
+  // inside it so the leaves never crop it mid-word — as a transform rather than a
+  // width, so nothing re-flows while scrolling.
+  const aperture = apertureWidthPx(
+    window.innerWidth,
+    window.innerHeight,
+    lite,
+    scratch.approach,
+    scratch.open,
+  );
+  const copyScale = Math.min(1, (aperture * 0.82) / REVEAL_COPY_WIDTH_PX);
+  stage.style.setProperty("--hero-beyond-copy-scale", copyScale.toFixed(3));
 
   stage.style.setProperty("--hero-hint-opacity", (1 - range(progress, 0, 0.07)).toFixed(3));
-
-  // Cream veil that hands off to the section below, so passing through the doorway
-  // lands the visitor in the light page rather than cutting to it.
-  stage.style.setProperty("--hero-exit-opacity", range(progress, 0.9, 1).toFixed(3));
 
   // Exposed for anything that wants to react to the reveal (and useful when debugging).
   stage.style.setProperty("--hero-reveal", reveal.toFixed(3));
@@ -100,9 +130,11 @@ export function DoorHeroSection({
   const quality = useHeroQuality();
 
   const lite = quality.lite;
+  // Scratch object the overlay evaluates the timeline into, reused every frame.
+  const scratchRef = useRef(createHeroMotion());
   const onProgress = useCallback(
     (progress: number) => {
-      writeOverlayVars(stageRef.current, clamp01(progress), lite);
+      writeOverlayVars(stageRef.current, clamp01(progress), lite, scratchRef.current);
     },
     [lite],
   );
@@ -141,13 +173,6 @@ export function DoorHeroSection({
         )}
 
         <HeroCopyOverlay copy={copy} />
-
-        {/* Hand-off to the next section: the light the visitor steps into. */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-20 bg-background"
-          style={{ opacity: "var(--hero-exit-opacity, 0)" }}
-        />
       </div>
     </section>
   );

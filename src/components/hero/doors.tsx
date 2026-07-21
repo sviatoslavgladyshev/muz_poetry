@@ -43,16 +43,25 @@ import type { HeroMotion } from "./motion";
  * `useGLTF(...).nodes.LeftDoor` etc.; the pivots and animation stay as they are.
  */
 
-/** Leaf sub-dimensions: a stile-and-rail door with a smoked glass panel. */
+/** Leaf sub-dimensions: a solid stile-and-rail door with a recessed centre panel. */
 const STILE_WIDTH = 0.13;
 const TOP_RAIL_HEIGHT = 0.17;
 const BOTTOM_RAIL_HEIGHT = 0.36;
-const GLASS_THICKNESS = 0.05;
+/** The panel sits proud of nothing and shy of the frame, leaving a shadow reveal. */
+const PANEL_THICKNESS = LEAF_THICKNESS - 0.045;
 
-const GLASS_WIDTH = LEAF_WIDTH - STILE_WIDTH * 2;
-const GLASS_HEIGHT = LEAF_HEIGHT - TOP_RAIL_HEIGHT - BOTTOM_RAIL_HEIGHT;
-/** Vertical centre of the glazed opening — the rails are not symmetric. */
-const GLASS_CENTER_Y = (BOTTOM_RAIL_HEIGHT - TOP_RAIL_HEIGHT) / 2;
+const PANEL_WIDTH = LEAF_WIDTH - STILE_WIDTH * 2;
+const PANEL_HEIGHT = LEAF_HEIGHT - TOP_RAIL_HEIGHT - BOTTOM_RAIL_HEIGHT;
+/** Vertical centre of the panel — the rails are not symmetric. */
+const PANEL_CENTER_Y = (BOTTOM_RAIL_HEIGHT - TOP_RAIL_HEIGHT) / 2;
+
+/**
+ * Astragal — the strip carried on the leading edge of the left leaf that laps the
+ * meeting stile of the right one. Real double doors have one for exactly the reason
+ * we need it: without it there is a slot straight through the centre of the pair,
+ * and the lit space behind blazes through it as a hard white line.
+ */
+const ASTRAGAL_WIDTH = 0.06;
 
 const TRIM_WIDTH = 0.24;
 const FRONT_FACE_Z = LEAF_CENTER_Z + LEAF_THICKNESS / 2;
@@ -191,11 +200,10 @@ export function DoorFrame({
         <MetalSurface roughnessMap={roughnessMap} roughness={0.52} metalness={0.45} />
       </RoundedBox>
 
-      {/* Threshold. Sits just below the leaves so they sweep clear of it. */}
-      <mesh
-        position={[0, FLOOR_Y - 0.045, (TRIM_DEPTH - WALL_DEPTH) / 2]}
-      >
-        <boxGeometry args={[trimHalfSpan * 2, 0.09, WALL_DEPTH + TRIM_DEPTH]} />
+      {/* Threshold, flush with the floor of the opening and kept behind the wall face
+          so the leaves — which now lap below the opening — sweep clear of it. */}
+      <mesh position={[0, FLOOR_Y - 0.045, -WALL_DEPTH / 2]}>
+        <boxGeometry args={[trimHalfSpan * 2, 0.09, WALL_DEPTH]} />
         <MetalSurface roughnessMap={roughnessMap} roughness={0.45} metalness={0.7} />
       </mesh>
 
@@ -251,7 +259,7 @@ function DoorLeaf({
 
       {/* Rails (horizontal) */}
       <RoundedBox
-        args={[GLASS_WIDTH, TOP_RAIL_HEIGHT, LEAF_THICKNESS]}
+        args={[PANEL_WIDTH, TOP_RAIL_HEIGHT, LEAF_THICKNESS]}
         radius={0.011}
         smoothness={2}
         position={[0, (LEAF_HEIGHT - TOP_RAIL_HEIGHT) / 2, 0]}
@@ -259,7 +267,7 @@ function DoorLeaf({
         <MetalSurface roughnessMap={roughnessMap} />
       </RoundedBox>
       <RoundedBox
-        args={[GLASS_WIDTH, BOTTOM_RAIL_HEIGHT, LEAF_THICKNESS]}
+        args={[PANEL_WIDTH, BOTTOM_RAIL_HEIGHT, LEAF_THICKNESS]}
         radius={0.011}
         smoothness={2}
         position={[0, -(LEAF_HEIGHT - BOTTOM_RAIL_HEIGHT) / 2, 0]}
@@ -267,29 +275,32 @@ function DoorLeaf({
         <MetalSurface roughnessMap={roughnessMap} />
       </RoundedBox>
 
-      {/* Smoked glazing. Kept opaque enough to hide the room until the doors part,
-          but not so opaque that the warm light behind stops bleeding through. */}
-      <mesh position={[0, GLASS_CENTER_Y, 0]}>
-        <boxGeometry args={[GLASS_WIDTH, GLASS_HEIGHT, GLASS_THICKNESS]} />
-        <meshStandardMaterial
-          color={PALETTE.glass}
-          transparent
-          opacity={0.86}
-          roughness={0.14}
-          metalness={0.35}
-          envMapIntensity={1.6}
-        />
-      </mesh>
+      {/* Solid centre panel, set back from the face of the stiles and rails so the
+          recess catches a shadow line all the way round. The leaf is opaque: nothing
+          is visible beyond the doors until they actually open. */}
+      <RoundedBox
+        args={[PANEL_WIDTH, PANEL_HEIGHT, PANEL_THICKNESS]}
+        radius={0.01}
+        smoothness={2}
+        position={[0, PANEL_CENTER_Y, 0]}
+      >
+        <MetalSurface roughnessMap={roughnessMap} roughness={0.44} metalness={0.55} />
+      </RoundedBox>
 
-      {/* Warm reflection catching the inner edge of the glazing. */}
-      <EdgeHighlight
-        position={[inward * (GLASS_WIDTH / 2 - 0.004), GLASS_CENTER_Y, GLASS_THICKNESS / 2]}
-        size={[0.004, GLASS_HEIGHT * 0.92, 0.004]}
-        opacity={0.3}
-      />
+      {/* Astragal, on the left leaf only, closing the joint between the pair. */}
+      {inward === 1 && (
+        <RoundedBox
+          args={[ASTRAGAL_WIDTH, LEAF_HEIGHT, LEAF_THICKNESS + 0.012]}
+          radius={0.008}
+          smoothness={2}
+          position={[LEAF_WIDTH / 2 + 0.01, 0, 0]}
+        >
+          <MetalSurface roughnessMap={roughnessMap} />
+        </RoundedBox>
+      )}
 
       {/* Vertical pull handle, standing off the front face on two posts. */}
-      <group position={[handleX, GLASS_CENTER_Y * 0.6, LEAF_THICKNESS / 2]}>
+      <group position={[handleX, PANEL_CENTER_Y * 0.6, LEAF_THICKNESS / 2]}>
         {[-0.36, 0.36].map((y) => (
           <mesh key={y} position={[0, y, 0.035]} rotation={[Math.PI / 2, 0, 0]}>
             <cylinderGeometry args={[0.014, 0.014, 0.07, 8]} />

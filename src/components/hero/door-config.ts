@@ -22,7 +22,13 @@ export const HINGE_X = OPENING_WIDTH / 2;
 
 /** One leaf. Slightly narrower than half the opening so seams stay visible. */
 export const LEAF_WIDTH = 1.13;
-export const LEAF_HEIGHT = 3.37;
+/**
+ * Slightly taller than the clear opening. The leaves sit in front of the wall, so
+ * the extra 2cm at top and bottom laps over the reveal the way a real door does —
+ * without it, daylight from the space beyond leaks over the door heads as a hard
+ * bright line.
+ */
+export const LEAF_HEIGHT = OPENING_HEIGHT + 0.04;
 export const LEAF_THICKNESS = 0.14;
 
 /** Gap between the hinge axis and the leaf's outer edge — reads as a shadow reveal. */
@@ -68,5 +74,4 @@ export const PALETTE = {
   gold: "#c6963d",
   goldSoft: "#e3c789",
   cream: "#fbf7f0",
-  glass: "#150a11",
 } as const;

@@ -199,3 +199,15 @@ body:has(.door-hero) > header:not([data-scrolled]) {
   --foreground: var(--cream);
   --border: color-mix(in oklab, var(--cream) 35%, transparent);
 }
+
+/*
+  Nav labels float over the doors with nothing behind them, and the doors are almost
+  black with bright specular streaks running down the stiles. A shadow keeps the
+  labels legible wherever they happen to fall. Buttons are excluded — they carry
+  their own solid background and the shadow only muddies them.
+*/
+body:has(.door-hero) > header:not([data-scrolled]) a:not([data-slot="button"]),
+body:has(.door-hero) > header:not([data-scrolled]) button:not([data-slot="button"]),
+body:has(.door-hero) > header:not([data-scrolled]) span:not([data-slot="button"] span) {
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.85);
+}

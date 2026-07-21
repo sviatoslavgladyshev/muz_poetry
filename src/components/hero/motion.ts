@@ -29,11 +29,13 @@ export type HeroMotion = {
 const DOOR_START = 0.12;
 const DOOR_END = 0.86;
 /**
- * The camera only starts moving once the leaves have visibly parted, and eases in
- * as well as out — an early linear push reads as falling toward the doors rather
- * than walking toward them.
+ * The camera holds still until the doors are most of the way open, then walks
+ * through. Starting it earlier means the threshold is crossed while the leaves are
+ * still swinging, and the doors disappear from the shot with a third of the scroll
+ * still to go. It eases in as well as out — an early linear push reads as falling
+ * toward the doors rather than walking toward them.
  */
-const APPROACH_START = 0.22;
+const APPROACH_START = 0.38;
 const APPROACH_END = 1;
 /** The room brightens behind the widening gap, slightly trailing the doors. */
 const REVEAL_START = 0.2;
