@@ -202,8 +202,10 @@ export function PricingPageContent({ locale }: { locale: AppLocale }) {
 function CompactPriceCard({ item }: { item: PriceItem }) {
   return (
     <article
-      className={`flex h-full flex-col rounded-2xl border p-6 shadow-sm ${
-        item.featured ? "border-gold bg-primary text-primary-foreground" : "border-border bg-card"
+      className={`flex h-full flex-col rounded-2xl border p-6 shadow-sm transition-transform hover:-translate-y-1 ${
+        item.featured
+          ? "border-gold bg-primary text-primary-foreground shadow-lg"
+          : "border-border bg-card"
       }`}
     >
       <div className="flex items-start justify-between gap-3">
@@ -215,13 +217,33 @@ function CompactPriceCard({ item }: { item: PriceItem }) {
           {item.label}
         </span>
         {item.badge && (
-          <Badge className="bg-accent text-accent-foreground hover:bg-accent">
+          <Badge className="bg-accent px-3 py-1 text-accent-foreground hover:bg-accent">
             {item.badge}
           </Badge>
         )}
       </div>
 
-      <h3 className={`mt-5 font-display text-xl italic ${item.featured ? "text-cream" : "text-primary"}`}>
+      {item.benefitLabel && (
+        <p
+          className={`mt-6 text-xs font-semibold uppercase tracking-[0.18em] ${
+            item.featured ? "text-gold-soft" : "text-gold"
+          }`}
+        >
+          {item.benefitLabel}
+        </p>
+      )}
+      <p
+        className={`mt-2 font-display text-3xl italic leading-tight ${
+          item.featured ? "text-cream" : "text-primary"
+        }`}
+      >
+        {item.benefit}
+      </p>
+      <h3
+        className={`mt-5 text-sm font-semibold ${
+          item.featured ? "text-primary-foreground/85" : "text-foreground/80"
+        }`}
+      >
         {item.title}
       </h3>
       {item.description && (
@@ -233,7 +255,7 @@ function CompactPriceCard({ item }: { item: PriceItem }) {
           {item.description}
         </p>
       )}
-      <PriceLine item={item} className="mt-auto pt-6" />
+      <PriceLine item={item} className="mt-auto pt-6" compact />
     </article>
   );
 }
@@ -241,12 +263,14 @@ function CompactPriceCard({ item }: { item: PriceItem }) {
 function FullPriceCard({ item, cta }: { item: PriceItem; cta: string }) {
   return (
     <article
-      className={`relative flex h-full flex-col rounded-2xl border p-6 shadow-sm transition-shadow hover:shadow-lg ${
-        item.featured ? "border-gold bg-primary text-primary-foreground" : "border-border bg-card"
+      className={`relative flex h-full flex-col rounded-2xl border p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg ${
+        item.featured
+          ? "border-gold bg-primary text-primary-foreground shadow-lg"
+          : "border-border bg-card"
       }`}
     >
       {item.badge && (
-        <Badge className="absolute -top-3 left-5 bg-accent text-accent-foreground hover:bg-accent">
+        <Badge className="absolute -top-3 left-5 bg-accent px-3 py-1 text-accent-foreground hover:bg-accent">
           {item.badge}
         </Badge>
       )}
@@ -260,13 +284,30 @@ function FullPriceCard({ item, cta }: { item: PriceItem; cta: string }) {
           {item.label}
         </span>
         <h3
-          className={`font-display text-xl italic leading-tight ${
-            item.featured ? "text-cream" : "text-primary"
+          className={`text-sm font-semibold leading-tight ${
+            item.featured ? "text-primary-foreground/85" : "text-foreground/80"
           }`}
         >
           {item.title}
         </h3>
       </div>
+
+      {item.benefitLabel && (
+        <p
+          className={`mt-6 text-xs font-semibold uppercase tracking-[0.18em] ${
+            item.featured ? "text-gold-soft" : "text-gold"
+          }`}
+        >
+          {item.benefitLabel}
+        </p>
+      )}
+      <p
+        className={`mt-2 font-display text-3xl italic leading-tight ${
+          item.featured ? "text-cream" : "text-primary"
+        }`}
+      >
+        {item.benefit}
+      </p>
 
       {item.description && (
         <p
@@ -314,12 +355,27 @@ function FullPriceCard({ item, cta }: { item: PriceItem; cta: string }) {
   );
 }
 
-function PriceLine({ item, className = "" }: { item: PriceItem; className?: string }) {
+function PriceLine({
+  item,
+  className = "",
+  compact = false,
+}: {
+  item: PriceItem;
+  className?: string;
+  compact?: boolean;
+}) {
   return (
     <div className={className}>
+      <p
+        className={`mb-1 text-xs font-semibold uppercase tracking-[0.16em] ${
+          item.featured ? "text-primary-foreground/55" : "text-foreground/45"
+        }`}
+      >
+        инвестиция
+      </p>
       <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
         <span
-          className={`font-display text-3xl italic ${
+          className={`font-display ${compact ? "text-2xl" : "text-2xl"} italic ${
             item.featured ? "text-gold-soft" : "text-primary"
           }`}
         >
