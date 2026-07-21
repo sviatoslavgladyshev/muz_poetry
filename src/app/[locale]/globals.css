@@ -113,6 +113,55 @@
   }
 }
 
+@layer components {
+  /*
+    Door hero layout.
+
+    `.door-hero` is the scroll track: its extra height is the scroll distance the
+    door animation is mapped onto. `.door-hero-stage` is the single viewport-sized
+    panel that stays pinned while that scrolling happens.
+
+    The heights live in CSS rather than in JS so that `prefers-reduced-motion` can
+    collapse the track to one screen at first paint, with no layout shift on mount.
+  */
+  .door-hero {
+    height: 280svh;
+  }
+
+  .door-hero-stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+  }
+
+  /*
+    Smooths the overlay between scroll events. The doors are damped inside the
+    render loop; this gives the HTML copy the same unhurried feel.
+  */
+  .door-hero-lead,
+  .door-hero-hint {
+    transition:
+      opacity 260ms linear,
+      transform 260ms linear;
+    will-change: opacity, transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .door-hero {
+      height: 100svh;
+    }
+
+    .door-hero-stage {
+      position: relative;
+    }
+
+    .door-hero-lead,
+    .door-hero-hint {
+      transition: none;
+    }
+  }
+}
+
 @layer utilities {
   .reveal {
     opacity: 0;
@@ -123,4 +172,30 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+/*
+  Header treatment on pages that open with the door hero.
+
+  Deliberately unlayered so these rules outrank the Tailwind utilities on the
+  header element itself.
+
+  1. The header goes `fixed` so the hero is full-bleed from the very first pixel
+     instead of starting below a band of page. Every other page keeps `sticky`.
+  2. Before the first scroll the header floats over near-black, where its
+     plum-on-cream palette is unreadable — so its colour tokens are flipped to the
+     light-on-dark pair. Once scrolled it becomes the usual cream pill and the
+     override lifts.
+*/
+body:has(.door-hero) > header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+}
+
+body:has(.door-hero) > header:not([data-scrolled]) {
+  --primary: var(--gold-soft);
+  --primary-foreground: #2a1c05;
+  --foreground: var(--cream);
+  --border: color-mix(in oklab, var(--cream) 35%, transparent);
 }

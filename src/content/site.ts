@@ -37,3 +37,8 @@ export const primaryNavLinks = [
   { href: "/pricing", key: "pricing" },
   { href: "/afisha", key: "afisha" },
 ] as const;
+
+export const secondaryNavLinks = [
+  { href: "/#o-masterskoy", key: "about" },
+  { href: "/#kontakty", key: "contacts" },
+] as const;

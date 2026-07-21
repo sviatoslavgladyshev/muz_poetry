@@ -2,8 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { CalendarPlus, Menu, Music2 } from "lucide-react";
+import { CalendarPlus, Info, MapPin, Menu, Music2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 import {
   Sheet,
   SheetClose,
@@ -14,7 +22,11 @@ import {
 } from "@/components/ui/sheet";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { Link } from "@/i18n/navigation";
-import { navLinks, primaryNavLinks } from "@/content/site";
+import {
+  navLinks,
+  primaryNavLinks,
+  secondaryNavLinks,
+} from "@/content/site";
 import type { AppLocale } from "@/i18n/routing";
 
 export function Header({ locale }: { locale: AppLocale }) {
@@ -52,14 +64,17 @@ export function Header({ locale }: { locale: AppLocale }) {
       // Exposed as an attribute so pages with a dark hero can restyle the
       // pre-scroll state from CSS (see globals.css).
       data-scrolled={scrolled ? "" : undefined}
-      className={`pointer-events-none sticky top-0 z-50 h-[60px] w-full ${
-        scrolled ? "" : "border-b border-border/60 bg-cream"
-      }`}
+      // Always transparent: at rest the page — or the hero's doors — shows straight
+      // through, and the scrolled state puts its background on the pill instead.
+      className="pointer-events-none sticky top-0 z-50 h-[60px] w-full"
     >
       <div
-        className={`pointer-events-auto mx-auto flex transform-gpu items-center justify-between transition-[max-width,border-radius,box-shadow,padding,transform] duration-200 ease-out ${
+        className={`pointer-events-auto mx-auto flex transform-gpu items-center justify-between transition-[max-width,border-radius,box-shadow,padding,transform,background-color] duration-300 ease-out ${
           scrolled
-            ? "mt-2 h-11 w-[calc(100%-1rem)] max-w-4xl rounded-full border border-border/80 bg-cream px-3 shadow-md md:w-[calc(100%-3rem)] md:px-4"
+            ? // Liquid glass: a translucent pill that blurs and saturates whatever is
+              // behind it, with a bright inset rim so it reads as a lens rather than
+              // a flat panel.
+              "mt-2 h-11 w-[calc(100%-1rem)] max-w-4xl rounded-full border border-white/45 bg-cream/55 px-3 shadow-[0_10px_34px_-8px_rgba(60,18,36,0.35)] ring-1 ring-inset ring-white/50 backdrop-blur-xl backdrop-saturate-150 md:w-[calc(100%-3rem)] md:px-4"
             : "h-[60px] w-full max-w-6xl px-5 md:px-8"
         }`}
       >
@@ -70,7 +85,7 @@ export function Header({ locale }: { locale: AppLocale }) {
           </span>
         </Link>
 
-        <nav className="hidden h-full items-center gap-4 lg:flex">
+        <div className="hidden h-full items-center gap-3.5 lg:flex">
           {primaryNavLinks.map((link) => (
             <Link
               key={link.href}
@@ -80,7 +95,32 @@ export function Header({ locale }: { locale: AppLocale }) {
               {t(link.key)}
             </Link>
           ))}
-        </nav>
+          <NavigationMenu align="end" className="h-full flex-none">
+            <NavigationMenuList className="h-full">
+              <NavigationMenuItem className="flex h-full items-center">
+                <NavigationMenuTrigger className="h-8 rounded-full bg-transparent px-2 text-foreground/75 hover:bg-primary/8 hover:text-primary data-open:bg-primary/8">
+                  {t("more")}
+                </NavigationMenuTrigger>
+                <NavigationMenuContent className="w-56 p-1.5">
+                  {secondaryNavLinks.map((link) => {
+                    const Icon = link.key === "about" ? Info : MapPin;
+
+                    return (
+                      <NavigationMenuLink
+                        key={link.href}
+                        render={<Link href={link.href} />}
+                        className="gap-3 px-3 py-2.5 font-medium"
+                      >
+                        <Icon className="text-primary" />
+                        {t(link.key)}
+                      </NavigationMenuLink>
+                    );
+                  })}
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
 
         <div className="hidden h-full items-center gap-3 lg:flex">
           <LanguageSwitcher locale={locale} className="h-full leading-none" />
