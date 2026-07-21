@@ -29,3 +29,11 @@ export const navLinks = [
   { href: "/#afisha", key: "afisha" },
   { href: "/#kontakty", key: "contacts" },
 ] as const;
+
+export const primaryNavLinks = [
+  { href: "/#obuchenie", key: "directions" },
+  { href: "/#mastera", key: "teachers" },
+  { href: "/#klub", key: "club" },
+  { href: "/pricing", key: "pricing" },
+  { href: "/afisha", key: "afisha" },
+] as const;

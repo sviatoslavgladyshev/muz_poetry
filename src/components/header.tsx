@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Menu, Music2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,50 +14,64 @@ import {
 } from "@/components/ui/sheet";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { Link } from "@/i18n/navigation";
-import { navLinks } from "@/content/site";
+import { navLinks, primaryNavLinks } from "@/content/site";
 import type { AppLocale } from "@/i18n/routing";
 
 export function Header({ locale }: { locale: AppLocale }) {
   const [scrolled, setScrolled] = useState(false);
+  const scrolledRef = useRef(false);
+  const frameRef = useRef<number | null>(null);
   const t = useTranslations("nav");
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => {
+      if (frameRef.current !== null) return;
+
+      frameRef.current = window.requestAnimationFrame(() => {
+        const nextScrolled = window.scrollY > 32;
+        if (nextScrolled !== scrolledRef.current) {
+          scrolledRef.current = nextScrolled;
+          setScrolled(nextScrolled);
+        }
+        frameRef.current = null;
+      });
+    };
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frameRef.current !== null) {
+        window.cancelAnimationFrame(frameRef.current);
+      }
+    };
   }, []);
 
   return (
     <header
-      className={`pointer-events-none sticky top-0 z-50 w-full transition-all duration-300 ${
-        scrolled ? "pt-2 md:pt-3" : "border-b border-border/60 bg-cream"
+      // Exposed as an attribute so pages with a dark hero can restyle the
+      // pre-scroll state from CSS (see globals.css).
+      data-scrolled={scrolled ? "" : undefined}
+      className={`pointer-events-none sticky top-0 z-50 h-[68px] w-full ${
+        scrolled ? "" : "border-b border-border/60 bg-cream"
       }`}
     >
       <div
-        className={`pointer-events-auto mx-auto flex items-center justify-between transition-all duration-300 ${
+        className={`pointer-events-auto mx-auto flex transform-gpu items-center justify-between transition-[max-width,border-radius,box-shadow,padding,transform] duration-200 ease-out ${
           scrolled
-            ? "w-[calc(100%-1rem)] max-w-5xl rounded-full border border-border/80 bg-cream/95 px-3 py-2 shadow-lg backdrop-blur-md md:w-[calc(100%-3rem)] md:px-5"
-            : "w-full max-w-7xl px-5 py-4 md:px-8"
+            ? "mt-2 w-[calc(100%-1rem)] max-w-4xl rounded-full border border-border/80 bg-cream px-3 py-2 shadow-md md:w-[calc(100%-3rem)] md:px-4"
+            : "w-full max-w-6xl px-5 py-4 md:px-8"
         }`}
       >
         <Link href="/" className="flex items-center gap-2 group">
           <Music2 className="h-5 w-5 text-primary transition-transform group-hover:-rotate-12" />
-          <span
-            className={`font-display italic tracking-tight text-primary transition-all duration-300 ${
-              scrolled ? "text-lg" : "text-xl"
-            }`}
-          >
+          <span className="font-display text-xl italic tracking-tight text-primary">
             {t("brand")}
           </span>
         </Link>
 
-        <nav
-          className={`hidden items-center transition-all duration-300 lg:flex ${
-            scrolled ? "gap-4" : "gap-7"
-          }`}
-        >
-          {navLinks.map((link) => (
+        <nav className="hidden items-center gap-4 lg:flex">
+          {primaryNavLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -68,7 +82,7 @@ export function Header({ locale }: { locale: AppLocale }) {
           ))}
         </nav>
 
-        <div className={`hidden items-center lg:flex ${scrolled ? "gap-3" : "gap-5"}`}>
+        <div className="hidden items-center gap-3 lg:flex">
           <LanguageSwitcher locale={locale} />
           <Button
             render={<Link href="/#kontakty" />}
