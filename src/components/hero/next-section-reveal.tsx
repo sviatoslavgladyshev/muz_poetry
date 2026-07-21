@@ -29,7 +29,8 @@ export type NextSectionCopy = {
 
 export function NextSectionReveal({ copy }: { copy: NextSectionCopy }) {
   return (
-    <div
+    <section
+      aria-labelledby="door-about-heading"
       className="absolute inset-0 overflow-hidden bg-cream"
       style={{
         // Grows as the camera moves toward the doorway, so the space beyond has its
@@ -51,7 +52,10 @@ export function NextSectionReveal({ copy }: { copy: NextSectionCopy }) {
           <p className="text-[11px] font-semibold tracking-[0.25em] text-gold uppercase sm:text-xs md:text-sm">
             {copy.eyebrow}
           </p>
-          <h2 className="mt-3 max-w-4xl font-display text-3xl leading-[1.05] italic text-primary sm:text-4xl md:mt-4 md:text-5xl">
+          <h2
+            id="door-about-heading"
+            className="mt-3 max-w-4xl font-display text-3xl leading-[1.05] italic text-primary sm:text-4xl md:mt-4 md:text-5xl"
+          >
             {copy.heading}
           </h2>
           <p className="mt-5 max-w-4xl text-[13px] leading-relaxed text-foreground/78 sm:text-sm md:mt-7 md:text-base">
@@ -82,6 +86,6 @@ export function NextSectionReveal({ copy }: { copy: NextSectionCopy }) {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

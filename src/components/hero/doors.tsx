@@ -200,8 +200,16 @@ export function DoorFrame({
 }) {
   const trimHalfSpan = TRIM_INNER_X + TRIM_WIDTH;
   const outerCasingX = trimHalfSpan + 0.085;
-  const pilasterHeight = TRIM_INNER_Y + TRIM_WIDTH - (FLOOR_Y - 0.1);
-  const pilasterCenterY = (TRIM_INNER_Y + TRIM_WIDTH + FLOOR_Y - 0.1) / 2;
+  const pilasterBottom = FLOOR_Y - 0.1;
+  // Stop the vertical pieces at the underside of each lintel. Overlapping coplanar
+  // rounded boxes at these joins caused z-fighting flashes in the upper corners.
+  const pilasterTop = TRIM_INNER_Y;
+  const pilasterHeight = pilasterTop - pilasterBottom;
+  const pilasterCenterY = (pilasterTop + pilasterBottom) / 2;
+  const outerLintelY = TRIM_INNER_Y + TRIM_WIDTH + 0.085;
+  const outerPilasterTop = outerLintelY - 0.05;
+  const outerPilasterHeight = outerPilasterTop - pilasterBottom;
+  const outerPilasterCenterY = (outerPilasterTop + pilasterBottom) / 2;
 
   return (
     <group name="DoorFrame">
@@ -236,10 +244,10 @@ export function DoorFrame({
       {[-1, 1].map((side) => (
         <RoundedBox
           key={`outer-${side}`}
-          args={[0.1, pilasterHeight + 0.16, 0.1]}
+          args={[0.1, outerPilasterHeight, 0.1]}
           radius={0.012}
           smoothness={2}
-          position={[side * outerCasingX, pilasterCenterY + 0.02, 0.018]}
+          position={[side * outerCasingX, outerPilasterCenterY, 0.018]}
         >
           <MetalSurface
             roughnessMap={roughnessMap}
@@ -253,7 +261,7 @@ export function DoorFrame({
         args={[outerCasingX * 2 + 0.1, 0.1, 0.1]}
         radius={0.012}
         smoothness={2}
-        position={[0, TRIM_INNER_Y + TRIM_WIDTH + 0.085, 0.018]}
+        position={[0, outerLintelY, 0.018]}
       >
         <MetalSurface
           roughnessMap={roughnessMap}
@@ -266,8 +274,8 @@ export function DoorFrame({
       {[-1, 1].map((side) => (
         <EdgeHighlight
           key={`outer-gold-${side}`}
-          position={[side * (outerCasingX - 0.048), pilasterCenterY, 0.074]}
-          size={[0.006, pilasterHeight - 0.05, 0.004]}
+          position={[side * (outerCasingX - 0.048), outerPilasterCenterY, 0.074]}
+          size={[0.006, outerPilasterHeight - 0.05, 0.004]}
           opacity={0.3}
         />
       ))}
