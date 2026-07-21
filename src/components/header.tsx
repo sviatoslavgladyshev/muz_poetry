@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Menu, Music2 } from "lucide-react";
+import { CalendarPlus, Menu, Music2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -52,15 +52,15 @@ export function Header({ locale }: { locale: AppLocale }) {
       // Exposed as an attribute so pages with a dark hero can restyle the
       // pre-scroll state from CSS (see globals.css).
       data-scrolled={scrolled ? "" : undefined}
-      className={`pointer-events-none sticky top-0 z-50 h-14 w-full ${
+      className={`pointer-events-none sticky top-0 z-50 h-[60px] w-full ${
         scrolled ? "" : "border-b border-border/60 bg-cream"
       }`}
     >
       <div
         className={`pointer-events-auto mx-auto flex transform-gpu items-center justify-between transition-[max-width,border-radius,box-shadow,padding,transform] duration-200 ease-out ${
           scrolled
-            ? "mt-1.5 h-10 w-[calc(100%-1rem)] max-w-4xl rounded-full border border-border/80 bg-cream px-3 shadow-md md:w-[calc(100%-3rem)] md:px-4"
-            : "h-14 w-full max-w-6xl px-5 md:px-8"
+            ? "mt-2 h-11 w-[calc(100%-1rem)] max-w-4xl rounded-full border border-border/80 bg-cream px-3 shadow-md md:w-[calc(100%-3rem)] md:px-4"
+            : "h-[60px] w-full max-w-6xl px-5 md:px-8"
         }`}
       >
         <Link href="/" className="group flex h-full items-center gap-2 leading-none">
@@ -90,6 +90,7 @@ export function Header({ locale }: { locale: AppLocale }) {
             size="sm"
             className="bg-primary text-primary-foreground hover:bg-primary/90"
           >
+            <CalendarPlus />
             {t("cta")}
           </Button>
         </div>
@@ -128,10 +129,11 @@ export function Header({ locale }: { locale: AppLocale }) {
                   render={
                     <Link
                       href="/#kontakty"
-                      className="mt-3 rounded-md bg-primary px-3 py-3 text-center text-base font-semibold text-primary-foreground"
+                      className="mt-3 inline-flex items-center justify-center gap-2 rounded-md bg-primary px-3 py-3 text-center text-base font-semibold text-primary-foreground"
                     />
                   }
                 >
+                  <CalendarPlus className="h-4 w-4" />
                   {t("cta")}
                 </SheetClose>
               </nav>
