@@ -3,6 +3,8 @@ import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/reveal";
 import type { AppLocale } from "@/i18n/routing";
+import { publicAssetPath } from "@/lib/utils";
+import { Link } from "@/i18n/navigation";
 
 export async function Hero({ locale }: { locale: AppLocale }) {
   const t = await getTranslations({ locale, namespace: "hero" });
@@ -11,7 +13,7 @@ export async function Hero({ locale }: { locale: AppLocale }) {
     <section className="relative overflow-hidden bg-primary text-primary-foreground">
       <div className="absolute inset-0">
         <Image
-          src="/images/hero-studio.svg"
+          src={publicAssetPath("/images/hero-studio.svg")}
           alt="Зал вокально-акустической мастерской «Поэзия звука»"
           fill
           priority
@@ -64,12 +66,12 @@ export async function Hero({ locale }: { locale: AppLocale }) {
               {t("ctaAfisha")}
             </Button>
           </div>
-          <a
-            href="#tseny"
+          <Link
+            href="/pricing"
             className="mt-5 inline-block text-sm font-medium text-cream/70 underline underline-offset-4 transition-colors hover:text-cream"
           >
             {t("ctaSubscription")}
-          </a>
+          </Link>
         </Reveal>
       </div>
     </section>

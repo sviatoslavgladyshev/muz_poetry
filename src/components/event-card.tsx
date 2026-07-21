@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import type { StudioEvent } from "@/content/events";
 import { formatEventDate } from "@/content/events";
 import type { AppLocale } from "@/i18n/routing";
+import { publicAssetPath } from "@/lib/utils";
 
 const typeStyles: Record<StudioEvent["type"], string> = {
   concert: "bg-primary text-primary-foreground",
@@ -26,7 +27,12 @@ export async function EventCard({
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-shadow hover:shadow-lg">
       <div className="relative aspect-[4/3] w-full">
-        <Image src={event.image} alt={event.title} fill className="object-cover" />
+        <Image
+          src={publicAssetPath(event.image)}
+          alt={event.title}
+          fill
+          className="object-cover"
+        />
         <Badge className={`absolute left-4 top-4 capitalize ${typeStyles[event.type]}`}>
           {t(`eventTypes.${event.type}`)}
         </Badge>

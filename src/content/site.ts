@@ -21,11 +21,11 @@ export const siteConfig = {
 } as const;
 
 export const navLinks = [
-  { href: "#o-masterskoy", key: "about" },
-  { href: "#mastera", key: "teachers" },
-  { href: "#obuchenie", key: "directions" },
-  { href: "#klub", key: "club" },
-  { href: "#tseny", key: "pricing" },
-  { href: "#afisha", key: "afisha" },
-  { href: "#kontakty", key: "contacts" },
+  { href: "/#o-masterskoy", key: "about" },
+  { href: "/#mastera", key: "teachers" },
+  { href: "/#obuchenie", key: "directions" },
+  { href: "/#klub", key: "club" },
+  { href: "/pricing", key: "pricing" },
+  { href: "/#afisha", key: "afisha" },
+  { href: "/#kontakty", key: "contacts" },
 ] as const;

@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/reveal";
 import { directions, directionGroups, type DirectionGroup } from "@/content/directions";
 import type { AppLocale } from "@/i18n/routing";
+import { publicAssetPath } from "@/lib/utils";
+import { Link } from "@/i18n/navigation";
 
 export async function Directions({ locale }: { locale: AppLocale }) {
   const t = await getTranslations({ locale, namespace: "directions" });
@@ -42,7 +44,7 @@ export async function Directions({ locale }: { locale: AppLocale }) {
                     <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-shadow hover:shadow-lg">
                       <div className="relative aspect-[5/4] w-full">
                         <Image
-                          src={direction.image}
+                          src={publicAssetPath(direction.image)}
                           alt={direction.title}
                           fill
                           className="object-cover"
@@ -68,7 +70,7 @@ export async function Directions({ locale }: { locale: AppLocale }) {
                           {direction.forWhom}
                         </p>
                         <Button
-                          render={<a href="#tseny" />}
+                          render={<Link href="/pricing" />}
                           className="mt-auto w-full bg-primary text-primary-foreground hover:bg-primary/90"
                         >
                           {t("cta")}

@@ -13,9 +13,13 @@ export async function Footer({ locale }: { locale: AppLocale }) {
         <p>{tFooter("copyright", { year: new Date().getFullYear() })}</p>
         <nav className="flex flex-wrap justify-center gap-x-5 gap-y-2">
           {navLinks.map((link) => (
-            <a key={link.href} href={link.href} className="transition-colors hover:text-gold-soft">
+            <Link
+              key={link.href}
+              href={link.href}
+              className="transition-colors hover:text-gold-soft"
+            >
               {t(link.key)}
-            </a>
+            </Link>
           ))}
           <Link href="/afisha" className="transition-colors hover:text-gold-soft">
             {t("afisha")}

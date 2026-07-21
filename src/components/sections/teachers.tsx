@@ -4,6 +4,7 @@ import { Quote, Sparkles, Compass, GraduationCap } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { teachers, teachersIntro, type Teacher, type TeacherSlot } from "@/content/teachers";
 import type { AppLocale } from "@/i18n/routing";
+import { publicAssetPath } from "@/lib/utils";
 
 function isTeacher(slot: TeacherSlot): slot is Teacher {
   return !("empty" in slot);
@@ -66,7 +67,12 @@ function TeacherCard({
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-shadow hover:shadow-lg">
       <div className="relative aspect-[4/5] w-full">
-        <Image src={teacher.photo} alt={teacher.name} fill className="object-cover" />
+        <Image
+          src={publicAssetPath(teacher.photo)}
+          alt={teacher.name}
+          fill
+          className="object-cover"
+        />
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-plum-deep/90 to-transparent p-5">
           <h3 className="font-display text-2xl italic text-cream">{teacher.name}</h3>
           {teacher.alias && <p className="text-xs text-cream/70">({teacher.alias})</p>}

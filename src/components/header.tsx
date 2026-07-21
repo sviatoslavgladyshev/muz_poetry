@@ -46,20 +46,20 @@ export function Header({ locale }: { locale: AppLocale }) {
 
         <nav className="hidden items-center gap-7 lg:flex">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="text-sm font-medium text-foreground/75 transition-colors hover:text-primary"
             >
               {t(link.key)}
-            </a>
+            </Link>
           ))}
         </nav>
 
         <div className="hidden items-center gap-5 lg:flex">
           <LanguageSwitcher locale={locale} />
           <Button
-            render={<a href="#kontakty" />}
+            render={<Link href="/#kontakty" />}
             size="sm"
             className="bg-primary text-primary-foreground hover:bg-primary/90"
           >
@@ -88,7 +88,7 @@ export function Header({ locale }: { locale: AppLocale }) {
                   <SheetClose
                     key={link.href}
                     render={
-                      <a
+                      <Link
                         href={link.href}
                         className="rounded-md px-2 py-3 text-base font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-primary"
                       />
@@ -99,8 +99,8 @@ export function Header({ locale }: { locale: AppLocale }) {
                 ))}
                 <SheetClose
                   render={
-                    <a
-                      href="#kontakty"
+                    <Link
+                      href="/#kontakty"
                       className="mt-3 rounded-md bg-primary px-3 py-3 text-center text-base font-semibold text-primary-foreground"
                     />
                   }

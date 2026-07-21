@@ -4,6 +4,7 @@ import { Heart, Sparkles, BookOpen, Drama } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { missionText, historyText, values, type ValueCard } from "@/content/values";
 import type { AppLocale } from "@/i18n/routing";
+import { publicAssetPath } from "@/lib/utils";
 
 const icons: Record<ValueCard["icon"], React.ComponentType<{ className?: string }>> = {
   heart: Heart,
@@ -68,7 +69,7 @@ export async function About({ locale }: { locale: AppLocale }) {
           <Reveal delay={120} className="order-1 md:order-2">
             <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl shadow-lg">
               <Image
-                src="/images/history-quartirnik.svg"
+                src={publicAssetPath("/images/history-quartirnik.svg")}
                 alt="Отчётный квартирник мастерской «Поэзия звука»"
                 fill
                 className="object-cover"
