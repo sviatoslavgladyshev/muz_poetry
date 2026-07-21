@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, Sparkles } from "lucide-react";
+import { BookOpen, Drama, Heart, Sparkles } from "lucide-react";
 
 /**
  * What the visitor sees through the doorway: the opening of the next section.
@@ -10,10 +10,8 @@ import { Heart, Sparkles } from "lucide-react";
  * geometry — so the only place this layer shows through is the opening itself.
  * As the leaves swing apart, more of it is uncovered.
  *
- * It deliberately mirrors the real `About` section's opening — same eyebrow, same
- * heading, same palette — so that when the hero hands off at the end of the scroll,
- * the visitor lands on the section they were already looking at rather than cutting
- * to something new.
+ * This is the workshop introduction itself. The normal document flow continues
+ * into the workshop history, so this copy and its principles are rendered once.
  */
 
 export type NextSectionCopy = {
@@ -26,6 +24,13 @@ export type NextSectionCopy = {
     description: string;
   }>;
 };
+
+const highlightIcons = {
+  heart: Heart,
+  sparkles: Sparkles,
+  "book-open": BookOpen,
+  drama: Drama,
+} as const;
 
 export function NextSectionReveal({ copy }: { copy: NextSectionCopy }) {
   return (
@@ -58,26 +63,26 @@ export function NextSectionReveal({ copy }: { copy: NextSectionCopy }) {
           >
             {copy.heading}
           </h2>
-          <p className="mt-5 max-w-4xl text-[13px] leading-relaxed text-foreground/78 sm:text-sm md:mt-7 md:text-base">
+          <p className="mt-5 max-w-5xl text-[13px] leading-relaxed text-foreground/78 sm:text-sm md:mt-6 md:text-[15px]">
             {copy.mission}
           </p>
 
-          <div className="mt-6 grid w-full max-w-4xl gap-3 text-left sm:grid-cols-2 md:mt-8 md:gap-4">
+          <div className="mt-5 grid w-full max-w-6xl snap-x snap-mandatory grid-flow-col auto-cols-[minmax(260px,82vw)] gap-3 overflow-x-auto px-0.5 pb-2 text-left [scrollbar-width:none] md:mt-7 md:auto-cols-[minmax(280px,46vw)] md:gap-4 xl:grid-flow-row xl:grid-cols-4 xl:auto-cols-auto xl:overflow-visible [&::-webkit-scrollbar]:hidden">
             {copy.highlights.map((highlight) => {
-              const Icon = highlight.icon === "heart" ? Heart : Sparkles;
+              const Icon = highlightIcons[highlight.icon];
 
               return (
                 <article
                   key={highlight.title}
-                  className="border-l-2 border-gold/55 bg-white/45 px-4 py-3 backdrop-blur-[2px] md:px-5 md:py-4"
+                  className="h-full snap-start border-l-2 border-gold/55 bg-white/50 px-4 py-3 backdrop-blur-[2px] md:px-4 md:py-4"
                 >
                   <div className="flex items-center gap-2.5">
                     <Icon className="size-4 shrink-0 text-primary" />
-                    <h3 className="font-display text-lg italic text-primary md:text-xl">
+                    <h3 className="font-display text-lg leading-tight italic text-primary">
                       {highlight.title}
                     </h3>
                   </div>
-                  <p className="mt-2 text-xs leading-relaxed text-foreground/72 md:text-sm">
+                  <p className="mt-2 text-xs leading-relaxed text-foreground/72">
                     {highlight.description}
                   </p>
                 </article>

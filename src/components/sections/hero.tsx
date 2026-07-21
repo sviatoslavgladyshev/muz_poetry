@@ -33,7 +33,7 @@ export async function Hero({ locale }: { locale: AppLocale }) {
         eyebrow: about("eyebrow"),
         heading: about("heading"),
         mission: missionText[locale],
-        highlights: values[locale].slice(0, 2),
+        highlights: values[locale],
       }}
     />
   );
