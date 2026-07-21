@@ -27,7 +27,7 @@ export type HeroMotion = {
 
 /** Timeline: the doors hold shut briefly, then open across most of the scroll. */
 const DOOR_START = 0.12;
-const DOOR_END = 0.86;
+const DOOR_END = 0.68;
 /**
  * The camera holds still until the doors are most of the way open, then walks
  * through. Starting it earlier means the threshold is crossed while the leaves are
@@ -36,10 +36,10 @@ const DOOR_END = 0.86;
  * toward the doors rather than walking toward them.
  */
 const APPROACH_START = 0.38;
-const APPROACH_END = 1;
+const APPROACH_END = 0.88;
 /** The room brightens behind the widening gap, slightly trailing the doors. */
 const REVEAL_START = 0.2;
-const REVEAL_END = 0.82;
+const REVEAL_END = 0.64;
 
 /** Derives every animated value from a single progress value. */
 export function applyMotion(motion: HeroMotion, smooth: number) {

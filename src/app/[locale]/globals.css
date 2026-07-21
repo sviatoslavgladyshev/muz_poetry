@@ -125,7 +125,7 @@
     collapse the track to one screen at first paint, with no layout shift on mount.
   */
   .door-hero {
-    height: 280svh;
+    height: 320svh;
   }
 
   .door-hero-stage {
@@ -139,11 +139,16 @@
     render loop; this gives the HTML copy the same unhurried feel.
   */
   .door-hero-lead,
-  .door-hero-hint {
+  .door-hero-hint,
+  .door-about-preview {
     transition:
       opacity 260ms linear,
       transform 260ms linear;
     will-change: opacity, transform;
+  }
+
+  .door-about-preview {
+    transition-duration: 180ms;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -156,7 +161,8 @@
     }
 
     .door-hero-lead,
-    .door-hero-hint {
+    .door-hero-hint,
+    .door-about-preview {
       transition: none;
     }
   }

@@ -1,5 +1,7 @@
 "use client";
 
+import { Heart, Sparkles } from "lucide-react";
+
 /**
  * What the visitor sees through the doorway: the opening of the next section.
  *
@@ -17,19 +19,17 @@
 export type NextSectionCopy = {
   eyebrow: string;
   heading: string;
+  mission: string;
+  highlights: Array<{
+    icon: "heart" | "sparkles" | "book-open" | "drama";
+    title: string;
+    description: string;
+  }>;
 };
-
-/**
- * Width the copy is laid out at. It never changes, so the text never re-flows while
- * scrolling; the fit to the doorway is done with a transform instead. Exported so
- * the scroll driver can work out the scale factor that makes it fit.
- */
-export const REVEAL_COPY_WIDTH_PX = 460;
 
 export function NextSectionReveal({ copy }: { copy: NextSectionCopy }) {
   return (
     <div
-      aria-hidden="true"
       className="absolute inset-0 overflow-hidden bg-cream"
       style={{
         // Grows as the camera moves toward the doorway, so the space beyond has its
@@ -37,29 +37,49 @@ export function NextSectionReveal({ copy }: { copy: NextSectionCopy }) {
         transform: "scale(var(--hero-beyond-scale, 1))",
       }}
     >
-      {/* Warm light pooling where the doorway is, falling off toward the edges. */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_center,#fffdf9_0%,var(--cream)_45%,#efe4d2_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_65%_at_50%_40%,#fffefa_0%,var(--cream)_52%,#eee0cc_100%)]" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gold/30" />
 
-      <div className="relative flex h-full items-center justify-center">
+      <div className="relative h-full overflow-hidden">
         <div
-          className="text-center"
+          className="door-about-preview mx-auto flex min-h-full w-full max-w-6xl flex-col items-center justify-center px-5 pt-20 pb-8 text-center md:px-8 md:pt-24"
           style={{
-            width: `${REVEAL_COPY_WIDTH_PX}px`,
             opacity: "var(--hero-beyond-copy-opacity, 1)",
-            // Shrunk to whatever gap the doors currently leave, so the leaves never
-            // crop the copy, then travelling up and out of frame as we pass through.
-            // The scale arrives as a plain number from the scroll driver — CSS cannot
-            // compare a length against a unitless 1, so doing this arithmetic in
-            // `min()` here silently invalidates the whole transform.
-            transform: "translateY(var(--hero-beyond-y, 0px)) scale(var(--hero-beyond-copy-scale, 1))",
+            transform: "translateY(var(--hero-beyond-y, 0px))",
           }}
         >
-          <p className="text-xs font-semibold tracking-[0.25em] text-gold uppercase sm:text-sm">
+          <p className="text-[11px] font-semibold tracking-[0.25em] text-gold uppercase sm:text-xs md:text-sm">
             {copy.eyebrow}
           </p>
-          <h2 className="mt-4 font-display text-3xl leading-snug italic text-primary md:text-4xl">
+          <h2 className="mt-3 max-w-4xl font-display text-3xl leading-[1.05] italic text-primary sm:text-4xl md:mt-4 md:text-5xl">
             {copy.heading}
           </h2>
+          <p className="mt-5 max-w-4xl text-[13px] leading-relaxed text-foreground/78 sm:text-sm md:mt-7 md:text-base">
+            {copy.mission}
+          </p>
+
+          <div className="mt-6 grid w-full max-w-4xl gap-3 text-left sm:grid-cols-2 md:mt-8 md:gap-4">
+            {copy.highlights.map((highlight) => {
+              const Icon = highlight.icon === "heart" ? Heart : Sparkles;
+
+              return (
+                <article
+                  key={highlight.title}
+                  className="border-l-2 border-gold/55 bg-white/45 px-4 py-3 backdrop-blur-[2px] md:px-5 md:py-4"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Icon className="size-4 shrink-0 text-primary" />
+                    <h3 className="font-display text-lg italic text-primary md:text-xl">
+                      {highlight.title}
+                    </h3>
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed text-foreground/72 md:text-sm">
+                    {highlight.description}
+                  </p>
+                </article>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

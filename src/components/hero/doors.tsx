@@ -47,13 +47,17 @@ import type { HeroMotion } from "./motion";
 const STILE_WIDTH = 0.13;
 const TOP_RAIL_HEIGHT = 0.17;
 const BOTTOM_RAIL_HEIGHT = 0.36;
+const MID_RAIL_HEIGHT = 0.15;
 /** The panel sits proud of nothing and shy of the frame, leaving a shadow reveal. */
 const PANEL_THICKNESS = LEAF_THICKNESS - 0.045;
 
 const PANEL_WIDTH = LEAF_WIDTH - STILE_WIDTH * 2;
-const PANEL_HEIGHT = LEAF_HEIGHT - TOP_RAIL_HEIGHT - BOTTOM_RAIL_HEIGHT;
-/** Vertical centre of the panel — the rails are not symmetric. */
-const PANEL_CENTER_Y = (BOTTOM_RAIL_HEIGHT - TOP_RAIL_HEIGHT) / 2;
+const UPPER_PANEL_HEIGHT = 1.56;
+const UPPER_PANEL_Y = 0.58;
+const LOWER_PANEL_HEIGHT = 0.78;
+const LOWER_PANEL_Y = -0.92;
+const MID_RAIL_Y = -0.31;
+const HANDLE_Y = 0.06;
 
 /**
  * Astragal — the strip carried on the leading edge of the left leaf that laps the
@@ -127,6 +131,32 @@ function MetalSurface({
   );
 }
 
+/** Polished plum lacquer used on the leaves, with enough clear coat to catch the room. */
+function LacquerSurface({
+  colorMap,
+  roughnessMap,
+  roughness = 0.3,
+}: {
+  colorMap: Texture | null;
+  roughnessMap: Texture | null;
+  roughness?: number;
+}) {
+  return (
+    <meshPhysicalMaterial
+      color={PALETTE.panel}
+      map={colorMap}
+      roughness={roughness}
+      roughnessMap={roughnessMap}
+      bumpMap={roughnessMap}
+      bumpScale={0.012}
+      metalness={0.08}
+      clearcoat={0.62}
+      clearcoatRoughness={0.24}
+      envMapIntensity={1.35}
+    />
+  );
+}
+
 /** A hairline of warm light along an edge. Sells the bevels without adding geometry. */
 function EdgeHighlight({
   position,
@@ -169,6 +199,7 @@ export function DoorFrame({
   roughnessMap: Texture | null;
 }) {
   const trimHalfSpan = TRIM_INNER_X + TRIM_WIDTH;
+  const outerCasingX = trimHalfSpan + 0.085;
   const pilasterHeight = TRIM_INNER_Y + TRIM_WIDTH - (FLOOR_Y - 0.1);
   const pilasterCenterY = (TRIM_INNER_Y + TRIM_WIDTH + FLOOR_Y - 0.1) / 2;
 
@@ -200,6 +231,47 @@ export function DoorFrame({
         <MetalSurface roughnessMap={roughnessMap} roughness={0.52} metalness={0.45} />
       </RoundedBox>
 
+      {/* A second, slimmer casing gives the portal a stepped silhouette and catches
+          a separate highlight, which makes the frame feel built into the wall. */}
+      {[-1, 1].map((side) => (
+        <RoundedBox
+          key={`outer-${side}`}
+          args={[0.1, pilasterHeight + 0.16, 0.1]}
+          radius={0.012}
+          smoothness={2}
+          position={[side * outerCasingX, pilasterCenterY + 0.02, 0.018]}
+        >
+          <MetalSurface
+            roughnessMap={roughnessMap}
+            color={PALETTE.plumDeep}
+            roughness={0.4}
+            metalness={0.42}
+          />
+        </RoundedBox>
+      ))}
+      <RoundedBox
+        args={[outerCasingX * 2 + 0.1, 0.1, 0.1]}
+        radius={0.012}
+        smoothness={2}
+        position={[0, TRIM_INNER_Y + TRIM_WIDTH + 0.085, 0.018]}
+      >
+        <MetalSurface
+          roughnessMap={roughnessMap}
+          color={PALETTE.plumDeep}
+          roughness={0.4}
+          metalness={0.42}
+        />
+      </RoundedBox>
+
+      {[-1, 1].map((side) => (
+        <EdgeHighlight
+          key={`outer-gold-${side}`}
+          position={[side * (outerCasingX - 0.048), pilasterCenterY, 0.074]}
+          size={[0.006, pilasterHeight - 0.05, 0.004]}
+          opacity={0.3}
+        />
+      ))}
+
       {/* Threshold, flush with the floor of the opening and kept behind the wall face
           so the leaves — which now lap below the opening — sweep clear of it. */}
       <mesh position={[0, FLOOR_Y - 0.045, -WALL_DEPTH / 2]}>
@@ -226,6 +298,75 @@ export function DoorFrame({
   );
 }
 
+function InsetPanel({
+  height,
+  y,
+  roughnessMap,
+  colorMap,
+}: {
+  height: number;
+  y: number;
+  roughnessMap: Texture | null;
+  colorMap: Texture | null;
+}) {
+  const mouldingWidth = PANEL_WIDTH + 0.055;
+  const mouldingHeight = height + 0.055;
+  const frontZ = LEAF_THICKNESS / 2 + 0.006;
+
+  return (
+    <group position={[0, y, 0]}>
+      <RoundedBox
+        args={[PANEL_WIDTH, height, PANEL_THICKNESS]}
+        radius={0.012}
+        smoothness={3}
+      >
+        <LacquerSurface colorMap={colorMap} roughnessMap={roughnessMap} roughness={0.38} />
+      </RoundedBox>
+
+      {/* Stepped moulding and a restrained brass keyline make the recess read at
+          a distance without turning the doors into ornate stage scenery. */}
+      {[-1, 1].map((side) => (
+        <RoundedBox
+          key={`v-${side}`}
+          args={[0.042, mouldingHeight, 0.028]}
+          radius={0.007}
+          smoothness={2}
+          position={[side * mouldingWidth / 2, 0, frontZ]}
+        >
+          <LacquerSurface colorMap={colorMap} roughnessMap={roughnessMap} roughness={0.25} />
+        </RoundedBox>
+      ))}
+      {[-1, 1].map((side) => (
+        <RoundedBox
+          key={`h-${side}`}
+          args={[mouldingWidth, 0.042, 0.028]}
+          radius={0.007}
+          smoothness={2}
+          position={[0, side * mouldingHeight / 2, frontZ]}
+        >
+          <LacquerSurface colorMap={colorMap} roughnessMap={roughnessMap} roughness={0.25} />
+        </RoundedBox>
+      ))}
+      {[-1, 1].map((side) => (
+        <EdgeHighlight
+          key={`gold-v-${side}`}
+          position={[side * (PANEL_WIDTH / 2 - 0.012), 0, frontZ + 0.017]}
+          size={[0.006, height - 0.025, 0.004]}
+          opacity={0.55}
+        />
+      ))}
+      {[-1, 1].map((side) => (
+        <EdgeHighlight
+          key={`gold-h-${side}`}
+          position={[0, side * (height / 2 - 0.012), frontZ + 0.017]}
+          size={[PANEL_WIDTH - 0.025, 0.006, 0.004]}
+          opacity={0.55}
+        />
+      ))}
+    </group>
+  );
+}
+
 /**
  * One door leaf, modelled in its own local space with the centre of the panel at
  * the origin. `inward` is +1 for the left leaf (which extends toward +x) and -1
@@ -235,15 +376,29 @@ export function DoorFrame({
 function DoorLeaf({
   inward,
   roughnessMap,
+  colorMap,
 }: {
   inward: 1 | -1;
   roughnessMap: Texture | null;
+  colorMap: Texture | null;
 }) {
   const stileOffset = (LEAF_WIDTH - STILE_WIDTH) / 2;
   const handleX = inward * (LEAF_WIDTH / 2 - 0.125);
 
   return (
     <group>
+      {/* Continuous structural slab behind the joinery. Besides giving the open
+          leaves a convincing back face, it prevents light from leaking between
+          rails and panels while the bright About section is behind them. */}
+      <RoundedBox
+        args={[LEAF_WIDTH - 0.018, LEAF_HEIGHT - 0.018, 0.055]}
+        radius={0.012}
+        smoothness={2}
+        position={[0, 0, -0.035]}
+      >
+        <LacquerSurface colorMap={colorMap} roughnessMap={roughnessMap} roughness={0.42} />
+      </RoundedBox>
+
       {/* Stiles (vertical) */}
       {[-1, 1].map((side) => (
         <RoundedBox
@@ -253,7 +408,7 @@ function DoorLeaf({
           smoothness={2}
           position={[side * stileOffset, 0, 0]}
         >
-          <MetalSurface roughnessMap={roughnessMap} />
+          <LacquerSurface colorMap={colorMap} roughnessMap={roughnessMap} />
         </RoundedBox>
       ))}
 
@@ -264,7 +419,7 @@ function DoorLeaf({
         smoothness={2}
         position={[0, (LEAF_HEIGHT - TOP_RAIL_HEIGHT) / 2, 0]}
       >
-        <MetalSurface roughnessMap={roughnessMap} />
+        <LacquerSurface colorMap={colorMap} roughnessMap={roughnessMap} />
       </RoundedBox>
       <RoundedBox
         args={[PANEL_WIDTH, BOTTOM_RAIL_HEIGHT, LEAF_THICKNESS]}
@@ -272,20 +427,32 @@ function DoorLeaf({
         smoothness={2}
         position={[0, -(LEAF_HEIGHT - BOTTOM_RAIL_HEIGHT) / 2, 0]}
       >
-        <MetalSurface roughnessMap={roughnessMap} />
+        <LacquerSurface colorMap={colorMap} roughnessMap={roughnessMap} />
       </RoundedBox>
 
-      {/* Solid centre panel, set back from the face of the stiles and rails so the
-          recess catches a shadow line all the way round. The leaf is opaque: nothing
-          is visible beyond the doors until they actually open. */}
+      {/* A middle rail separates the tall upper panel from the grounded lower one,
+          giving the pair the proportions of mansion doors rather than cabinet fronts. */}
       <RoundedBox
-        args={[PANEL_WIDTH, PANEL_HEIGHT, PANEL_THICKNESS]}
-        radius={0.01}
+        args={[PANEL_WIDTH, MID_RAIL_HEIGHT, LEAF_THICKNESS]}
+        radius={0.011}
         smoothness={2}
-        position={[0, PANEL_CENTER_Y, 0]}
+        position={[0, MID_RAIL_Y, 0]}
       >
-        <MetalSurface roughnessMap={roughnessMap} roughness={0.44} metalness={0.55} />
+        <LacquerSurface colorMap={colorMap} roughnessMap={roughnessMap} />
       </RoundedBox>
+
+      <InsetPanel
+        height={UPPER_PANEL_HEIGHT}
+        y={UPPER_PANEL_Y}
+        roughnessMap={roughnessMap}
+        colorMap={colorMap}
+      />
+      <InsetPanel
+        height={LOWER_PANEL_HEIGHT}
+        y={LOWER_PANEL_Y}
+        roughnessMap={roughnessMap}
+        colorMap={colorMap}
+      />
 
       {/* Astragal, on the left leaf only, closing the joint between the pair. */}
       {inward === 1 && (
@@ -295,27 +462,44 @@ function DoorLeaf({
           smoothness={2}
           position={[LEAF_WIDTH / 2 + 0.01, 0, 0]}
         >
-          <MetalSurface roughnessMap={roughnessMap} />
+          <MetalSurface
+            roughnessMap={roughnessMap}
+            color={PALETTE.plumDeep}
+            roughness={0.3}
+            metalness={0.5}
+          />
         </RoundedBox>
       )}
 
-      {/* Vertical pull handle, standing off the front face on two posts. */}
-      <group position={[handleX, PANEL_CENTER_Y * 0.6, LEAF_THICKNESS / 2]}>
+      {/* Vertical pull handle with rosettes, posts and rounded finials. */}
+      <group position={[handleX, HANDLE_Y, LEAF_THICKNESS / 2]}>
+        {[-0.36, 0.36].map((y) => (
+          <mesh key={`plate-${y}`} position={[0, y, 0.025]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.055, 0.055, 0.022, 20]} />
+            <meshStandardMaterial color={PALETTE.gold} roughness={0.25} metalness={1} />
+          </mesh>
+        ))}
         {[-0.36, 0.36].map((y) => (
           <mesh key={y} position={[0, y, 0.035]} rotation={[Math.PI / 2, 0, 0]}>
-            <cylinderGeometry args={[0.014, 0.014, 0.07, 8]} />
+            <cylinderGeometry args={[0.016, 0.016, 0.09, 16]} />
             <meshStandardMaterial color={PALETTE.gold} roughness={0.28} metalness={1} />
           </mesh>
         ))}
-        <mesh position={[0, 0, 0.07]}>
-          <cylinderGeometry args={[0.019, 0.019, 0.86, 10]} />
+        <mesh position={[0, 0, 0.085]}>
+          <cylinderGeometry args={[0.021, 0.021, 0.88, 20]} />
           <meshStandardMaterial
             color={PALETTE.goldSoft}
-            roughness={0.22}
+            roughness={0.18}
             metalness={1}
             roughnessMap={roughnessMap}
           />
         </mesh>
+        {[-0.44, 0.44].map((y) => (
+          <mesh key={`finial-${y}`} position={[0, y, 0.085]}>
+            <sphereGeometry args={[0.027, 16, 10]} />
+            <meshStandardMaterial color={PALETTE.goldSoft} roughness={0.18} metalness={1} />
+          </mesh>
+        ))}
       </group>
     </group>
   );
@@ -332,9 +516,11 @@ function DoorLeaf({
 export function Doors({
   motionRef,
   roughnessMap,
+  colorMap,
 }: {
   motionRef: RefObject<HeroMotion>;
   roughnessMap: Texture | null;
+  colorMap: Texture | null;
 }) {
   const leftPivot = useRef<Group>(null);
   const rightPivot = useRef<Group>(null);
@@ -350,13 +536,13 @@ export function Doors({
     <group>
       <group name="LeftDoor" ref={leftPivot} position={[-HINGE_X, 0, LEAF_CENTER_Z]}>
         <group position={[LEAF_OFFSET_X, 0, 0]}>
-          <DoorLeaf inward={1} roughnessMap={roughnessMap} />
+          <DoorLeaf inward={1} roughnessMap={roughnessMap} colorMap={colorMap} />
         </group>
       </group>
 
       <group name="RightDoor" ref={rightPivot} position={[HINGE_X, 0, LEAF_CENTER_Z]}>
         <group position={[-LEAF_OFFSET_X, 0, 0]}>
-          <DoorLeaf inward={-1} roughnessMap={roughnessMap} />
+          <DoorLeaf inward={-1} roughnessMap={roughnessMap} colorMap={colorMap} />
         </group>
       </group>
     </group>

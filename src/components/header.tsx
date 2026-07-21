@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { CalendarPlus, Info, MapPin, Menu, Music2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -85,15 +85,20 @@ export function Header({ locale }: { locale: AppLocale }) {
           </span>
         </Link>
 
-        <div className="hidden h-full items-center gap-3.5 lg:flex">
+        <div className="hidden h-full items-center gap-2.5 lg:flex">
           {primaryNavLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="inline-flex h-full items-center text-sm font-medium leading-none text-foreground/90 transition-colors hover:text-primary"
-            >
-              {t(link.key)}
-            </Link>
+            <Fragment key={link.href}>
+              <Link
+                href={link.href}
+                className="inline-flex h-full items-center text-sm font-medium leading-none text-foreground/90 transition-colors hover:text-primary"
+              >
+                {t(link.key)}
+              </Link>
+              <span
+                aria-hidden="true"
+                className="size-1 shrink-0 rounded-full bg-current text-foreground/35"
+              />
+            </Fragment>
           ))}
           <NavigationMenu align="end" className="h-full flex-none">
             <NavigationMenuList className="h-full">
@@ -123,7 +128,7 @@ export function Header({ locale }: { locale: AppLocale }) {
         </div>
 
         <div className="hidden h-full items-center gap-3 lg:flex">
-          <LanguageSwitcher locale={locale} className="h-full leading-none" />
+          <LanguageSwitcher locale={locale} />
           <Button
             render={<Link href="/#kontakty" />}
             nativeButton={false}
@@ -136,7 +141,7 @@ export function Header({ locale }: { locale: AppLocale }) {
         </div>
 
         <div className="flex h-full items-center gap-2 lg:hidden">
-          <LanguageSwitcher locale={locale} className="h-full leading-none" />
+          <LanguageSwitcher locale={locale} />
           <Sheet>
             <SheetTrigger
               render={

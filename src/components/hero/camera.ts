@@ -1,10 +1,5 @@
 import {
   HINGE_X,
-  LEAF_CENTER_Z,
-  LEAF_HINGE_GAP,
-  LEAF_THICKNESS,
-  LEAF_WIDTH,
-  MAX_OPEN_ANGLE,
   OPENING_HEIGHT,
   TRIM_INNER_X,
 } from "./door-config";
@@ -45,61 +40,14 @@ export function heroCameraStartZ(aspect: number, lite: boolean) {
  * stopped changing, and it pulls the doors out of view far too early.
  */
 export function heroCameraEndZ(startZ: number, lite: boolean) {
-  return lite ? startZ * 0.78 : 1;
+  // Mobile starts much farther away because its narrow frustum has to contain the
+  // leaves. It still needs to reach the threshold; otherwise the top and sides of
+  // the frame continue masking the About section after the doors are fully open.
+  return lite ? 1.15 : 1;
 }
 
 export function heroCameraZ(aspect: number, lite: boolean, approach: number) {
   const start = heroCameraStartZ(aspect, lite);
   const end = heroCameraEndZ(start, lite);
   return start + (end - start) * approach;
-}
-
-/**
- * How wide the gap between the doors appears on screen, in CSS pixels.
- *
- * Used to size the copy showing through the opening so the leaves never crop it.
- * Two things can be the limit, and the narrower one wins:
- *
- *   - the wall opening itself, once the doors are wide enough to clear it
- *   - the free (leading) edge of each leaf, which is what actually blocks the view
- *     for most of the animation — a half-open door hides far more of the doorway
- *     than the wall does
- *
- * Both edges are projected properly rather than approximated, because the leaf edge
- * swings toward the camera as it opens and so grows much faster in screen space than
- * its world position alone would suggest.
- */
-export function apertureWidthPx(
-  viewportWidth: number,
-  viewportHeight: number,
-  lite: boolean,
-  approach: number,
-  open: number,
-) {
-  const aspect = viewportWidth / viewportHeight;
-  const cameraZ = heroCameraZ(aspect, lite, approach);
-  const tanHalfFov = Math.tan((CAMERA_FOV * Math.PI) / 360);
-
-  /** Half the frame width, in world units, at the given depth. */
-  const halfVisibleAt = (worldZ: number) => (cameraZ - worldZ) * tanHalfFov * aspect;
-
-  // The leaf's free edge, swung out around its hinge. The leaf has real thickness,
-  // and what actually bounds the view is the corner of that edge nearest the centre
-  // line — offset half a thickness along the leaf's normal. Using the edge's centre
-  // instead over-reports the gap by about a fifth at half-open, which is exactly
-  // where the copy behind gets clipped.
-  const angle = open * MAX_OPEN_ANGLE;
-  const edgeReach = LEAF_HINGE_GAP + LEAF_WIDTH;
-  const halfThickness = LEAF_THICKNESS / 2;
-  const edgeX = HINGE_X - edgeReach * Math.cos(angle) - halfThickness * Math.sin(angle);
-  const edgeZ = LEAF_CENTER_Z + edgeReach * Math.sin(angle) - halfThickness * Math.cos(angle);
-
-  const wallSpan = halfVisibleAt(0);
-  const doorSpan = halfVisibleAt(edgeZ);
-
-  // Camera level with (or past) either edge: nothing is framing the view any more.
-  if (wallSpan <= 0.05 || doorSpan <= 0.05) return viewportWidth * 10;
-
-  const halfFraction = Math.min(HINGE_X / wallSpan, edgeX / doorSpan);
-  return Math.max(halfFraction, 0) * viewportWidth;
 }

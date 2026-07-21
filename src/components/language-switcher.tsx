@@ -1,7 +1,12 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
@@ -30,30 +35,38 @@ export function LanguageSwitcher({
   const t = useTranslations("languageSwitcher");
   const pathname = usePathname();
   const router = useRouter();
-  const isTatar = locale === "tt";
 
-  const switchLanguage = (checked: boolean) => {
-    router.replace(pathname, { locale: checked ? "tt" : "ru", scroll: false });
+  const switchLanguage = (nextLocale: AppLocale | null) => {
+    if (!nextLocale || nextLocale === locale) return;
+    router.replace(pathname, { locale: nextLocale, scroll: false });
   };
 
   return (
-    <div
-      className={cn("flex items-center gap-1.5", className)}
-      title={t(isTatar ? "ariaTt" : "ariaRu")}
+    <Select
+      value={locale}
+      onValueChange={(value) => switchLanguage(value as AppLocale | null)}
     >
-      <span className={cn("transition-opacity", isTatar && "opacity-40")}>
-        <FlagMark locale="ru" />
-      </span>
-      <Switch
+      <SelectTrigger
         size="sm"
-        checked={isTatar}
-        onCheckedChange={switchLanguage}
-        aria-label={t("toggleAria")}
-        className="data-unchecked:bg-[#1d4f9f]/35 data-checked:bg-[#159447]"
-      />
-      <span className={cn("transition-opacity", !isTatar && "opacity-40")}>
-        <FlagMark locale="tt" />
-      </span>
-    </div>
+        aria-label={t("selectAria")}
+        className={cn(
+          "h-8 gap-1.5 rounded-full border-transparent bg-transparent px-2 font-semibold hover:bg-primary/8 focus-visible:ring-2",
+          className
+        )}
+      >
+        <FlagMark locale={locale} />
+        <span className="text-xs leading-none">{t(locale)}</span>
+      </SelectTrigger>
+      <SelectContent align="end" alignItemWithTrigger={false} className="min-w-44 p-1.5">
+        <SelectItem value="ru" className="gap-2.5 px-2.5 py-2">
+          <FlagMark locale="ru" />
+          {t("ariaRu")}
+        </SelectItem>
+        <SelectItem value="tt" className="gap-2.5 px-2.5 py-2">
+          <FlagMark locale="tt" />
+          {t("ariaTt")}
+        </SelectItem>
+      </SelectContent>
+    </Select>
   );
 }

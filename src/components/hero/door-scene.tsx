@@ -77,6 +77,10 @@ function SceneLighting({ motionRef }: { motionRef: RefObject<HeroMotion> }) {
 
       <directionalLight ref={key} position={[3.4, 5.2, 6.4]} intensity={2.8} color="#fff2df" />
 
+      {/* Opposed side fills pick out the panel moulding as the leaves rotate. */}
+      <pointLight position={[-3.2, 0.8, 3.2]} intensity={4.5} distance={8} decay={2} color="#d9c7e3" />
+      <pointLight position={[3.2, -0.2, 2.6]} intensity={3.8} distance={8} decay={2} color="#f4c889" />
+
       {/*
         A wide soft light grazing the door faces from above and in front. This is the
         one that makes the panels read as surfaces: it picks out the bevels, the stile
@@ -107,7 +111,7 @@ function SceneLighting({ motionRef }: { motionRef: RefObject<HeroMotion> }) {
         to reflect — long vertical highlights down the stiles and handles — without
         downloading an HDRI. Baked once on mount, never re-rendered.
       */}
-      <Environment resolution={128} frames={1} environmentIntensity={1.4}>
+      <Environment resolution={256} frames={1} environmentIntensity={1.55}>
         <Lightformer form="rect" intensity={4} position={[0, 5, 4]} scale={[10, 4, 1]} color="#fff4e4" />
         <Lightformer form="rect" intensity={6} position={[-5, 0, 3]} scale={[1, 8, 1]} color="#e8ecf5" />
         <Lightformer form="rect" intensity={6} position={[5, 0, 3]} scale={[1, 8, 1]} color="#e8ecf5" />
@@ -230,7 +234,7 @@ function Scene({
   reducedMotion: boolean;
 }) {
   const motionRef = useHeroMotion(reducedMotion ? REDUCED_MOTION_POSE : 0);
-  const { brushedRoughness } = useHeroTextures();
+  const { brushedRoughness, lacquerColor } = useHeroTextures();
 
   return (
     <>
@@ -245,7 +249,11 @@ function Scene({
       <SceneLighting motionRef={motionRef} />
 
       <DoorFrame roughnessMap={brushedRoughness} />
-      <Doors motionRef={motionRef} roughnessMap={brushedRoughness} />
+      <Doors
+        motionRef={motionRef}
+        roughnessMap={brushedRoughness}
+        colorMap={lacquerColor}
+      />
       {!lite && <ContactPool motionRef={motionRef} />}
     </>
   );
@@ -284,7 +292,7 @@ export default function DoorScene({
       onCreated={({ gl }) => {
         // Lifted slightly above neutral: the palette is almost entirely shadow, and
         // the default exposure crushes the door detail into flat black.
-        gl.toneMappingExposure = 1.25;
+        gl.toneMappingExposure = 1.34;
       }}
     >
       <Scene progressRef={progressRef} lite={lite} reducedMotion={reducedMotion} />

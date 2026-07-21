@@ -2,14 +2,12 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef } from "react";
-import { apertureWidthPx } from "./camera";
 import { clamp01, easeInOutSine, range } from "./easing";
 import { applyMotion, createHeroMotion, type HeroMotion } from "./motion";
 import { DoorHeroFallback } from "./door-hero-fallback";
 import { HeroCopyOverlay, type DoorHeroCopy } from "./hero-copy-overlay";
 import {
   NextSectionReveal,
-  REVEAL_COPY_WIDTH_PX,
   type NextSectionCopy,
 } from "./next-section-reveal";
 import { useHeroQuality } from "./use-hero-quality";
@@ -44,7 +42,6 @@ function writeStaticOverlayVars(stage: HTMLElement | null) {
   stage.style.setProperty("--hero-lead-y", "0px");
   stage.style.setProperty("--hero-beyond-scale", "1");
   stage.style.setProperty("--hero-beyond-y", "0px");
-  stage.style.setProperty("--hero-beyond-copy-scale", "1");
   stage.style.setProperty("--hero-beyond-copy-opacity", "1");
   stage.style.setProperty("--hero-hint-opacity", "0");
 }
@@ -82,26 +79,16 @@ function writeOverlayVars(
 
   // The section beyond grows as the camera closes on the threshold, then settles back
   // to 1:1 once we are through it, so it matches the real section that follows.
-  const beyondScale = 1 + reveal * 0.2 * (1 - throughDoorway);
+  const beyondScale = 1 + reveal * 0.06 * (1 - throughDoorway);
   stage.style.setProperty("--hero-beyond-scale", beyondScale.toFixed(3));
 
-  // Its copy travels up and out of frame as we pass it, rather than dissolving —
-  // and so that it does not sit on top of the real heading arriving underneath.
-  stage.style.setProperty("--hero-beyond-y", `${(-70 * throughDoorway).toFixed(1)}px`);
-  stage.style.setProperty("--hero-beyond-copy-opacity", (1 - throughDoorway).toFixed(3));
-
-  // How wide a gap the doors currently leave. The copy behind them is scaled to fit
-  // inside it so the leaves never crop it mid-word — as a transform rather than a
-  // width, so nothing re-flows while scrolling.
-  const aperture = apertureWidthPx(
-    window.innerWidth,
-    window.innerHeight,
-    lite,
-    scratch.approach,
-    scratch.open,
-  );
-  const copyScale = Math.min(1, (aperture * 0.82) / REVEAL_COPY_WIDTH_PX);
-  stage.style.setProperty("--hero-beyond-copy-scale", copyScale.toFixed(3));
+  // The actual About composition stays readable after the threshold is crossed.
+  // A small upward drift makes it feel attached to the document scroll, while the
+  // full text remains present instead of dissolving into a temporary teaser.
+  const readProgress = easeInOutSine(range(progress, 0.7, 1));
+  const readTravel = Math.min(window.innerHeight * (lite ? 0.025 : 0.045), lite ? 20 : 40);
+  stage.style.setProperty("--hero-beyond-y", `${(-readTravel * readProgress).toFixed(1)}px`);
+  stage.style.setProperty("--hero-beyond-copy-opacity", "1");
 
   stage.style.setProperty("--hero-hint-opacity", (1 - range(progress, 0, 0.07)).toFixed(3));
 

@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { DoorHeroSection } from "@/components/hero/door-hero-section";
 import { siteConfig } from "@/content/site";
+import { missionText, values } from "@/content/values";
 import type { AppLocale } from "@/i18n/routing";
 
 /**
@@ -31,6 +32,8 @@ export async function Hero({ locale }: { locale: AppLocale }) {
       nextSection={{
         eyebrow: about("eyebrow"),
         heading: about("heading"),
+        mission: missionText[locale],
+        highlights: values[locale].slice(0, 2),
       }}
     />
   );
