@@ -5,7 +5,7 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const target = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/ru/`;
+  const target = "/ru/";
 
   return (
     <html lang="ru">

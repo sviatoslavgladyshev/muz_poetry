@@ -4,7 +4,12 @@ import { useEffect, useRef, type RefObject } from "react";
 import { Environment, Lightformer } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { MathUtils, type DirectionalLight, type PerspectiveCamera, type PointLight } from "three";
-import { PALETTE } from "./door-config";
+import {
+  MODEL_OFFSET_Y,
+  MODEL_SCALE_X,
+  MODEL_SCALE_Y,
+  PALETTE,
+} from "./door-config";
 import { CAMERA_FOV, heroCameraEndZ, heroCameraStartZ } from "./camera";
 import { ContactPool, DoorFrame, Doors } from "./doors";
 import { applyMotion, useHeroMotion, type HeroMotion } from "./motion";
@@ -73,9 +78,9 @@ function SceneLighting({ motionRef }: { motionRef: RefObject<HeroMotion> }) {
     <>
       {/* Tinted cool-plum so the shadow side of the metal never goes flat black —
           this replaces a second fill light, one less term in every fragment. */}
-      <ambientLight intensity={0.64} color="#806f68" />
+      <ambientLight intensity={0.64} color="#807a77" />
 
-      <directionalLight ref={key} position={[3.4, 5.2, 6.4]} intensity={2.15} color="#fff0df" />
+      <directionalLight ref={key} position={[3.4, 5.2, 6.4]} intensity={2.15} color="#fff5eb" />
 
       {/*
         A wide soft light grazing the door faces from above and in front. This is the
@@ -89,7 +94,7 @@ function SceneLighting({ motionRef }: { motionRef: RefObject<HeroMotion> }) {
         intensity={17}
         distance={16}
         decay={1.4}
-        color="#ffe9cd"
+        color="#fff1e5"
       />
 
       {/* Light from beyond the doors, leaking through the opening. */}
@@ -276,15 +281,20 @@ function Scene({
       <CameraRig motionRef={motionRef} lite={lite} />
       <SceneLighting motionRef={motionRef} />
 
-      <DoorFrame roughnessMap={brushedRoughness} colorMap={woodColor} />
-      <Doors
-        motionRef={motionRef}
-        roughnessMap={brushedRoughness}
-        colorMap={woodColor}
-        leftDoorFace={leftDoorFace}
-        rightDoorFace={rightDoorFace}
-      />
-      {!lite && <ContactPool motionRef={motionRef} />}
+      <group
+        position={[0, MODEL_OFFSET_Y, 0]}
+        scale={[MODEL_SCALE_X, MODEL_SCALE_Y, 1]}
+      >
+        <DoorFrame roughnessMap={brushedRoughness} colorMap={woodColor} />
+        <Doors
+          motionRef={motionRef}
+          roughnessMap={brushedRoughness}
+          colorMap={woodColor}
+          leftDoorFace={leftDoorFace}
+          rightDoorFace={rightDoorFace}
+        />
+        {!lite && <ContactPool motionRef={motionRef} />}
+      </group>
     </>
   );
 }

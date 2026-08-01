@@ -75,7 +75,7 @@ function WoodSurface({
 }: WoodMaps & { color?: string; roughness?: number }) {
   return (
     <meshStandardMaterial
-      color={colorMap ? "#969696" : PALETTE.wood}
+      color={colorMap ? "#a0a0a0" : PALETTE.wood}
       map={colorMap}
       roughness={roughness}
       roughnessMap={roughnessMap}

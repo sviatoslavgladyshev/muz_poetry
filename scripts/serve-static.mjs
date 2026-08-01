@@ -5,7 +5,6 @@ import path from "node:path";
 
 const port = Number.parseInt(process.env.PORT ?? "3000", 10);
 const hostname = process.env.HOST ?? "0.0.0.0";
-const basePath = process.env.BASE_PATH ?? "/muz_poetry";
 const outDir = path.resolve("out");
 
 const contentTypes = new Map([
@@ -47,19 +46,7 @@ async function findStaticFile(filePath) {
 
 const server = createServer(async (request, response) => {
   const url = new URL(request.url ?? "/", `http://${request.headers.host ?? "localhost"}`);
-
-  if (url.pathname === "/" || url.pathname === basePath) {
-    response.writeHead(302, { location: `${basePath}/` });
-    response.end();
-    return;
-  }
-
-  if (!url.pathname.startsWith(`${basePath}/`)) {
-    sendText(response, 404, `Not found. This export is mounted at ${basePath}/`);
-    return;
-  }
-
-  const filePath = resolveFilePath(url.pathname.slice(basePath.length));
+  const filePath = resolveFilePath(url.pathname);
   const staticFile = filePath ? await findStaticFile(filePath) : null;
 
   if (!staticFile) {
@@ -88,5 +75,5 @@ const server = createServer(async (request, response) => {
 });
 
 server.listen(port, hostname, () => {
-  console.log(`Serving static export at http://localhost:${port}${basePath}/`);
+  console.log(`Serving static export at http://localhost:${port}/`);
 });

@@ -41,6 +41,11 @@ export const LEAF_CENTER_Z = LEAF_THICKNESS / 2 + 0.02;
 /** How far the doors open. ~86° reads as "fully open" without going perfectly flat. */
 export const MAX_OPEN_ANGLE = MathUtils.degToRad(86);
 
+/** Aligns the animated assembly to the measured box of the exact facade image. */
+export const MODEL_SCALE_X = 0.93;
+export const MODEL_SCALE_Y = 1.12;
+export const MODEL_OFFSET_Y = -0.36;
+
 /** The surrounding wall the doorway is cut into. Large enough to fill any viewport. */
 export const WALL_WIDTH = 30;
 export const WALL_HEIGHT = 20;
@@ -62,7 +67,7 @@ export const FLOOR_Y = -OPENING_HEIGHT / 2;
 export const PALETTE = {
   /** Dark plum wall with aged walnut architecture and muted antique brass. */
   ink: "#180b11",
-  wood: "#4f352e",
+  wood: "#422f2b",
   woodDark: "#3c211c",
   woodLight: "#9a6850",
   panel: "#5a3027",
