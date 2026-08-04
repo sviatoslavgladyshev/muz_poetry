@@ -14,8 +14,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "afisha" });
+  const tNav = await getTranslations({ locale, namespace: "nav" });
   return {
-    title: `${t("pageHeading")} — «Поэзия звука»`,
+    title: `${t("pageHeading")} — ${tNav("brand")}`,
     description: t("pageIntro"),
   };
 }
@@ -33,10 +34,10 @@ export default async function AfishaPage({
   const sorted = [...events[l]].sort((a, b) => a.date.localeCompare(b.date));
 
   return (
-    <div className="bg-cream py-24 md:py-32">
+    <div className="bg-candle py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <Reveal>
-          <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-gold">
+          <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
             {t("eyebrow")}
           </p>
         </Reveal>

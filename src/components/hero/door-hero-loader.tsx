@@ -14,7 +14,8 @@ export function DoorHeroLoader({
 
   useEffect(() => {
     if (!ready) return;
-    const timeoutId = window.setTimeout(() => setMounted(false), 420);
+    // Failsafe unmount if transitionend never fires (reduced motion / interrupted).
+    const timeoutId = window.setTimeout(() => setMounted(false), 220);
     return () => window.clearTimeout(timeoutId);
   }, [ready]);
 
@@ -25,17 +26,21 @@ export function DoorHeroLoader({
       role="status"
       aria-label={brandName}
       aria-hidden={ready}
-      className={`fixed inset-0 z-[100] flex items-center justify-center bg-[#120609] transition-opacity duration-400 ease-out motion-reduce:duration-0 ${
+      onTransitionEnd={(event) => {
+        if (event.target !== event.currentTarget) return;
+        if (ready) setMounted(false);
+      }}
+      className={`fixed inset-0 z-[100] flex items-center justify-center bg-[#1a0a08] transition-opacity duration-150 ease-out motion-reduce:duration-0 ${
         ready ? "pointer-events-none opacity-0" : "opacity-100"
       }`}
     >
-      <div className="flex w-52 flex-col items-center text-[#e3c789]">
+      <div className="flex w-52 flex-col items-center text-[#b5b38a]">
         <div className="flex items-center gap-3">
           <Music2 className="size-5" strokeWidth={1.7} />
-          <span className="font-display text-2xl italic">{brandName}</span>
+          <span className="font-display text-2xl">{brandName}</span>
         </div>
-        <div className="mt-5 h-px w-full overflow-hidden bg-[#e3c789]/20">
-          <span className="door-loader-progress block h-full w-2/5 bg-[#e3c789]" />
+        <div className="mt-5 h-px w-full overflow-hidden bg-[#b5b38a]/20">
+          <span className="door-loader-progress block h-full w-2/5 bg-[#b5b38a]" />
         </div>
       </div>
     </div>

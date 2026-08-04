@@ -13,7 +13,7 @@ const typeStyles: Record<StudioEvent["type"], string> = {
   concert: "bg-primary text-primary-foreground",
   kvartirnik: "bg-accent text-accent-foreground",
   lecture: "bg-secondary text-secondary-foreground",
-  cinema: "bg-plum-deep text-cream",
+  cinema: "bg-juniper text-candle",
 };
 
 export async function EventCard({
@@ -38,14 +38,14 @@ export async function EventCard({
           {t(`eventTypes.${event.type}`)}
         </Badge>
       </div>
-      <CardContent className="flex flex-1 flex-col gap-3 p-6">
+      <CardContent className="flex flex-1 flex-col gap-4 p-7 md:p-8">
         <div className="flex items-center gap-4 text-sm text-foreground/60">
           <span className="flex items-center gap-1.5">
-            <CalendarDays className="h-4 w-4 text-gold" />
+            <CalendarDays className="h-4 w-4 text-leaf" />
             {formatEventDate(event.date, locale)}
           </span>
           <span className="flex items-center gap-1.5">
-            <Clock className="h-4 w-4 text-gold" />
+            <Clock className="h-4 w-4 text-leaf" />
             {event.time}
           </span>
         </div>

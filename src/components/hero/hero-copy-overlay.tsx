@@ -30,31 +30,37 @@ export function HeroCopyOverlay({ copy }: { copy: DoorHeroCopy }) {
         part so it never fights the section being revealed behind them.
       */}
       <div
-        className="door-hero-lead pointer-events-auto flex w-full max-w-[38rem] flex-col items-center"
+        className="door-hero-lead pointer-events-auto relative flex w-full max-w-[40rem] flex-col items-center rounded-2xl px-5 py-8 sm:px-8 sm:py-10"
         style={{
           opacity: "var(--hero-lead-opacity, 1)",
           transform: "translate3d(0, var(--hero-lead-y, 0px), 0)",
         }}
       >
+        {/* Soft dark veil so cream type stays readable on the facade. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10 rounded-2xl bg-[radial-gradient(ellipse_at_center,rgba(18,6,9,0.72)_0%,rgba(18,6,9,0.45)_55%,transparent_78%)]"
+        />
+
         <div className="flex w-full items-center justify-center gap-3 sm:gap-4">
-          <span className="h-px w-7 bg-gold-soft/45 sm:w-12" aria-hidden="true" />
-          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-gold-soft sm:text-xs">
+          <span className="h-px w-7 bg-leaf sm:w-12" aria-hidden="true" />
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-leaf drop-shadow-[0_1px_10px_rgba(0,0,0,0.85)] sm:text-sm">
             {copy.eyebrow}
           </p>
-          <span className="h-px w-7 bg-gold-soft/45 sm:w-12" aria-hidden="true" />
+          <span className="h-px w-7 bg-leaf sm:w-12" aria-hidden="true" />
         </div>
 
-        <p className="mt-6 font-display text-xl font-medium leading-tight text-cream/80 drop-shadow-[0_2px_18px_rgba(0,0,0,0.75)] sm:text-2xl">
+        <p className="mt-6 font-display text-xl leading-tight text-candle drop-shadow-[0_2px_16px_rgba(0,0,0,0.9)] sm:text-2xl md:text-[1.75rem]">
           {copy.brandDescriptor}
         </p>
 
-        <h1 className="mt-2 font-display text-5xl font-semibold leading-none text-gold-soft drop-shadow-[0_2px_24px_rgba(0,0,0,0.8)] sm:text-6xl md:text-7xl">
+        <h1 className="mt-2 font-display text-5xl leading-none text-candle drop-shadow-[0_3px_28px_rgba(0,0,0,0.95)] sm:text-6xl md:text-7xl">
           {copy.brandName}
         </h1>
 
-        <span className="mt-6 h-px w-14 bg-gold-soft/55" aria-hidden="true" />
+        <span className="mt-6 h-px w-14 bg-leaf" aria-hidden="true" />
 
-        <p className="mt-5 max-w-sm text-sm leading-relaxed text-cream/70 drop-shadow-[0_1px_12px_rgba(0,0,0,0.8)] sm:max-w-lg sm:text-base">
+        <p className="mt-5 max-w-md text-base leading-relaxed text-candle drop-shadow-[0_2px_14px_rgba(0,0,0,0.9)] sm:max-w-lg sm:text-lg">
           {copy.subtitle}
         </p>
 
@@ -63,7 +69,7 @@ export function HeroCopyOverlay({ copy }: { copy: DoorHeroCopy }) {
             render={<a href="#kontakty" />}
             nativeButton={false}
             size="lg"
-            className="rounded-[6px] bg-accent px-4 text-accent-foreground hover:bg-accent/90"
+            className="bg-primary px-5 text-primary-foreground shadow-[0_8px_24px_-8px_rgba(0,0,0,0.65)] hover:bg-primary/90"
           >
             <CalendarPlus />
             {copy.ctaTrial}
@@ -73,7 +79,7 @@ export function HeroCopyOverlay({ copy }: { copy: DoorHeroCopy }) {
             nativeButton={false}
             size="lg"
             variant="ghost"
-            className="rounded-[6px] px-4 text-cream/80 hover:bg-cream/10 hover:text-cream"
+            className="px-5 text-candle hover:bg-candle/15 hover:text-candle"
           >
             {copy.ctaAfisha}
             <ArrowRight />
@@ -87,10 +93,10 @@ export function HeroCopyOverlay({ copy }: { copy: DoorHeroCopy }) {
         className="door-hero-hint absolute bottom-8 flex flex-col items-center gap-2"
         style={{ opacity: "var(--hero-hint-opacity, 1)" }}
       >
-        <span className="text-[0.7rem] font-medium tracking-[0.22em] text-cream/55 uppercase">
+        <span className="text-[0.75rem] font-medium tracking-[0.22em] text-candle/80 uppercase drop-shadow-[0_1px_8px_rgba(0,0,0,0.85)]">
           {copy.scrollHint}
         </span>
-        <span className="h-9 w-px bg-gradient-to-b from-gold-soft/70 to-transparent" />
+        <span className="h-9 w-px bg-gradient-to-b from-leaf to-transparent" />
       </div>
     </div>
   );

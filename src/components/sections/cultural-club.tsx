@@ -15,10 +15,10 @@ export async function CulturalClub({ locale }: { locale: AppLocale }) {
   const t = await getTranslations({ locale, namespace: "club" });
 
   return (
-    <section id="klub" className="bg-primary py-24 text-primary-foreground md:py-32">
+    <section id="klub" className="scroll-mt-24 bg-primary py-24 text-primary-foreground md:py-32">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <Reveal>
-          <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-gold-soft">
+          <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
             {t("eyebrowPrefix")} {siteConfig.name}
           </p>
         </Reveal>
@@ -33,21 +33,21 @@ export async function CulturalClub({ locale }: { locale: AppLocale }) {
           </p>
         </Reveal>
 
-        <div className="mt-16 grid gap-8 md:grid-cols-2">
+        <div className="mt-16 grid gap-6 md:grid-cols-2">
           {clubOfferings[locale].map((offering, i) => {
             const Icon = icons[offering.icon];
             return (
               <Reveal key={offering.title} delay={i * 120} className="h-full">
-                <Card className="flex h-full flex-col gap-0 rounded-[8px] border border-cream/15 bg-cream/5 py-0 text-primary-foreground ring-0 backdrop-blur-sm">
-                  <CardContent className="flex h-full flex-col p-8">
-                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-gold/20">
-                    <Icon className="h-6 w-6 text-gold-soft" />
+                <Card className="flex h-full flex-col gap-0 rounded-[8px] border border-candle/15 bg-candle/5 py-0 text-primary-foreground ring-0 backdrop-blur-sm transition-shadow hover:shadow-lg">
+                  <CardContent className="flex h-full flex-col p-8 md:p-9">
+                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-leaf/20">
+                    <Icon className="h-6 w-6 text-leaf" />
                   </div>
                   <h3 className="font-display text-2xl italic">{offering.title}</h3>
                   <p className="mt-4 flex-1 text-sm leading-relaxed text-primary-foreground/80">
                     {offering.description}
                   </p>
-                  <p className="mt-6 text-sm font-medium text-gold-soft">{offering.forWhom}</p>
+                  <p className="mt-6 text-sm font-medium text-leaf">{offering.forWhom}</p>
                   </CardContent>
                 </Card>
               </Reveal>

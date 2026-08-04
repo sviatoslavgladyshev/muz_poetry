@@ -65,15 +65,15 @@ export const FLOOR_Y = -OPENING_HEIGHT / 2;
 
 /** Brand palette, mirrored from globals.css so the 3D scene stays on-brand. */
 export const PALETTE = {
-  /** Dark plum wall with aged walnut architecture and muted antique brass. */
-  ink: "#180b11",
-  wood: "#422f2b",
-  woodDark: "#3c211c",
-  woodLight: "#9a6850",
-  panel: "#5a3027",
-  panelEdge: "#8a5945",
-  plumDeep: "#3b1723",
-  gold: "#a87936",
-  goldSoft: "#d5b06a",
-  cream: "#fbf7f0",
+  /** Mahogany / juniper wall with aged wood architecture and leaf metal accents. */
+  ink: "#1a0a08",
+  wood: "#3a2218",
+  woodDark: "#2a140f",
+  woodLight: "#8a6a50",
+  panel: "#4c2018",
+  panelEdge: "#7a5540",
+  plumDeep: "#4c0000",
+  gold: "#898861",
+  goldSoft: "#b5b38a",
+  cream: "#efe9d7",
 } as const;

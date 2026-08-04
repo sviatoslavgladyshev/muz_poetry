@@ -15,10 +15,10 @@ export async function Teachers({ locale }: { locale: AppLocale }) {
   const t = await getTranslations({ locale, namespace: "teachers" });
 
   return (
-    <section id="mastera" className="bg-secondary/60 py-24 md:py-32">
+    <section id="mastera" className="scroll-mt-24 bg-secondary/60 py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <Reveal>
-          <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-gold">
+          <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
             {t("eyebrow")}
           </p>
         </Reveal>
@@ -33,7 +33,7 @@ export async function Teachers({ locale }: { locale: AppLocale }) {
           </p>
         </Reveal>
 
-        <div className="mt-16 grid gap-8 md:grid-cols-3">
+        <div className="mt-16 grid gap-6 md:grid-cols-3">
           {teachers[locale].map((slot, i) => (
             <Reveal key={i} delay={i * 100} className="h-full">
               {isTeacher(slot) ? (
@@ -74,16 +74,16 @@ function TeacherCard({
           fill
           className="object-cover"
         />
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-plum-deep/90 to-transparent p-5">
-          <h3 className="font-display text-2xl italic text-cream">{teacher.name}</h3>
-          {teacher.alias && <p className="text-xs text-cream/70">({teacher.alias})</p>}
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-mahogany/90 to-transparent p-6 md:p-7">
+          <h3 className="font-display text-2xl italic text-candle">{teacher.name}</h3>
+          {teacher.alias && <p className="text-xs text-candle/70">({teacher.alias})</p>}
         </div>
       </div>
-      <CardContent className="flex flex-1 flex-col gap-4 p-6">
+      <CardContent className="flex flex-1 flex-col gap-4 p-7 md:p-8">
         <p className="text-sm font-semibold text-primary">{teacher.role}</p>
 
         <div className="flex gap-2 text-sm leading-relaxed text-foreground/75">
-          <GraduationCap className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+          <GraduationCap className="mt-0.5 h-4 w-4 shrink-0 text-leaf" />
           <p>
             <span className="font-semibold text-foreground">{credentialsLabel} </span>
             {teacher.credentials}
@@ -91,20 +91,20 @@ function TeacherCard({
         </div>
 
         <div className="flex gap-2 text-sm leading-relaxed text-foreground/75">
-          <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+          <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-leaf" />
           <p>
             <span className="font-semibold text-foreground">{superpowerLabel} </span>
             {teacher.superpower}
           </p>
         </div>
 
-        <blockquote className="relative rounded-xl bg-secondary/70 p-4 text-sm italic leading-relaxed text-foreground/85">
-          <Quote className="mb-1 h-4 w-4 text-gold" />
+        <blockquote className="relative border-l-2 border-leaf/40 pl-4 text-sm italic leading-relaxed text-foreground/85">
+          <Quote className="mb-1 h-4 w-4 text-leaf" />
           {teacher.quote}
         </blockquote>
 
         <div className="mt-auto flex gap-2 text-sm text-foreground/75">
-          <Compass className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+          <Compass className="mt-0.5 h-4 w-4 shrink-0 text-leaf" />
           <p>
             <span className="font-semibold text-foreground">{routeLabel} </span>
             {teacher.route}
@@ -117,7 +117,7 @@ function TeacherCard({
 
 function EmptySlot({ label, hint }: { label: string; hint: string }) {
   return (
-    <Card className="flex h-full min-h-[26rem] flex-col items-center justify-center gap-0 rounded-[8px] border-2 border-dashed border-border bg-card/40 p-8 py-8 text-center ring-0">
+    <Card className="flex h-full flex-col items-center justify-center gap-0 rounded-[8px] border border-dashed border-border bg-card/40 p-8 py-10 text-center ring-0 md:p-10">
       <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
         <Sparkles className="h-6 w-6 text-primary" />
       </div>

@@ -39,6 +39,8 @@ function CameraRig({ motionRef, lite }: { motionRef: RefObject<HeroMotion>; lite
     const start = heroCameraStartZ(aspect, lite);
     const end = heroCameraEndZ(start, lite);
 
+    if (!motionRef.current) return;
+
     camera.position.z = MathUtils.lerp(start, end, motionRef.current.approach);
 
     const parallaxX = lite ? 0 : state.pointer.x * 0.18;
@@ -46,8 +48,8 @@ function CameraRig({ motionRef, lite }: { motionRef: RefObject<HeroMotion>; lite
     // A slight descent as we approach, like walking toward a doorway.
     const driftY = MathUtils.lerp(0.12, -0.05, motionRef.current.approach);
 
-    camera.position.x = MathUtils.damp(camera.position.x, parallaxX, 2.4, delta);
-    camera.position.y = MathUtils.damp(camera.position.y, driftY + parallaxY, 2.4, delta);
+    camera.position.x = MathUtils.damp(camera.position.x, parallaxX, 7, delta);
+    camera.position.y = MathUtils.damp(camera.position.y, driftY + parallaxY, 7, delta);
     camera.lookAt(0, camera.position.y * 0.35, -2.5);
   });
 
@@ -116,7 +118,7 @@ function SceneLighting({ motionRef }: { motionRef: RefObject<HeroMotion> }) {
         <Lightformer form="rect" intensity={4} position={[0, 5, 4]} scale={[10, 4, 1]} color="#fff4e4" />
         <Lightformer form="rect" intensity={6} position={[-5, 0, 3]} scale={[1, 8, 1]} color="#e8ecf5" />
         <Lightformer form="rect" intensity={6} position={[5, 0, 3]} scale={[1, 8, 1]} color="#e8ecf5" />
-        <Lightformer form="rect" intensity={2} position={[0, -4, 3]} scale={[8, 2, 1]} color="#8a4a5f" />
+        <Lightformer form="rect" intensity={2} position={[0, -4, 3]} scale={[8, 2, 1]} color="#6a4a3a" />
       </Environment>
     </>
   );
@@ -143,7 +145,7 @@ function MotionDriver({
     // Frame-rate independent exponential damping.
     applyMotion(
       motionRef.current,
-      MathUtils.damp(motionRef.current.smooth, motionRef.current.target, 3.2, delta),
+      MathUtils.damp(motionRef.current.smooth, motionRef.current.target, 10, delta),
     );
   });
 
@@ -194,11 +196,11 @@ function RenderGate({
     };
 
     const onScroll = () => wake(2);
-    const onPointerMove = () => wake(18);
+    const onPointerMove = () => wake(8);
 
     window.addEventListener("scroll", onScroll, { passive: true });
     if (parallax) window.addEventListener("pointermove", onPointerMove, { passive: true });
-    wake(4);
+    wake(2);
 
     return () => {
       cancelAnimationFrame(rafId);
@@ -218,7 +220,7 @@ function SettleOnMount() {
   const invalidate = useThree((state) => state.invalidate);
 
   useEffect(() => {
-    let frames = 4;
+    let frames = 2;
     let id = 0;
     const tick = () => {
       invalidate();
@@ -232,22 +234,14 @@ function SettleOnMount() {
   return null;
 }
 
-/** Reports readiness after the first WebGL frame has reached the browser paint. */
+/** Reports readiness after the first WebGL frame. */
 function FirstFrameReady({ onReady }: { onReady: () => void }) {
   const reported = useRef(false);
-  const paintFrame = useRef(0);
-
-  useEffect(
-    () => () => {
-      cancelAnimationFrame(paintFrame.current);
-    },
-    [],
-  );
 
   useFrame(() => {
     if (reported.current) return;
     reported.current = true;
-    paintFrame.current = requestAnimationFrame(onReady);
+    onReady();
   });
 
   return null;
@@ -285,7 +279,11 @@ function Scene({
         position={[0, MODEL_OFFSET_Y, 0]}
         scale={[MODEL_SCALE_X, MODEL_SCALE_Y, 1]}
       >
-        <DoorFrame roughnessMap={brushedRoughness} colorMap={woodColor} />
+        <DoorFrame
+          roughnessMap={brushedRoughness}
+          colorMap={woodColor}
+          motionRef={motionRef}
+        />
         <Doors
           motionRef={motionRef}
           roughnessMap={brushedRoughness}

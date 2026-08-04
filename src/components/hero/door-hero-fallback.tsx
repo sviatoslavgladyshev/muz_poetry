@@ -23,7 +23,7 @@ export function DoorHeroFallback({ animated = true }: { animated?: boolean }) {
           <div className="flex-1 rounded-[2px] bg-gradient-to-bl from-[#8a5945] to-[#4c2b23] ring-1 ring-[#c79a7e]/30" />
         </div>
 
-        <div className="absolute inset-y-[6%] left-1/2 w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-[#c6963d]/45 to-transparent" />
+        <div className="absolute inset-y-[6%] left-1/2 w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-[#898861]/45 to-transparent" />
 
         {animated && (
           <div className="absolute inset-0 animate-pulse rounded-[2px] bg-[radial-gradient(ellipse_at_center,rgba(227,199,137,0.06),transparent_70%)]" />

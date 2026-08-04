@@ -11,10 +11,10 @@ export async function Afisha({ locale }: { locale: AppLocale }) {
   const upcoming = events[locale].slice(0, 3);
 
   return (
-    <section id="afisha" className="bg-cream py-24 md:py-32">
+    <section id="afisha" className="scroll-mt-24 bg-candle py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <Reveal>
-          <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-gold">
+          <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
             {t("eyebrow")}
           </p>
         </Reveal>

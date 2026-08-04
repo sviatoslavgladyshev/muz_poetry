@@ -35,10 +35,10 @@ export async function Contacts({ locale }: { locale: AppLocale }) {
   const t = await getTranslations({ locale, namespace: "contacts" });
 
   return (
-    <section id="kontakty" className="bg-plum-deep py-24 text-cream md:py-32">
+    <section id="kontakty" className="scroll-mt-24 bg-mahogany py-24 text-candle md:py-32">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <Reveal>
-          <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-gold-soft">
+          <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
             {t("eyebrow")}
           </p>
         </Reveal>
@@ -52,24 +52,24 @@ export async function Contacts({ locale }: { locale: AppLocale }) {
           <Reveal delay={120} className="lg:col-span-2">
             <div className="flex h-full flex-col gap-8">
               <div className="flex items-start gap-3">
-                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-gold-soft" />
+                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-leaf" />
                 <div>
                   <p className="font-semibold">{t("addressLabel")}</p>
-                  <p className="text-cream/75">{siteConfig.address[locale]}</p>
+                  <p className="text-candle/75">{siteConfig.address[locale]}</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <Phone className="mt-0.5 h-5 w-5 shrink-0 text-gold-soft" />
+                <Phone className="mt-0.5 h-5 w-5 shrink-0 text-leaf" />
                 <div>
                   <p className="font-semibold">{t("phoneLabel")}</p>
                   <a
                     href={siteConfig.phoneHref}
-                    className="text-cream/75 transition-colors hover:text-gold-soft"
+                    className="text-candle/75 transition-colors hover:text-leaf"
                   >
                     {siteConfig.phoneDisplay}
                   </a>
-                  <p className="text-sm text-cream/60">{siteConfig.contactPerson}</p>
+                  <p className="text-sm text-candle/60">{siteConfig.contactPerson}</p>
                 </div>
               </div>
 
@@ -78,8 +78,8 @@ export async function Contacts({ locale }: { locale: AppLocale }) {
                   href={siteConfig.vk}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="ВКонтакте"
-                  className="flex h-11 w-11 items-center justify-center rounded-full bg-cream/10 transition-colors hover:bg-gold hover:text-plum-deep"
+                  aria-label={t("vkAria")}
+                  className="flex h-11 w-11 items-center justify-center rounded-full bg-candle/10 transition-colors hover:bg-leaf hover:text-mahogany"
                 >
                   <VkIcon className="h-5 w-5" />
                 </a>
@@ -87,8 +87,8 @@ export async function Contacts({ locale }: { locale: AppLocale }) {
                   href={siteConfig.telegram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Telegram"
-                  className="flex h-11 w-11 items-center justify-center rounded-full bg-cream/10 transition-colors hover:bg-gold hover:text-plum-deep"
+                  aria-label={t("telegramAria")}
+                  className="flex h-11 w-11 items-center justify-center rounded-full bg-candle/10 transition-colors hover:bg-leaf hover:text-mahogany"
                 >
                   <Send className="h-5 w-5" />
                 </a>
@@ -96,8 +96,8 @@ export async function Contacts({ locale }: { locale: AppLocale }) {
                   href={siteConfig.whatsapp}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="WhatsApp"
-                  className="flex h-11 w-11 items-center justify-center rounded-full bg-cream/10 transition-colors hover:bg-gold hover:text-plum-deep"
+                  aria-label={t("whatsappAria")}
+                  className="flex h-11 w-11 items-center justify-center rounded-full bg-candle/10 transition-colors hover:bg-leaf hover:text-mahogany"
                 >
                   <MessageCircle className="h-5 w-5" />
                 </a>
@@ -105,17 +105,17 @@ export async function Contacts({ locale }: { locale: AppLocale }) {
                   href={siteConfig.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Instagram"
-                  className="flex h-11 w-11 items-center justify-center rounded-full bg-cream/10 transition-colors hover:bg-gold hover:text-plum-deep"
+                  aria-label={t("instagramAria")}
+                  className="flex h-11 w-11 items-center justify-center rounded-full bg-candle/10 transition-colors hover:bg-leaf hover:text-mahogany"
                 >
                   <InstagramIcon className="h-5 w-5" />
                 </a>
               </div>
 
-              <div className="mt-2 aspect-[4/3] w-full overflow-hidden rounded-2xl border border-cream/15">
+              <div className="mt-2 aspect-[4/3] w-full overflow-hidden rounded-[8px] border border-candle/15">
                 <iframe
                   src={siteConfig.yandexMapEmbedSrc}
-                  title="Мастерская «Поэзия звука» на карте — улица Гоголя, 25, Казань"
+                  title={t("mapTitle")}
                   className="h-full w-full"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
@@ -125,14 +125,14 @@ export async function Contacts({ locale }: { locale: AppLocale }) {
           </Reveal>
 
           <Reveal delay={200} className="lg:col-span-3">
-            <Card className="gap-0 rounded-[8px] bg-cream py-0 text-foreground shadow-xl ring-0">
-              <CardHeader className="gap-2 p-7 pb-0 md:p-9 md:pb-0">
+            <Card className="gap-0 rounded-[8px] bg-candle py-0 text-foreground shadow-xl ring-0">
+              <CardHeader className="gap-2 p-8 pb-0 md:p-10 md:pb-0">
                 <CardTitle className="font-display text-2xl italic text-primary">
                   {t("formHeading")}
                 </CardTitle>
                 <p className="text-sm text-foreground/70">{t("formSubtext")}</p>
               </CardHeader>
-              <CardContent className="p-7 pt-6 md:p-9 md:pt-6">
+              <CardContent className="p-8 pt-6 md:p-10 md:pt-6">
                 <TrialForm locale={locale} />
               </CardContent>
             </Card>

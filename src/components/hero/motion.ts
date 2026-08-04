@@ -25,9 +25,9 @@ export type HeroMotion = {
   reveal: number;
 };
 
-/** Timeline: the doors hold shut briefly, then open across most of the scroll. */
-const DOOR_START = 0.12;
-const DOOR_END = 0.68;
+/** Timeline: doors begin opening almost immediately, then across most of the scroll. */
+const DOOR_START = 0.04;
+const DOOR_END = 0.66;
 /**
  * The camera holds still until the doors are most of the way open, then walks
  * through. Starting it earlier means the threshold is crossed while the leaves are

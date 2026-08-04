@@ -17,10 +17,10 @@ export async function Directions({ locale }: { locale: AppLocale }) {
   };
 
   return (
-    <section id="obuchenie" className="bg-cream py-24 md:py-32">
+    <section id="obuchenie" className="scroll-mt-24 bg-candle py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <Reveal>
-          <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-gold">
+          <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
             {t("eyebrow")}
           </p>
         </Reveal>
@@ -51,7 +51,7 @@ export async function Directions({ locale }: { locale: AppLocale }) {
                           className="object-cover"
                         />
                       </div>
-                      <CardContent className="flex flex-1 flex-col gap-3 p-6">
+                      <CardContent className="flex flex-1 flex-col gap-4 p-7 md:p-8">
                         <h4 className="font-display text-2xl italic text-primary">
                           {direction.title}
                         </h4>

@@ -75,8 +75,8 @@ export function TrialForm({ locale }: { locale: AppLocale }) {
 
   if (status === "success") {
     return (
-      <div className="flex flex-col items-center gap-4 rounded-3xl border border-gold/30 bg-gold/10 px-8 py-14 text-center">
-        <CheckCircle2 className="h-12 w-12 text-gold" />
+      <div className="flex flex-col items-center gap-4 rounded-[8px] border border-leaf/30 bg-secondary px-8 py-14 text-center">
+        <CheckCircle2 className="h-12 w-12 text-leaf" />
         <h3 className="font-display text-2xl italic text-primary">{t("successHeading")}</h3>
         <p className="max-w-sm text-sm leading-relaxed text-foreground/75">
           {t("successMessage")}
@@ -157,7 +157,7 @@ export function TrialForm({ locale }: { locale: AppLocale }) {
         type="submit"
         size="lg"
         disabled={status === "submitting"}
-        className="mt-2 w-full bg-accent text-accent-foreground hover:bg-accent/90"
+        className="mt-2 w-full bg-primary text-primary-foreground hover:bg-primary/90"
       >
         {status === "submitting" ? (
           <>

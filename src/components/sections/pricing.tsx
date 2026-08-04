@@ -32,42 +32,34 @@ export function Pricing({ locale }: { locale: AppLocale }) {
     .filter((item): item is PriceItem => Boolean(item));
 
   return (
-    <section id="tseny" className="border-y border-border bg-secondary/45 py-20 md:py-28">
+    <section id="tseny" className="scroll-mt-24 border-y border-border bg-secondary/45 py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
-        <div className="grid items-end gap-8 lg:grid-cols-[1fr_1.1fr]">
-          <div>
-            <Reveal>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-gold">
-                {t("eyebrow")}
-              </p>
-            </Reveal>
-            <Reveal delay={80}>
-              <h2 className="mt-4 max-w-xl font-display text-4xl leading-[1.05] text-primary md:text-5xl">
-                {t("heading")}
-              </h2>
-            </Reveal>
-          </div>
+        <Reveal>
+          <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
+            {t("eyebrow")}
+          </p>
+        </Reveal>
+        <Reveal delay={80}>
+          <h2 className="mx-auto mt-4 max-w-2xl text-center font-display text-3xl italic leading-[1.05] text-primary sm:text-4xl md:text-5xl">
+            {t("heading")}
+          </h2>
+        </Reveal>
+        <Reveal delay={120}>
+          <p className="mx-auto mt-6 max-w-2xl text-center text-base leading-relaxed text-foreground/75 md:text-lg">
+            {t("previewIntro")}
+          </p>
+        </Reveal>
 
-          <Reveal delay={120}>
-            <div className="border-l-2 border-gold pl-5 md:pl-7">
-              <p className="max-w-xl text-base leading-relaxed text-foreground/75">
-                {t("previewIntro")}
-              </p>
-              <div className="mt-5 flex flex-wrap gap-x-7 gap-y-3">
-                {pricingStats[locale].map((stat) => (
-                  <div key={stat.label}>
-                    <span className="font-display text-2xl font-semibold text-primary">
-                      {stat.value}
-                    </span>
-                    <span className="ml-2 text-xs text-foreground/60">{stat.label}</span>
-                  </div>
-                ))}
-              </div>
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+          {pricingStats[locale].map((stat) => (
+            <div key={stat.label} className="text-center">
+              <span className="font-display text-2xl text-primary">{stat.value}</span>
+              <span className="ml-2 text-xs text-foreground/60">{stat.label}</span>
             </div>
-          </Reveal>
+          ))}
         </div>
 
-        <div className="mt-12 grid gap-4 md:grid-cols-3">
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
           {previewItems.map((item, index) => (
             <Reveal key={item.id} delay={index * 80} className="h-full">
               <CompactPriceCard item={item} />
@@ -76,7 +68,7 @@ export function Pricing({ locale }: { locale: AppLocale }) {
         </div>
 
         <Reveal delay={160}>
-          <div className="mt-9 flex flex-col items-start justify-between gap-5 border-t border-border pt-7 sm:flex-row sm:items-center">
+          <div className="mt-12 flex flex-col items-center justify-center gap-5 border-t border-border pt-8 text-center sm:flex-row sm:justify-between sm:text-left">
             <p className="max-w-2xl text-sm leading-relaxed text-foreground/65">
               {t("previewNote")}
             </p>
@@ -109,18 +101,18 @@ export function PricingPageContent({ locale }: { locale: AppLocale }) {
     .filter((item): item is PriceItem => Boolean(item));
 
   return (
-    <div className="bg-cream">
+    <div className="bg-candle">
       <section className="border-b border-border bg-primary text-primary-foreground">
         <div className="mx-auto max-w-6xl px-5 py-14 md:px-8 md:py-20">
           <div className="grid items-end gap-10 lg:grid-cols-[1.25fr_0.75fr]">
             <div>
               <Reveal>
-                <p className="text-xs font-bold uppercase tracking-[0.22em] text-gold-soft">
+                <p className="text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
                   {t("pageEyebrow")}
                 </p>
               </Reveal>
               <Reveal delay={60}>
-                <h1 className="mt-4 max-w-3xl font-display text-4xl leading-[1.02] text-cream sm:text-5xl md:text-6xl">
+                <h1 className="mt-4 max-w-3xl font-display text-4xl italic leading-[1.02] text-candle sm:text-5xl md:text-6xl">
                   {t("pageHeading")}
                 </h1>
               </Reveal>
@@ -135,7 +127,7 @@ export function PricingPageContent({ locale }: { locale: AppLocale }) {
                     render={<Link href="/#kontakty" />}
                     nativeButton={false}
                     size="lg"
-                    className="bg-accent text-accent-foreground hover:bg-accent/90"
+                    className="bg-candle text-mahogany hover:bg-candle/90"
                   >
                     {t("cta")}
                     <ArrowRight />
@@ -145,7 +137,7 @@ export function PricingPageContent({ locale }: { locale: AppLocale }) {
                     nativeButton={false}
                     size="lg"
                     variant="outline"
-                    className="border-cream/35 bg-transparent text-cream hover:bg-cream/10 hover:text-cream"
+                    className="border-candle/35 bg-transparent text-candle hover:bg-candle/10 hover:text-candle"
                   >
                     {t("catalogCta")}
                   </Button>
@@ -154,14 +146,14 @@ export function PricingPageContent({ locale }: { locale: AppLocale }) {
             </div>
 
             <Reveal delay={140}>
-              <div className="border-y border-gold-soft/40 py-6 lg:border-y-0 lg:border-l lg:py-2 lg:pl-9">
-                <div className="flex items-center gap-3 text-gold-soft">
+              <div className="border-y border-leaf/40 py-6 lg:border-y-0 lg:border-l lg:py-2 lg:pl-9">
+                <div className="flex items-center gap-3 text-leaf">
                   <Gift className="h-5 w-5" />
-                  <p className="text-xs font-bold uppercase tracking-[0.2em]">
+                  <p className="text-sm font-semibold uppercase tracking-[0.25em]">
                     {t("freeEyebrow")}
                   </p>
                 </div>
-                <p className="mt-4 font-display text-4xl leading-none text-cream">
+                <p className="mt-4 font-display text-4xl leading-none text-candle">
                   {t("freeHeading")}
                 </p>
                 <p className="mt-3 max-w-sm text-sm leading-relaxed text-primary-foreground/65">
@@ -180,7 +172,7 @@ export function PricingPageContent({ locale }: { locale: AppLocale }) {
                     index > 0 ? "border-t border-primary-foreground/15 sm:border-l sm:border-t-0" : ""
                   }`}
                 >
-                  <p className="font-display text-3xl font-semibold text-gold-soft">{stat.value}</p>
+                  <p className="font-display text-3xl text-leaf">{stat.value}</p>
                   <p className="mt-1 text-xs leading-relaxed text-primary-foreground/60">
                     {stat.label}
                   </p>
@@ -205,7 +197,7 @@ export function PricingPageContent({ locale }: { locale: AppLocale }) {
         <div className="mx-auto max-w-6xl px-5 md:px-8">
           <Reveal>
             <div className="max-w-2xl">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold">
+              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
                 {t("recommendedEyebrow")}
               </p>
               <h2 className="mt-3 font-display text-4xl leading-tight text-primary md:text-5xl">
@@ -241,7 +233,7 @@ export function PricingPageContent({ locale }: { locale: AppLocale }) {
       <section id="pricing-catalog" className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
         <Reveal>
           <div className="max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold">
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
               {t("catalogEyebrow")}
             </p>
             <h2 className="mt-3 font-display text-4xl leading-tight text-primary md:text-5xl">
@@ -304,10 +296,10 @@ export function PricingPageContent({ locale }: { locale: AppLocale }) {
       <section className="bg-primary py-14 text-primary-foreground">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-7 px-5 md:flex-row md:items-center md:px-8">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold-soft">
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
               {t("finalEyebrow")}
             </p>
-            <h2 className="mt-3 max-w-2xl font-display text-3xl leading-tight text-cream md:text-4xl">
+            <h2 className="mt-3 max-w-2xl font-display text-3xl leading-tight text-candle md:text-4xl">
               {t("finalHeading")}
             </h2>
           </div>
@@ -329,29 +321,29 @@ export function PricingPageContent({ locale }: { locale: AppLocale }) {
 function CompactPriceCard({ item }: { item: PriceItem }) {
   return (
     <Card
-      className={`flex h-full flex-col rounded-[8px] border p-6 transition-transform hover:-translate-y-1 ${
+      className={`relative flex h-full flex-col gap-0 rounded-[8px] border p-7 ring-0 transition-shadow hover:shadow-lg md:p-8 ${
         item.featured
           ? "border-primary bg-primary text-primary-foreground shadow-lg"
-          : "border-border bg-card"
-      } gap-0 py-0 ring-0`}
+          : "border-border bg-card shadow-sm"
+      }`}
     >
-      <div className="flex min-h-7 items-start justify-between gap-3">
-        <p className={`text-xs font-bold uppercase tracking-[0.16em] ${item.featured ? "text-gold-soft" : "text-gold"}`}>
+      <div className={`flex min-h-7 items-start ${item.badge ? "pr-28" : ""}`}>
+        <p className={`min-w-0 text-sm font-semibold uppercase tracking-[0.25em] ${item.featured ? "text-candle" : "text-leaf"}`}>
           {item.benefitLabel}
         </p>
-        {item.badge && (
-          <Badge className="rounded-[4px] bg-accent px-2.5 py-1 text-accent-foreground hover:bg-accent">
-            {item.badge}
-          </Badge>
-        )}
       </div>
-      <p className={`mt-6 font-display text-3xl font-semibold leading-tight ${item.featured ? "text-cream" : "text-primary"}`}>
+      {item.badge && (
+        <Badge className="absolute top-5 right-4 h-auto rounded-[4px] bg-accent px-2.5 py-1 text-accent-foreground hover:bg-accent md:top-6 md:right-5">
+          {item.badge}
+        </Badge>
+      )}
+      <p className={`mt-5 font-display text-3xl leading-snug ${item.featured ? "text-candle" : "text-primary"}`}>
         {item.benefit}
       </p>
-      <h3 className={`mt-6 text-sm font-semibold ${item.featured ? "text-primary-foreground/85" : "text-foreground/80"}`}>
+      <h3 className={`mt-5 text-sm font-semibold leading-relaxed ${item.featured ? "text-primary-foreground/85" : "text-foreground/80"}`}>
         {item.title}
       </h3>
-      <PriceLine item={item} className="mt-auto pt-5" compact dark={item.featured} />
+      <PriceLine item={item} className="mt-auto pt-6" compact dark={item.featured} />
     </Card>
   );
 }
@@ -369,20 +361,33 @@ function RecommendedCard({
 }) {
   return (
     <Card
-      className={`relative flex h-full flex-col overflow-hidden rounded-[8px] border p-7 ${
+      className={`relative flex h-full flex-col gap-0 overflow-hidden rounded-[8px] border p-7 ring-0 md:p-8 ${
         featured
           ? "border-primary bg-primary text-primary-foreground shadow-xl"
-          : "border-border bg-card"
-      } gap-0 py-0 ring-0`}
+          : "border-border bg-card shadow-sm"
+      }`}
     >
-      {featured && <div className="absolute inset-x-0 top-0 h-1 bg-gold" />}
-      <p className={`text-xs font-bold uppercase tracking-[0.18em] ${featured ? "text-gold-soft" : "text-gold"}`}>
-        {eyebrow}
-      </p>
-      <h3 className={`mt-3 text-lg font-semibold ${featured ? "text-cream" : "text-primary"}`}>
+      {featured && <div className="absolute inset-x-0 top-0 h-1 bg-leaf" />}
+      <div className={`flex min-h-7 items-start ${item.badge ? "pr-28" : ""}`}>
+        <p className={`min-w-0 text-sm font-semibold uppercase tracking-[0.25em] ${featured ? "text-candle" : "text-leaf"}`}>
+          {eyebrow}
+        </p>
+      </div>
+      {item.badge && (
+        <Badge
+          className={`absolute top-5 right-4 h-auto rounded-[4px] px-2.5 py-1 md:top-6 md:right-5 ${
+            featured
+              ? "bg-accent text-accent-foreground hover:bg-accent"
+              : "bg-primary text-primary-foreground hover:bg-primary"
+          }`}
+        >
+          {item.badge}
+        </Badge>
+      )}
+      <h3 className={`mt-3 text-lg font-semibold ${featured ? "text-candle" : "text-primary"}`}>
         {item.title}
       </h3>
-      <p className={`mt-8 font-display text-4xl font-semibold leading-[1.05] ${featured ? "text-gold-soft" : "text-primary"}`}>
+      <p className={`mt-8 font-display text-4xl leading-[1.05] ${featured ? "text-candle" : "text-primary"}`}>
         {item.benefit}
       </p>
       {item.description && (
@@ -451,11 +456,11 @@ function SectionLead({
 }) {
   return (
     <div>
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-gold-soft [&_svg]:h-5 [&_svg]:w-5">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-candle [&_svg]:h-5 [&_svg]:w-5">
         {icon}
       </div>
-      <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-gold">{eyebrow}</p>
-      <h2 className="mt-2 font-display text-3xl leading-tight text-primary">{title}</h2>
+      <p className="mt-5 text-sm font-semibold uppercase tracking-[0.25em] text-leaf">{eyebrow}</p>
+      <h2 className="mt-2 font-display text-3xl italic leading-tight text-primary">{title}</h2>
       {description && (
         <p className="mt-4 text-sm leading-relaxed text-foreground/60">{description}</p>
       )}
@@ -475,8 +480,8 @@ function OfferCollection({
   return (
     <div>
       <div className="mb-4 flex items-center gap-3 border-b border-border pb-3">
-        {icon && <span className="text-gold [&_svg]:h-4 [&_svg]:w-4">{icon}</span>}
-        <h3 className="font-display text-2xl text-primary">{section.title}</h3>
+        {icon && <span className="text-leaf [&_svg]:h-4 [&_svg]:w-4">{icon}</span>}
+        <h3 className="font-display text-2xl italic text-primary">{section.title}</h3>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         {section.items.map((item) => (
@@ -490,25 +495,25 @@ function OfferCollection({
 function CatalogOffer({ item, cta }: { item: PriceItem; cta: string }) {
   return (
     <Card
-      className={`relative flex h-full flex-col rounded-[8px] border p-6 ${
+      className={`relative flex h-full flex-col gap-0 rounded-[8px] border p-7 ring-0 md:p-8 ${
         item.featured
-          ? "border-gold/70 bg-[#fff7e2] shadow-sm"
-          : "border-border bg-card"
-      } gap-0 py-0 ring-0`}
+          ? "border-leaf/70 bg-secondary shadow-sm"
+          : "border-border bg-card shadow-sm"
+      }`}
     >
-      <div className="flex min-h-7 items-start justify-between gap-3">
-        <p className="text-xs font-bold uppercase tracking-[0.15em] text-gold">
+      <div className={`flex min-h-7 items-start ${item.badge ? "pr-28" : ""}`}>
+        <p className="min-w-0 text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
           {item.benefitLabel}
         </p>
-        {item.badge && (
-          <Badge className="rounded-[4px] bg-primary px-2.5 py-1 text-primary-foreground hover:bg-primary">
-            {item.badge}
-          </Badge>
-        )}
       </div>
+      {item.badge && (
+        <Badge className="absolute top-5 right-4 h-auto rounded-[4px] bg-primary px-2.5 py-1 text-primary-foreground hover:bg-primary md:top-6 md:right-5">
+          {item.badge}
+        </Badge>
+      )}
 
       <h3 className="mt-5 text-base font-semibold text-primary">{item.title}</h3>
-      <p className="mt-2 font-display text-3xl font-semibold leading-tight text-primary">
+      <p className="mt-2 font-display text-3xl leading-snug text-primary">
         {item.benefit}
       </p>
       {item.description && (
@@ -516,24 +521,24 @@ function CatalogOffer({ item, cta }: { item: PriceItem; cta: string }) {
       )}
 
       {item.details && (
-        <ul className="mt-5 space-y-2">
+        <ul className="mt-5 space-y-2.5">
           {item.details.map((detail) => (
             <li key={detail} className="flex items-start gap-2 text-xs leading-relaxed text-foreground/65">
-              <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold" />
+              <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-leaf" />
               <span>{detail}</span>
             </li>
           ))}
         </ul>
       )}
 
-      <div className="mt-auto flex flex-col gap-5 border-t border-border/80 pt-5 sm:flex-row sm:items-end sm:justify-between">
+      <div className="mt-auto flex flex-col gap-5 border-t border-border/80 pt-6 sm:flex-row sm:items-end sm:justify-between">
         <PriceLine item={item} compact />
         <Button
           render={<Link href="/#kontakty" />}
           nativeButton={false}
           size="sm"
           variant="ghost"
-          className="justify-start px-0 text-primary hover:bg-transparent hover:text-gold sm:justify-center"
+          className="justify-start px-0 text-primary hover:bg-transparent hover:text-leaf sm:justify-center"
         >
           {cta}
           <ArrowRight />
@@ -560,7 +565,7 @@ function PricingNav({
             nativeButton={false}
             size="sm"
             variant="ghost"
-            className="shrink-0 rounded-full px-2 text-xs font-bold uppercase tracking-[0.08em] text-foreground/60 hover:bg-secondary hover:text-primary"
+            className="shrink-0 rounded-full px-2 text-sm font-semibold uppercase tracking-[0.25em] text-foreground/60 hover:bg-secondary hover:text-primary"
           >
             {itemLabel}
           </Button>
@@ -585,7 +590,7 @@ function PriceLine({
     <div className={className}>
       <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
         <span
-          className={`${compact ? "text-xl" : "text-2xl"} font-semibold ${dark ? "text-gold-soft" : "text-primary"}`}
+          className={`${compact ? "text-xl" : "text-2xl"} font-medium ${dark ? "text-candle" : "text-primary"}`}
         >
           {item.price}
         </span>

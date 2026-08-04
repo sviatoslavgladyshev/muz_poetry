@@ -24,7 +24,7 @@ export function Reveal({ children, className, delay = 0, as = "div" }: RevealPro
           observer.unobserve(node);
         }
       },
-      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0.08, rootMargin: "0px 0px -8% 0px" }
     );
 
     observer.observe(node);
@@ -32,12 +32,14 @@ export function Reveal({ children, className, delay = 0, as = "div" }: RevealPro
   }, []);
 
   const Comp = as;
+  // Keep stagger subtle so sections feel responsive, not staged.
+  const cappedDelay = delay > 0 ? Math.min(Math.round(delay * 0.35), 60) : 0;
 
   return (
     <Comp
       ref={ref as never}
       className={cn("reveal", className)}
-      style={{ transitionDelay: delay ? `${delay}ms` : undefined }}
+      style={{ transitionDelay: cappedDelay ? `${cappedDelay}ms` : undefined }}
     >
       {children}
     </Comp>

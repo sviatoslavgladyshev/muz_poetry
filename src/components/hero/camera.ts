@@ -41,10 +41,9 @@ export function heroCameraStartZ(aspect: number, lite: boolean) {
  * stopped changing, and it pulls the doors out of view far too early.
  */
 export function heroCameraEndZ(startZ: number, lite: boolean) {
-  // Mobile starts much farther away because its narrow frustum has to contain the
-  // leaves. It still needs to reach the threshold; otherwise the top and sides of
-  // the frame continue masking the About section after the doors are fully open.
-  return lite ? 1.15 : 1;
+  // Close enough that the doorway fills the frame; remaining black surround is
+  // faded out in `DoorFrame` / `Doors` once approach finishes.
+  return lite ? 0.85 : 0.7;
 }
 
 export function heroCameraZ(aspect: number, lite: boolean, approach: number) {

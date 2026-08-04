@@ -154,7 +154,7 @@ const monthNames: Record<AppLocale, string[]> = {
     "декабря",
   ],
   tt: [
-    "гыйнварь",
+    "гыйнвар",
     "февраль",
     "март",
     "апрель",

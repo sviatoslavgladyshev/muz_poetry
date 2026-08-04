@@ -8,24 +8,26 @@ export async function Footer({ locale }: { locale: AppLocale }) {
   const tFooter = await getTranslations({ locale, namespace: "footer" });
 
   return (
-    <footer className="bg-charcoal py-8 text-cream/60">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-5 text-center text-sm md:flex-row md:justify-between md:px-8 md:text-left">
-        <p>{tFooter("copyright", { year: new Date().getFullYear() })}</p>
+    <footer className="border-t border-candle/10 bg-juniper py-12 text-candle/75 md:py-14">
+      <div className="mx-auto grid max-w-6xl gap-6 px-5 text-sm md:grid-cols-3 md:items-center md:gap-8 md:px-8">
+        <p className="text-center md:text-left">
+          {tFooter("copyright", { year: new Date().getFullYear() })}
+        </p>
         <nav className="flex flex-wrap justify-center gap-x-5 gap-y-2">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="transition-colors hover:text-gold-soft"
+              className="transition-colors hover:text-candle"
             >
               {t(link.key)}
             </Link>
           ))}
-          <Link href="/afisha" className="transition-colors hover:text-gold-soft">
+          <Link href="/afisha" className="transition-colors hover:text-candle">
             {t("afisha")}
           </Link>
         </nav>
-        <p className="text-cream/40">{siteConfig.domain}</p>
+        <p className="text-center text-candle/45 md:text-right">{siteConfig.domain}</p>
       </div>
     </footer>
   );

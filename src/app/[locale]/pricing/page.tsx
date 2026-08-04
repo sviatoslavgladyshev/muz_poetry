@@ -10,9 +10,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "pricing" });
+  const tNav = await getTranslations({ locale, namespace: "nav" });
 
   return {
-    title: `${t("pageEyebrow")} — «Поэзия звука»`,
+    title: `${t("pageEyebrow")} — ${tNav("brand")}`,
     description: t("pageIntro"),
   };
 }

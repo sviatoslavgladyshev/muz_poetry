@@ -7,6 +7,8 @@ import {
   ExtrudeGeometry,
   Group,
   MathUtils,
+  Mesh,
+  MeshLambertMaterial,
   Path,
   Shape,
   type Texture,
@@ -41,7 +43,9 @@ type WoodMaps = {
   colorMap: Texture | null;
 };
 
-function WallWithOpening() {
+function WallWithOpening({ motionRef }: { motionRef: RefObject<HeroMotion> }) {
+  const materialRef = useRef<MeshLambertMaterial>(null);
+
   const geometry = useMemo(() => {
     const shape = new Shape();
     shape.moveTo(-WALL_WIDTH / 2, -WALL_HEIGHT / 2);
@@ -61,9 +65,20 @@ function WallWithOpening() {
     return new ExtrudeGeometry(shape, { depth: WALL_DEPTH, bevelEnabled: false });
   }, []);
 
+  useFrame(() => {
+    if (!materialRef.current || !motionRef.current) return;
+    // After the door-open finishes and the camera is through, drop the black wall
+    // so it no longer leaves dark side strips around "Через звук".
+    const hide = MathUtils.smoothstep(motionRef.current.approach, 0.72, 0.95);
+    materialRef.current.opacity = 1 - hide;
+    materialRef.current.transparent = hide > 0.01;
+    materialRef.current.depthWrite = hide < 0.5;
+    materialRef.current.visible = hide < 0.98;
+  });
+
   return (
     <mesh geometry={geometry} position={[0, 0, -WALL_DEPTH]}>
-      <meshLambertMaterial color={PALETTE.ink} />
+      <meshLambertMaterial ref={materialRef} color={PALETTE.ink} />
     </mesh>
   );
 }
@@ -169,76 +184,101 @@ function Crown({ roughnessMap, colorMap }: WoodMaps) {
 }
 
 /** Heavy carved casing and crown from the historic entrance reference. */
-export function DoorFrame({ roughnessMap, colorMap }: WoodMaps) {
+export function DoorFrame({
+  roughnessMap,
+  colorMap,
+  motionRef,
+}: WoodMaps & { motionRef: RefObject<HeroMotion> }) {
   const trimHalfSpan = TRIM_INNER_X + TRIM_WIDTH;
   const pilasterBottom = FLOOR_Y - 0.12;
   const pilasterTop = TRIM_INNER_Y + 0.2;
   const pilasterHeight = pilasterTop - pilasterBottom;
   const pilasterY = (pilasterTop + pilasterBottom) / 2;
+  const trimRef = useRef<Group>(null);
+
+  useFrame(() => {
+    if (!trimRef.current || !motionRef.current) return;
+    // Hide the carved surround with the black wall once we're through the doorway.
+    const hide = MathUtils.smoothstep(motionRef.current.approach, 0.72, 0.95);
+    trimRef.current.visible = hide < 0.98;
+    trimRef.current.traverse((child) => {
+      const mesh = child as Mesh;
+      if (!mesh.isMesh) return;
+      const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      for (const material of materials) {
+        if (!material || !("opacity" in material)) continue;
+        material.transparent = hide > 0.01;
+        material.opacity = 1 - hide;
+        material.depthWrite = hide < 0.5;
+      }
+    });
+  });
 
   return (
     <group name="DoorFrame">
-      <WallWithOpening />
+      <WallWithOpening motionRef={motionRef} />
 
-      {[-1, 1].map((side) => (
-        <group key={side} position={[side * (TRIM_INNER_X + TRIM_WIDTH / 2), pilasterY, 0]}>
-          <RoundedBox args={[TRIM_WIDTH, pilasterHeight, TRIM_DEPTH]} radius={0.012} smoothness={2}>
-            <WoodSurface colorMap={colorMap} roughnessMap={roughnessMap} color="#9f755f" />
-          </RoundedBox>
-
-          {[-0.055, 0, 0.055].map((x) => (
-            <RoundedBox
-              key={x}
-              args={[0.022, pilasterHeight - 0.48, 0.025]}
-              radius={0.006}
-              smoothness={1}
-              position={[x, -0.1, TRIM_DEPTH / 2 + 0.018]}
-            >
-              <WoodSurface colorMap={colorMap} roughnessMap={roughnessMap} color="#c0967f" />
+      <group ref={trimRef}>
+        {[-1, 1].map((side) => (
+          <group key={side} position={[side * (TRIM_INNER_X + TRIM_WIDTH / 2), pilasterY, 0]}>
+            <RoundedBox args={[TRIM_WIDTH, pilasterHeight, TRIM_DEPTH]} radius={0.012} smoothness={2}>
+              <WoodSurface colorMap={colorMap} roughnessMap={roughnessMap} color="#9f755f" />
             </RoundedBox>
-          ))}
 
-          <RoundedBox
-            args={[0.38, 0.17, 0.23]}
-            radius={0.014}
-            smoothness={2}
-            position={[0, pilasterHeight / 2 - 0.12, 0.02]}
-          >
-            <WoodSurface colorMap={colorMap} roughnessMap={roughnessMap} color="#b98c74" />
-          </RoundedBox>
-          <mesh position={[0, pilasterHeight / 2 - 0.29, 0.13]} scale={[1, 1.35, 0.55]}>
-            <sphereGeometry args={[0.085, 8, 6]} />
-            <WoodSurface colorMap={colorMap} roughnessMap={roughnessMap} color="#c49a82" />
-          </mesh>
-        </group>
-      ))}
+            {[-0.055, 0, 0.055].map((x) => (
+              <RoundedBox
+                key={x}
+                args={[0.022, pilasterHeight - 0.48, 0.025]}
+                radius={0.006}
+                smoothness={1}
+                position={[x, -0.1, TRIM_DEPTH / 2 + 0.018]}
+              >
+                <WoodSurface colorMap={colorMap} roughnessMap={roughnessMap} color="#c0967f" />
+              </RoundedBox>
+            ))}
 
-      <RoundedBox
-        args={[trimHalfSpan * 2, 0.27, TRIM_DEPTH + 0.035]}
-        radius={0.014}
-        smoothness={2}
-        position={[0, TRIM_INNER_Y + 0.12, 0.018]}
-      >
-        <WoodSurface colorMap={colorMap} roughnessMap={roughnessMap} color="#a77b65" />
-      </RoundedBox>
-      <RoundedBox
-        args={[trimHalfSpan * 2 + 0.24, 0.1, 0.22]}
-        radius={0.012}
-        smoothness={2}
-        position={[0, TRIM_INNER_Y + 0.29, 0.025]}
-      >
-        <WoodSurface colorMap={colorMap} roughnessMap={roughnessMap} color="#c09278" />
-      </RoundedBox>
+            <RoundedBox
+              args={[0.38, 0.17, 0.23]}
+              radius={0.014}
+              smoothness={2}
+              position={[0, pilasterHeight / 2 - 0.12, 0.02]}
+            >
+              <WoodSurface colorMap={colorMap} roughnessMap={roughnessMap} color="#b98c74" />
+            </RoundedBox>
+            <mesh position={[0, pilasterHeight / 2 - 0.29, 0.13]} scale={[1, 1.35, 0.55]}>
+              <sphereGeometry args={[0.085, 8, 6]} />
+              <WoodSurface colorMap={colorMap} roughnessMap={roughnessMap} color="#c49a82" />
+            </mesh>
+          </group>
+        ))}
 
-      <Crown roughnessMap={roughnessMap} colorMap={colorMap} />
+        <RoundedBox
+          args={[trimHalfSpan * 2, 0.27, TRIM_DEPTH + 0.035]}
+          radius={0.014}
+          smoothness={2}
+          position={[0, TRIM_INNER_Y + 0.12, 0.018]}
+        >
+          <WoodSurface colorMap={colorMap} roughnessMap={roughnessMap} color="#a77b65" />
+        </RoundedBox>
+        <RoundedBox
+          args={[trimHalfSpan * 2 + 0.24, 0.1, 0.22]}
+          radius={0.012}
+          smoothness={2}
+          position={[0, TRIM_INNER_Y + 0.29, 0.025]}
+        >
+          <WoodSurface colorMap={colorMap} roughnessMap={roughnessMap} color="#c09278" />
+        </RoundedBox>
 
-      <mesh position={[0, FLOOR_Y - 0.05, -WALL_DEPTH / 2]}>
-        <boxGeometry args={[trimHalfSpan * 2, 0.1, WALL_DEPTH]} />
-        <WoodSurface colorMap={colorMap} roughnessMap={roughnessMap} color="#77503f" />
-      </mesh>
+        <Crown roughnessMap={roughnessMap} colorMap={colorMap} />
 
-      <HingeStack x={-HINGE_X} roughnessMap={roughnessMap} />
-      <HingeStack x={HINGE_X} roughnessMap={roughnessMap} />
+        <mesh position={[0, FLOOR_Y - 0.05, -WALL_DEPTH / 2]}>
+          <boxGeometry args={[trimHalfSpan * 2, 0.1, WALL_DEPTH]} />
+          <WoodSurface colorMap={colorMap} roughnessMap={roughnessMap} color="#77503f" />
+        </mesh>
+
+        <HingeStack x={-HINGE_X} roughnessMap={roughnessMap} />
+        <HingeStack x={HINGE_X} roughnessMap={roughnessMap} />
+      </group>
     </group>
   );
 }
@@ -290,16 +330,36 @@ export function Doors({
 }) {
   const leftPivot = useRef<Group>(null);
   const rightPivot = useRef<Group>(null);
+  const rootRef = useRef<Group>(null);
   const maps = { roughnessMap, colorMap };
 
   useFrame(() => {
+    if (!motionRef.current) return;
     const angle = motionRef.current.open * MAX_OPEN_ANGLE;
     if (leftPivot.current) leftPivot.current.rotation.y = -angle;
     if (rightPivot.current) rightPivot.current.rotation.y = angle;
+
+    // Once through the doorway, clear the open leaves so they do not leave dark
+    // side bands around the About content.
+    if (rootRef.current) {
+      const hide = MathUtils.smoothstep(motionRef.current.approach, 0.78, 0.98);
+      rootRef.current.visible = hide < 0.98;
+      rootRef.current.traverse((child) => {
+        const mesh = child as Mesh;
+        if (!mesh.isMesh) return;
+        const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+        for (const material of materials) {
+          if (!material || !("opacity" in material)) continue;
+          material.transparent = hide > 0.01;
+          material.opacity = 1 - hide;
+          material.depthWrite = hide < 0.5;
+        }
+      });
+    }
   });
 
   return (
-    <group>
+    <group ref={rootRef}>
       <group name="LeftDoor" ref={leftPivot} position={[-HINGE_X, 0, LEAF_CENTER_Z]}>
         <group position={[LEAF_HINGE_GAP + LEFT_LEAF_WIDTH / 2, 0, 0]}>
           <DoorLeaf width={LEFT_LEAF_WIDTH} maps={maps} faceMap={leftDoorFace} />
@@ -319,8 +379,10 @@ export function ContactPool({ motionRef }: { motionRef: RefObject<HeroMotion> })
   const ref = useRef<Group>(null);
 
   useFrame(() => {
-    if (!ref.current) return;
+    if (!ref.current || !motionRef.current) return;
     ref.current.scale.z = MathUtils.lerp(1, 0.55, motionRef.current.open);
+    const hide = MathUtils.smoothstep(motionRef.current.approach, 0.72, 0.95);
+    ref.current.visible = hide < 0.98;
   });
 
   return (

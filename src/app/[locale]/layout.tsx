@@ -3,24 +3,23 @@ import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { Forum, Montserrat_Alternates } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { routing, type AppLocale } from "@/i18n/routing";
 import "./globals.css";
 
-const displayFont = Cormorant_Garamond({
+const displayFont = Forum({
   variable: "--font-display",
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  subsets: ["latin", "latin-ext", "cyrillic", "cyrillic-ext"],
+  weight: "400",
 });
 
-const bodyFont = Manrope({
+const bodyFont = Montserrat_Alternates({
   variable: "--font-body",
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "600", "700", "800"],
+  subsets: ["latin", "latin-ext", "cyrillic", "cyrillic-ext"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export function generateStaticParams() {
@@ -39,14 +38,10 @@ export async function generateMetadata({
     metadataBase: new URL("https://muzpoetry.ru"),
     title: t("title"),
     description: t("description"),
-    keywords: [
-      "вокал Казань",
-      "музыкальная школа Казань",
-      "уроки вокала",
-      "уроки фортепиано",
-      "уроки гитары",
-      "поэзия звука",
-    ],
+    keywords: t("keywords")
+      .split(",")
+      .map((keyword) => keyword.trim())
+      .filter(Boolean),
     openGraph: {
       title: t("title"),
       description: t("description"),

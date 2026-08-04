@@ -34,8 +34,8 @@ export const primaryNavLinks = [
   { href: "/#obuchenie", key: "directions" },
   { href: "/#mastera", key: "teachers" },
   { href: "/#klub", key: "club" },
-  { href: "/pricing", key: "pricing" },
-  { href: "/afisha", key: "afisha" },
+  { href: "/#tseny", key: "pricing" },
+  { href: "/#afisha", key: "afisha" },
 ] as const;
 
 export const secondaryNavLinks = [
