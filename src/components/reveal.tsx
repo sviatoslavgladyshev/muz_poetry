@@ -5,61 +5,139 @@ import { cn } from "@/lib/utils";
 
 const VISIBLE_CLASS = "is-visible";
 
-type PendingReveal = {
+/** How far past the viewport edge a block must sit before it hides again. */
+const HIDE_MARGIN = 96;
+
+type RevealEntry = {
   node: HTMLElement;
-  show: () => void;
+  visible: boolean;
+  frame: number;
 };
 
 /*
-  One shared scroll/resize sweep backs up the per-element observers.
+  Every reveal shares two observers and one slow safety sweep.
 
-  An IntersectionObserver alone is not enough here: a locale switch replaces the
-  DOM nodes mid-scroll, and anything whose observer was attached to the old node
-  would stay at opacity 0 forever. The sweep re-checks live rects, so content
-  always ends up visible no matter how often the visitor scrolls or switches.
+  Two observers instead of one: the "enter" observer trims the viewport slightly
+  so a block starts its fade just after it appears, while the "exit" observer
+  pads the viewport so a block only resets once it is comfortably off screen.
+  That gap is deliberate hysteresis — with a single boundary a block parked on
+  the edge would flicker between states.
+
+  The sweep exists because observers alone can miss cases where the DOM changes
+  under them: a locale switch swaps every node mid-scroll, and layout can settle
+  a frame later. It re-reads live rects so nothing is ever stranded invisible.
 */
-const pending = new Set<PendingReveal>();
-let sweepFrame = 0;
-let sweepBound = false;
+const entries = new Map<HTMLElement, RevealEntry>();
+let enterObserver: IntersectionObserver | null = null;
+let exitObserver: IntersectionObserver | null = null;
+let sweepTimer = 0;
+let listening = false;
 
-function isInView(node: HTMLElement) {
+function viewportHeight() {
+  return window.innerHeight || document.documentElement.clientHeight;
+}
+
+function shouldShow(node: HTMLElement) {
   const rect = node.getBoundingClientRect();
-  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-  return rect.top < viewportHeight * 0.94 && rect.bottom > 0;
+  return rect.top < viewportHeight() * 0.94 && rect.bottom > 0;
+}
+
+function shouldHide(node: HTMLElement) {
+  const rect = node.getBoundingClientRect();
+  return rect.bottom < -HIDE_MARGIN || rect.top > viewportHeight() + HIDE_MARGIN;
+}
+
+function show(entry: RevealEntry) {
+  if (entry.visible) return;
+  entry.visible = true;
+  // Paint the hidden state first, otherwise the fade-up is skipped for blocks
+  // that are already on screen when they mount.
+  entry.frame = requestAnimationFrame(() => {
+    entry.frame = requestAnimationFrame(() => {
+      entry.frame = 0;
+      entry.node.classList.add(VISIBLE_CLASS);
+    });
+  });
+}
+
+function hide(entry: RevealEntry) {
+  if (!entry.visible) return;
+  entry.visible = false;
+  if (entry.frame !== 0) {
+    cancelAnimationFrame(entry.frame);
+    entry.frame = 0;
+  }
+  entry.node.classList.remove(VISIBLE_CLASS);
+}
+
+function sync(entry: RevealEntry) {
+  if (shouldShow(entry.node)) show(entry);
+  else if (shouldHide(entry.node)) hide(entry);
 }
 
 function runSweep() {
-  sweepFrame = 0;
-  for (const entry of Array.from(pending)) {
+  sweepTimer = 0;
+  for (const entry of Array.from(entries.values())) {
     if (!entry.node.isConnected) {
-      pending.delete(entry);
+      release(entry.node);
       continue;
     }
-    if (isInView(entry.node)) entry.show();
+    sync(entry);
   }
-  if (pending.size === 0) unbindSweep();
 }
 
 function scheduleSweep() {
-  if (sweepFrame !== 0) return;
-  sweepFrame = requestAnimationFrame(runSweep);
+  if (sweepTimer !== 0) return;
+  // Slow on purpose: the observers do the real work, and the hero writes CSS
+  // variables every frame, so reading rects often would thrash layout.
+  sweepTimer = window.setTimeout(runSweep, 150);
 }
 
-function bindSweep() {
-  if (sweepBound) return;
-  sweepBound = true;
+function ensureObservers() {
+  if (!enterObserver) {
+    enterObserver = new IntersectionObserver(
+      (records) => {
+        for (const record of records) {
+          const entry = entries.get(record.target as HTMLElement);
+          if (entry && record.isIntersecting) show(entry);
+        }
+      },
+      { rootMargin: `0px 0px -6% 0px` },
+    );
+  }
+
+  if (!exitObserver) {
+    exitObserver = new IntersectionObserver(
+      (records) => {
+        for (const record of records) {
+          const entry = entries.get(record.target as HTMLElement);
+          if (entry && !record.isIntersecting) hide(entry);
+        }
+      },
+      { rootMargin: `${HIDE_MARGIN}px 0px ${HIDE_MARGIN}px 0px` },
+    );
+  }
+
+  if (listening) return;
+  listening = true;
   window.addEventListener("scroll", scheduleSweep, { passive: true });
   window.addEventListener("resize", scheduleSweep);
 }
 
-function unbindSweep() {
-  if (!sweepBound) return;
-  sweepBound = false;
+function release(node: HTMLElement) {
+  const entry = entries.get(node);
+  if (entry && entry.frame !== 0) cancelAnimationFrame(entry.frame);
+  entries.delete(node);
+  enterObserver?.unobserve(node);
+  exitObserver?.unobserve(node);
+
+  if (entries.size > 0) return;
+  listening = false;
   window.removeEventListener("scroll", scheduleSweep);
   window.removeEventListener("resize", scheduleSweep);
-  if (sweepFrame !== 0) {
-    cancelAnimationFrame(sweepFrame);
-    sweepFrame = 0;
+  if (sweepTimer !== 0) {
+    clearTimeout(sweepTimer);
+    sweepTimer = 0;
   }
 }
 
@@ -71,47 +149,28 @@ type RevealProps = {
 };
 
 export function Reveal({ children, className, delay = 0, as = "div" }: RevealProps) {
-  const detachRef = useRef<(() => void) | null>(null);
+  const nodeRef = useRef<HTMLElement | null>(null);
 
-  // A callback ref rather than an effect: it fires again whenever React hands us
-  // a different element, which is exactly what happens on a locale switch.
+  // A callback ref rather than an effect: it fires again whenever React hands
+  // us a different element, which is exactly what a locale switch does.
   const attach = useCallback((node: HTMLDivElement | null) => {
-    detachRef.current?.();
-    detachRef.current = null;
-
-    if (!node) return;
-    if (node.classList.contains(VISIBLE_CLASS)) return;
-
-    if (isInView(node)) {
-      node.classList.add(VISIBLE_CLASS);
-      return;
+    if (nodeRef.current && nodeRef.current !== node) {
+      release(nodeRef.current);
     }
+    nodeRef.current = node;
+    if (!node) return;
 
-    const entry: PendingReveal = {
+    ensureObservers();
+
+    const entry: RevealEntry = {
       node,
-      show: () => {
-        node.classList.add(VISIBLE_CLASS);
-        detachRef.current?.();
-        detachRef.current = null;
-      },
+      visible: node.classList.contains(VISIBLE_CLASS),
+      frame: 0,
     };
-
-    const observer = new IntersectionObserver(
-      ([observed]) => {
-        if (observed.isIntersecting) entry.show();
-      },
-      { threshold: 0.08, rootMargin: "0px 0px -6% 0px" },
-    );
-    observer.observe(node);
-
-    pending.add(entry);
-    bindSweep();
-
-    detachRef.current = () => {
-      observer.disconnect();
-      pending.delete(entry);
-      if (pending.size === 0) unbindSweep();
-    };
+    entries.set(node, entry);
+    enterObserver?.observe(node);
+    exitObserver?.observe(node);
+    sync(entry);
   }, []);
 
   const Comp = as;

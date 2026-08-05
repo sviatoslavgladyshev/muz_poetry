@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { Reveal } from "@/components/reveal";
 import { SectionLink } from "@/components/section-link";
 import { siteConfig, navLinks } from "@/content/site";
 import type { AppLocale } from "@/i18n/routing";
@@ -9,7 +10,7 @@ export async function Footer({ locale }: { locale: AppLocale }) {
 
   return (
     <footer className="border-t border-candle/10 bg-juniper py-12 text-candle/75 md:py-14">
-      <div className="mx-auto grid max-w-6xl gap-6 px-5 text-sm md:grid-cols-3 md:items-center md:gap-8 md:px-8">
+      <Reveal className="mx-auto grid max-w-6xl gap-6 px-5 text-sm md:grid-cols-3 md:items-center md:gap-8 md:px-8">
         <p className="text-center md:text-left">
           {tFooter("copyright", { year: new Date().getFullYear() })}
         </p>
@@ -25,7 +26,7 @@ export async function Footer({ locale }: { locale: AppLocale }) {
           ))}
         </nav>
         <p className="text-center text-candle/45 md:text-right">{siteConfig.domain}</p>
-      </div>
+      </Reveal>
     </footer>
   );
 }

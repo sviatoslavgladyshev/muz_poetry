@@ -51,14 +51,16 @@ export function Pricing({ locale }: { locale: AppLocale }) {
           </p>
         </Reveal>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
-          {pricingStats[locale].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <span className="font-display text-2xl text-primary">{stat.value}</span>
-              <span className="ml-2 text-xs text-foreground/60">{stat.label}</span>
-            </div>
-          ))}
-        </div>
+        <Reveal delay={140}>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+            {pricingStats[locale].map((stat) => (
+              <div key={stat.label} className="text-center">
+                <span className="font-display text-2xl text-primary">{stat.value}</span>
+                <span className="ml-2 text-xs text-foreground/60">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+        </Reveal>
 
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {previewItems.map((item, index) => (
@@ -295,25 +297,27 @@ export function PricingPageContent({ locale }: { locale: AppLocale }) {
       </section>
 
       <section className="bg-primary py-7 text-primary-foreground">
-        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-7 px-5 md:flex-row md:items-center md:px-8">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
-              {t("finalEyebrow")}
-            </p>
-            <h2 className="mt-3 max-w-2xl font-display text-3xl leading-tight text-candle md:text-4xl">
-              {t("finalHeading")}
-            </h2>
+        <Reveal>
+          <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-7 px-5 md:flex-row md:items-center md:px-8">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
+                {t("finalEyebrow")}
+              </p>
+              <h2 className="mt-3 max-w-2xl font-display text-3xl leading-tight text-candle md:text-4xl">
+                {t("finalHeading")}
+              </h2>
+            </div>
+            <Button
+              render={<SectionLink href="/#kontakty" />}
+              nativeButton={false}
+              size="lg"
+              className="bg-accent text-accent-foreground hover:bg-accent/90"
+            >
+              {t("cta")}
+              <ArrowRight />
+            </Button>
           </div>
-          <Button
-            render={<SectionLink href="/#kontakty" />}
-            nativeButton={false}
-            size="lg"
-            className="bg-accent text-accent-foreground hover:bg-accent/90"
-          >
-            {t("cta")}
-            <ArrowRight />
-          </Button>
-        </div>
+        </Reveal>
       </section>
     </div>
   );
@@ -435,8 +439,10 @@ function PricingBand({
       <div className="grid gap-10 lg:grid-cols-[16rem_1fr]">
         <SectionLead icon={icon} eyebrow={eyebrow} title={title} description={description} />
         <div className="grid gap-4 md:grid-cols-2">
-          {items.map((item) => (
-            <CatalogOffer key={item.id} item={item} cta={cta} />
+          {items.map((item, index) => (
+            <Reveal key={item.id} delay={index * 80} className="h-full">
+              <CatalogOffer item={item} cta={cta} />
+            </Reveal>
           ))}
         </div>
       </div>
@@ -456,7 +462,7 @@ function SectionLead({
   description?: string;
 }) {
   return (
-    <div>
+    <Reveal>
       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-candle [&_svg]:h-5 [&_svg]:w-5">
         {icon}
       </div>
@@ -465,7 +471,7 @@ function SectionLead({
       {description && (
         <p className="mt-4 text-sm leading-relaxed text-foreground/60">{description}</p>
       )}
-    </div>
+    </Reveal>
   );
 }
 
@@ -480,13 +486,17 @@ function OfferCollection({
 }) {
   return (
     <div>
-      <div className="mb-4 flex items-center gap-3 border-b border-border pb-3">
-        {icon && <span className="text-leaf [&_svg]:h-4 [&_svg]:w-4">{icon}</span>}
-        <h3 className="font-display text-2xl italic text-primary">{section.title}</h3>
-      </div>
+      <Reveal>
+        <div className="mb-4 flex items-center gap-3 border-b border-border pb-3">
+          {icon && <span className="text-leaf [&_svg]:h-4 [&_svg]:w-4">{icon}</span>}
+          <h3 className="font-display text-2xl italic text-primary">{section.title}</h3>
+        </div>
+      </Reveal>
       <div className="grid gap-4 md:grid-cols-2">
-        {section.items.map((item) => (
-          <CatalogOffer key={item.id} item={item} cta={cta} />
+        {section.items.map((item, index) => (
+          <Reveal key={item.id} delay={index * 80} className="h-full">
+            <CatalogOffer item={item} cta={cta} />
+          </Reveal>
         ))}
       </div>
     </div>
