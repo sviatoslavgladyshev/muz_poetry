@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import { Quote, Sparkles, Compass, GraduationCap } from "lucide-react";
+import { Sparkles, Compass, GraduationCap } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Reveal } from "@/components/reveal";
 import { teachers, teachersIntro, type Teacher, type TeacherSlot } from "@/content/teachers";
@@ -15,25 +15,28 @@ export async function Teachers({ locale }: { locale: AppLocale }) {
   const t = await getTranslations({ locale, namespace: "teachers" });
 
   return (
-    <section id="mastera" className="scroll-mt-24 bg-secondary/60 py-24 md:py-32">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
+    <section
+      id="mastera"
+      className="flex scroll-mt-24 flex-col justify-center bg-secondary/60 py-10 md:min-h-svh md:py-12"
+    >
+      <div className="mx-auto w-full max-w-6xl px-5 md:px-8">
         <Reveal>
           <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
             {t("eyebrow")}
           </p>
         </Reveal>
         <Reveal delay={80}>
-          <h2 className="mx-auto mt-4 max-w-2xl text-center font-display text-3xl italic text-primary sm:text-4xl md:text-5xl">
+          <h2 className="mx-auto mt-3 max-w-2xl text-center font-display text-3xl italic text-primary sm:text-4xl md:text-5xl">
             {t("heading")}
           </h2>
         </Reveal>
         <Reveal delay={140}>
-          <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-relaxed text-foreground/80">
+          <p className="mx-auto mt-3 max-w-2xl text-center text-base leading-relaxed text-foreground/80">
             {teachersIntro[locale]}
           </p>
         </Reveal>
 
-        <div className="mt-16 grid gap-6 md:grid-cols-3">
+        <div className="mt-8 grid gap-5 md:grid-cols-3">
           {teachers[locale].map((slot, i) => (
             <Reveal key={i} delay={i * 100} className="h-full">
               {isTeacher(slot) ? (
@@ -66,23 +69,23 @@ function TeacherCard({
   credentialsLabel: string;
 }) {
   return (
-    <Card className="flex h-full flex-col gap-0 overflow-hidden rounded-[8px] border border-border bg-card py-0 shadow-sm ring-0 transition-shadow hover:shadow-lg">
-      <div className="relative aspect-[4/5] w-full">
+    <Card className="flex h-full flex-col gap-0 rounded-[8px] border border-border bg-card px-5 py-6 shadow-sm ring-0 transition-shadow hover:shadow-lg">
+      <div className="relative mx-auto size-28 shrink-0 md:size-32">
         <Image
           src={publicAssetPath(teacher.photo)}
           alt={teacher.name}
           fill
-          className="object-cover"
+          className="rounded-full border border-leaf/25 object-cover shadow-sm"
         />
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-mahogany/90 to-transparent p-6 md:p-7">
-          <h3 className="font-display text-2xl italic text-candle">{teacher.name}</h3>
-          {teacher.alias && <p className="text-xs text-candle/70">({teacher.alias})</p>}
-        </div>
       </div>
-      <CardContent className="flex flex-1 flex-col gap-4 p-7 md:p-8">
-        <p className="text-sm font-semibold text-primary">{teacher.role}</p>
 
-        <div className="flex gap-2 text-sm leading-relaxed text-foreground/75">
+      <div className="mt-4 text-center">
+        <h3 className="font-display text-xl italic text-primary">{teacher.name}</h3>
+        <p className="mt-1 text-sm text-foreground/65">{teacher.role}</p>
+      </div>
+
+      <CardContent className="mt-4 flex flex-1 flex-col gap-2.5 p-0">
+        <div className="flex gap-2 text-sm leading-snug text-foreground/75">
           <GraduationCap className="mt-0.5 h-4 w-4 shrink-0 text-leaf" />
           <p>
             <span className="font-semibold text-foreground">{credentialsLabel} </span>
@@ -90,7 +93,7 @@ function TeacherCard({
           </p>
         </div>
 
-        <div className="flex gap-2 text-sm leading-relaxed text-foreground/75">
+        <div className="flex gap-2 text-sm leading-snug text-foreground/75">
           <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-leaf" />
           <p>
             <span className="font-semibold text-foreground">{superpowerLabel} </span>
@@ -98,12 +101,7 @@ function TeacherCard({
           </p>
         </div>
 
-        <blockquote className="relative border-l-2 border-leaf/40 pl-4 text-sm italic leading-relaxed text-foreground/85">
-          <Quote className="mb-1 h-4 w-4 text-leaf" />
-          {teacher.quote}
-        </blockquote>
-
-        <div className="mt-auto flex gap-2 text-sm text-foreground/75">
+        <div className="mt-auto flex gap-2 pt-1 text-sm leading-snug text-foreground/75">
           <Compass className="mt-0.5 h-4 w-4 shrink-0 text-leaf" />
           <p>
             <span className="font-semibold text-foreground">{routeLabel} </span>
@@ -117,12 +115,12 @@ function TeacherCard({
 
 function EmptySlot({ label, hint }: { label: string; hint: string }) {
   return (
-    <Card className="flex h-full flex-col items-center justify-center gap-0 rounded-[8px] border border-dashed border-border bg-card/40 p-8 py-10 text-center ring-0 md:p-10">
-      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-        <Sparkles className="h-6 w-6 text-primary" />
+    <Card className="flex h-full flex-col items-center justify-center gap-0 rounded-[8px] border border-dashed border-border bg-card/40 px-5 py-8 text-center ring-0">
+      <div className="mb-3 flex size-14 items-center justify-center rounded-full border border-dashed border-leaf/35 bg-primary/5">
+        <Sparkles className="h-5 w-5 text-primary" />
       </div>
-      <p className="font-display text-xl italic text-primary">{label}</p>
-      <p className="mt-2 text-sm text-foreground/60">{hint}</p>
+      <p className="font-display text-lg italic text-primary">{label}</p>
+      <p className="mt-1.5 max-w-[16rem] text-sm text-foreground/60">{hint}</p>
     </Card>
   );
 }

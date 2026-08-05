@@ -27,8 +27,7 @@ const highlightIcons = {
   drama: Drama,
 } as const;
 
-/** Shared About composition — same markup for the doorway peek and the final reveal. */
-export function NextSectionBody({
+function NextSectionBody({
   copy,
   headingId,
 }: {
@@ -42,23 +41,19 @@ export function NextSectionBody({
       <div className="absolute inset-x-0 top-0 h-px bg-leaf/30" />
 
       <div className="relative h-full overflow-hidden">
-        <div
-          className="door-about-preview mx-auto flex min-h-full w-full max-w-6xl flex-col items-center justify-center px-5 pt-20 pb-16 text-center md:px-8 md:pt-24 md:pb-20"
-          style={{
-            opacity: "var(--hero-beyond-copy-opacity, 1)",
-            transform: "translateY(var(--hero-beyond-y, 0px))",
-          }}
-        >
-          <p className="text-sm font-semibold tracking-[0.25em] text-leaf uppercase">
+        {/* Deliberately unanimated: this composition is revealed by the doors
+            parting, so any drift of its own would read as the text sliding. */}
+        <div className="mx-auto flex min-h-full w-full max-w-6xl flex-col items-center justify-center px-5 pt-20 pb-16 text-center md:px-8 md:pt-24 md:pb-20">
+          <p className="text-xs font-semibold tracking-[0.25em] text-leaf uppercase">
             {copy.eyebrow}
           </p>
           <h2
             id={headingId}
-            className="mt-3 max-w-4xl font-display text-3xl leading-[1.05] italic text-primary sm:text-4xl md:mt-4 md:text-5xl"
+            className="mt-3 max-w-3xl font-display text-2xl leading-[1.08] italic text-primary sm:text-3xl md:mt-4 md:text-4xl"
           >
             {copy.heading}
           </h2>
-          <p className="mt-5 max-w-3xl text-base leading-relaxed text-foreground/75 md:mt-6 md:text-lg">
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-foreground/75 md:mt-5 md:text-base">
             {copy.mission}
           </p>
 
@@ -69,15 +64,15 @@ export function NextSectionBody({
               return (
                 <article
                   key={highlight.title}
-                  className="h-full snap-start border-l-2 border-leaf/55 bg-secondary/70 px-5 py-5 md:px-6 md:py-6"
+                  className="flex h-full snap-start flex-col rounded-[6px] border border-leaf/25 bg-card/80 px-5 py-4"
                 >
-                  <div className="flex items-center gap-2.5">
-                    <Icon className="size-4 shrink-0 text-primary" />
+                  <div className="flex items-center gap-2">
+                    <Icon className="size-4 shrink-0 text-leaf" />
                     <h3 className="font-display text-lg leading-tight italic text-primary">
                       {highlight.title}
                     </h3>
                   </div>
-                  <p className="mt-2 text-sm leading-relaxed text-foreground/70">
+                  <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
                     {highlight.description}
                   </p>
                 </article>
@@ -95,9 +90,6 @@ export function NextSectionReveal({ copy }: { copy: NextSectionCopy }) {
     <section
       aria-labelledby="door-about-heading"
       className="absolute inset-0 overflow-hidden bg-candle"
-      style={{
-        transform: "scale(var(--hero-beyond-scale, 1))",
-      }}
     >
       <NextSectionBody copy={copy} headingId="door-about-heading" />
     </section>

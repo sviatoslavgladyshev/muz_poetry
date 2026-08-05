@@ -12,10 +12,8 @@ export const siteConfig = {
   } satisfies Record<AppLocale, string>,
   vk: "https://vk.ru/club240133150",
   telegram: "https://t.me/muzpoetry",
-  instagram: "https://instagram.com/muzpoetry",
   whatsapp: "https://wa.me/79005387870",
-  // Formspree-style placeholder — swap with a real endpoint before launch.
-  trialFormEndpoint: "https://formspree.io/f/YOUR_FORM_ID",
+  instagram: "https://www.instagram.com/muzpoetry_kzn",
   yandexMapEmbedSrc:
     "https://yandex.ru/map-widget/v1/?ll=49.111226%2C55.795250&z=16&text=Казань%2C%20улица%20Гоголя%2025&pt=49.111226,55.795250,pm2rdm",
 } as const;

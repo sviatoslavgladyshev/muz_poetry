@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { publicAssetPath } from "@/lib/utils";
-import { NextSectionBody, type NextSectionCopy } from "./next-section-reveal";
 
 /**
  * Historic door photograph that swings open like a real pair of leaves.
@@ -27,8 +26,8 @@ const RIGHT_W = RIGHT_END - RIGHT_X;
 const RIGHT_EDGE = IMAGE_W - RIGHT_END;
 const LEAF_FOOT = IMAGE_H - LEAF_BOTTOM;
 
-/** Real doors rarely swing fully flat to the wall in a hero shot. */
-const MAX_OPEN_DEG = 72;
+/** Just shy of a right angle, so the leaf faces stay readable at full open. */
+const MAX_OPEN_DEG = 83;
 /** Timber thickness — enough to read, not so much it looks toy-like. */
 const DEPTH = 16;
 
@@ -303,48 +302,97 @@ function DoorJamb() {
 }
 
 /**
- * Full About composition, clipped to the leaf opening. Sized to the viewport and
- * counter-scaled against the door zoom so it matches the final reveal exactly.
+ * Black surround filling the viewport outside the photograph. Lives inside the
+ * transformed stage so it tracks the door as it scales.
  */
-function DoorwayPeek({ copy }: { copy: NextSectionCopy }) {
+function BlackSurround() {
   return (
-    <div
-      className="absolute overflow-hidden"
-      style={{
-        left: pct(LEFT_X, IMAGE_W),
-        top: pct(LEAF_TOP, IMAGE_H),
-        width: pct(LEFT_W + RIGHT_W, IMAGE_W),
-        height: pct(LEAF_HEIGHT, IMAGE_H),
-      }}
-    >
+    <>
+      {/* Overlap every seam by a pixel: butted edges leave a lit hairline. */}
       <div
-        className="absolute top-1/2 left-1/2 h-[100svh] w-screen overflow-hidden"
-        style={{
-          transform:
-            "translate(-50%, -50%) scale(calc(var(--hero-beyond-scale, 1) / (1 + var(--hero-door-zoom, 0))))",
-          transformOrigin: "center center",
-        }}
-      >
-        <NextSectionBody copy={copy} />
-      </div>
-    </div>
+        className="absolute -left-[400%] w-[900%] bg-[#120609]"
+        style={{ top: "-400%", height: "calc(400% + 1px)" }}
+      />
+      <div
+        className="absolute -left-[400%] h-[400%] w-[900%] bg-[#120609]"
+        style={{ top: "calc(100% - 1px)" }}
+      />
+      <div
+        className="absolute top-0 -left-[400%] h-full bg-[#120609]"
+        style={{ width: "calc(400% + 1px)" }}
+      />
+      <div
+        className="absolute top-0 h-full w-[400%] bg-[#120609]"
+        style={{ left: "calc(100% - 1px)" }}
+      />
+
+      {/*
+        The photograph is a cut-out with transparent margins around the door, so
+        the frame band needs its own black backing — otherwise the lit copy behind
+        the stage shows through the silhouette. The opening stays clear on purpose.
+      */}
+      <div
+        className="absolute inset-x-0 top-0 bg-[#120609]"
+        style={{ height: `calc(${pct(LEAF_TOP, IMAGE_H)} + 1px)` }}
+      />
+      <div
+        className="absolute inset-x-0 bottom-0 bg-[#120609]"
+        style={{ height: `calc(${pct(LEAF_FOOT, IMAGE_H)} + 1px)` }}
+      />
+      <div
+        className="absolute top-0 left-0 h-full bg-[#120609]"
+        style={{ width: `calc(${pct(LEFT_X, IMAGE_W)} + 1px)` }}
+      />
+      <div
+        className="absolute top-0 right-0 h-full bg-[#120609]"
+        style={{ width: `calc(${pct(RIGHT_EDGE, IMAGE_W)} + 1px)` }}
+      />
+    </>
   );
 }
 
-export function PhotoDoors({
-  onReady,
-  beyond,
-}: {
-  onReady: () => void;
-  beyond: NextSectionCopy;
-}) {
+/**
+ * Seals the opening while the doors are shut. Sub-pixel seams around the leaves
+ * would otherwise let the lit copy bleed through on the very first screen; this
+ * clears the moment the leaves crack open, long before there is a real gap.
+ */
+function OpeningSeal() {
+  const bleed = 4;
+  return (
+    <>
+      <div
+        className="absolute bg-[#120609]"
+        style={{
+          left: pct(LEFT_X - bleed, IMAGE_W),
+          top: pct(LEAF_TOP - bleed, IMAGE_H),
+          width: pct(LEFT_W + RIGHT_W + bleed * 2, IMAGE_W),
+          height: pct(LEAF_HEIGHT + bleed * 2, IMAGE_H),
+          opacity: "calc(1 - var(--hero-door-open, 0) * 24)",
+        }}
+      />
+      {/* Permanent shadow line where leaf meets jamb — also hides edge aliasing. */}
+      <div
+        className="absolute"
+        style={{
+          left: pct(LEFT_X - bleed, IMAGE_W),
+          top: pct(LEAF_TOP - bleed, IMAGE_H),
+          width: pct(LEFT_W + RIGHT_W + bleed * 2, IMAGE_W),
+          height: pct(LEAF_HEIGHT + bleed * 2, IMAGE_H),
+          boxShadow: "inset 0 0 0 3px #120609",
+        }}
+      />
+    </>
+  );
+}
+
+export function PhotoDoors({ onReady }: { onReady: () => void }) {
   const openingCenterX = ((LEFT_X + RIGHT_END) / 2 / IMAGE_W) * 100;
   const openingCenterY = ((LEAF_TOP + LEAF_HEIGHT / 2) / IMAGE_H) * 100;
 
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 z-[1] overflow-hidden bg-[#120609]"
+      className="pointer-events-none absolute inset-0 z-[1] overflow-hidden"
       style={{ opacity: "var(--hero-photo-opacity, 1)" }}
     >
       <Image
@@ -375,8 +423,11 @@ export function PhotoDoors({
           }}
         >
           <div className="absolute inset-0" style={{ transformStyle: "preserve-3d" }}>
-            {/* Text only inside the leaf opening — rests on the black stage. */}
-            <DoorwayPeek copy={beyond} />
+            {/*
+              Everything except the clear opening is painted here, so the About
+              section underneath shows through the doorway and nowhere else.
+            */}
+            <BlackSurround />
 
             <PhotoCrop
               left="0"
@@ -419,6 +470,7 @@ export function PhotoDoors({
               cropH={LEAF_HEIGHT}
             />
 
+            <OpeningSeal />
             <DoorJamb />
             <DoorLeaf side="left" openSign={-1} />
             <DoorLeaf side="right" openSign={1} />

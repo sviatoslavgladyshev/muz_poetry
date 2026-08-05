@@ -24,13 +24,18 @@ export function useScrollProgress(
   }, [onProgress]);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
     let rafId = 0;
 
     const measure = () => {
       rafId = 0;
+      /*
+        Read the node on every tick rather than capturing it once: a locale switch
+        swaps the section for a fresh element, and a captured node would keep
+        reporting the detached rect — i.e. a door frozen shut.
+      */
+      const section = sectionRef.current;
+      if (!section || !section.isConnected) return;
+
       const rect = section.getBoundingClientRect();
       // Scroll distance available before the section's bottom reaches the fold.
       const travel = Math.max(rect.height - window.innerHeight, 1);
@@ -49,10 +54,15 @@ export function useScrollProgress(
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
 
+    // The track can still change size after mount: fonts, images, route swaps.
+    const observer = new ResizeObserver(schedule);
+    if (sectionRef.current) observer.observe(sectionRef.current);
+
     return () => {
       if (rafId !== 0) cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
+      observer.disconnect();
     };
   }, [sectionRef]);
 

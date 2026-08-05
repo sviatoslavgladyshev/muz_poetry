@@ -15,7 +15,7 @@ export async function CulturalClub({ locale }: { locale: AppLocale }) {
   const t = await getTranslations({ locale, namespace: "club" });
 
   return (
-    <section id="klub" className="scroll-mt-24 bg-primary py-24 text-primary-foreground md:py-32">
+    <section id="klub" className="scroll-mt-24 bg-primary py-12 text-primary-foreground md:py-16">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <Reveal>
           <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-leaf">

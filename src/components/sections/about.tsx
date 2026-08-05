@@ -9,7 +9,7 @@ export async function About({ locale }: { locale: AppLocale }) {
   return (
     <div
       id="o-masterskoy"
-      className="scroll-mt-24 bg-candle py-24 md:-mt-24 md:pt-32 md:pb-32"
+      className="scroll-mt-24 bg-candle py-12 md:py-16"
     >
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         {/* The heading, mission and all four principles are revealed through the

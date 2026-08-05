@@ -23,9 +23,6 @@ export async function Footer({ locale }: { locale: AppLocale }) {
               {t(link.key)}
             </Link>
           ))}
-          <Link href="/afisha" className="transition-colors hover:text-candle">
-            {t("afisha")}
-          </Link>
         </nav>
         <p className="text-center text-candle/45 md:text-right">{siteConfig.domain}</p>
       </div>

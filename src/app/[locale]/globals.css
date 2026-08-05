@@ -136,11 +136,10 @@
     door animation is mapped onto. `.door-hero-stage` is the single viewport-sized
     panel that stays pinned while that scrolling happens.
 
-    The heights live in CSS rather than in JS so that `prefers-reduced-motion` can
-    collapse the track to one screen at first paint, with no layout shift on mount.
+    The heights live in CSS so the scroll track is available from first paint.
   */
   .door-hero {
-    height: 260svh;
+    height: 300svh;
   }
 
   .door-hero-stage {
@@ -154,8 +153,7 @@
     the 3D scene already damps progress; stacking another ease desyncs copy from doors.
   */
   .door-hero-lead,
-  .door-hero-hint,
-  .door-about-preview {
+  .door-hero-hint {
     will-change: opacity, transform;
   }
 
@@ -163,21 +161,6 @@
     animation: door-loader-progress 700ms ease-in-out infinite;
     transform: translateX(-110%);
     will-change: transform;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .door-hero {
-      height: 100svh;
-    }
-
-    .door-hero-stage {
-      position: relative;
-    }
-
-    .door-loader-progress {
-      animation: none;
-      transform: translateX(75%);
-    }
   }
 }
 
@@ -201,12 +184,45 @@
     transform: translateY(0);
   }
 
+  /* Continuous bridge between instrument and vocal direction screens. */
+  .direction-bridge-marquee-track {
+    animation: direction-bridge-marquee 36s linear infinite;
+    will-change: transform;
+  }
+
+  .direction-bridge-marquee-track--reverse {
+    animation-name: direction-bridge-marquee-reverse;
+    animation-duration: 42s;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .reveal {
       opacity: 1;
       transform: none;
       transition: none;
     }
+
+    .direction-bridge-marquee-track {
+      animation: none;
+    }
+  }
+}
+
+@keyframes direction-bridge-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes direction-bridge-marquee-reverse {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
   }
 }
 /*

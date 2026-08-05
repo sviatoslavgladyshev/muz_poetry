@@ -25,9 +25,13 @@ export type HeroMotion = {
   reveal: number;
 };
 
-/** Timeline: doors begin opening almost immediately, then across most of the scroll. */
+/**
+ * Timeline: doors begin opening almost immediately and everything is finished
+ * well before the track ends, so the last stretch of scroll holds the revealed
+ * copy perfectly still instead of dragging it away the moment it appears.
+ */
 const DOOR_START = 0.04;
-const DOOR_END = 0.66;
+const DOOR_END = 0.52;
 /**
  * The camera holds still until the doors are most of the way open, then walks
  * through. Starting it earlier means the threshold is crossed while the leaves are
@@ -35,11 +39,11 @@ const DOOR_END = 0.66;
  * still to go. It eases in as well as out — an early linear push reads as falling
  * toward the doors rather than walking toward them.
  */
-const APPROACH_START = 0.38;
-const APPROACH_END = 0.88;
+const APPROACH_START = 0.3;
+const APPROACH_END = 0.7;
 /** The room brightens behind the widening gap, slightly trailing the doors. */
-const REVEAL_START = 0.2;
-const REVEAL_END = 0.64;
+const REVEAL_START = 0.18;
+const REVEAL_END = 0.52;
 
 /** Derives every animated value from a single progress value. */
 export function applyMotion(motion: HeroMotion, smooth: number) {

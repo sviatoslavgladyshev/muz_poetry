@@ -16,10 +16,12 @@ function FlagMark({ locale }: { locale: AppLocale }) {
     <span
       aria-hidden="true"
       className={cn(
-        "block h-3.5 w-5 overflow-hidden rounded-[2px] border border-black/10 shadow-sm",
+        // Outline is an inset shadow, not a border: a border shifts the gradient's
+        // painting area and the stripes wrap into stray slivers top and bottom.
+        "block h-3.5 w-5 overflow-hidden rounded-[2px] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.12),0_1px_2px_-1px_rgba(0,0,0,0.15)]",
         locale === "ru"
-          ? "bg-[linear-gradient(to_bottom,#fff_0_33.33%,#1d4f9f_33.33%_66.66%,#d52b1e_66.66%)]"
-          : "bg-[linear-gradient(to_bottom,#159447_0_45%,#fff_45%_55%,#d7252e_55%)]"
+          ? "bg-[linear-gradient(to_bottom,#fff_0_33.33%,#1d4f9f_33.33%_66.66%,#d52b1e_66.66%_100%)]"
+          : "bg-[linear-gradient(to_bottom,#159447_0_45%,#fff_45%_55%,#d7252e_55%_100%)]"
       )}
     />
   );

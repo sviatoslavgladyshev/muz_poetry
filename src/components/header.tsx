@@ -65,9 +65,15 @@ export function Header({ locale }: { locale: AppLocale }) {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
+      /*
+        Clear the id, not just the frame: this cleanup also runs on a locale
+        switch, where the refs survive. A leftover id makes every later scroll
+        bail out early and the header never returns to its pill state.
+      */
       if (frameRef.current !== null) {
         window.cancelAnimationFrame(frameRef.current);
       }
+      frameRef.current = null;
     };
   }, []);
 

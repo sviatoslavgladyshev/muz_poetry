@@ -32,7 +32,7 @@ export function Pricing({ locale }: { locale: AppLocale }) {
     .filter((item): item is PriceItem => Boolean(item));
 
   return (
-    <section id="tseny" className="scroll-mt-24 border-y border-border bg-secondary/45 py-24 md:py-32">
+    <section id="tseny" className="scroll-mt-24 border-y border-border bg-secondary/45 py-12 md:py-16">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <Reveal>
           <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
@@ -103,7 +103,7 @@ export function PricingPageContent({ locale }: { locale: AppLocale }) {
   return (
     <div className="bg-candle">
       <section className="border-b border-border bg-primary text-primary-foreground">
-        <div className="mx-auto max-w-6xl px-5 py-14 md:px-8 md:py-20">
+        <div className="mx-auto max-w-6xl px-5 py-7 md:px-8 md:py-10">
           <div className="grid items-end gap-10 lg:grid-cols-[1.25fr_0.75fr]">
             <div>
               <Reveal>
@@ -193,7 +193,7 @@ export function PricingPageContent({ locale }: { locale: AppLocale }) {
         ]}
       />
 
-      <section id="recommended" className="scroll-mt-20 border-b border-border bg-secondary/45 py-16 md:py-24">
+      <section id="recommended" className="scroll-mt-20 border-b border-border bg-secondary/45 py-8 md:py-12">
         <div className="mx-auto max-w-6xl px-5 md:px-8">
           <Reveal>
             <div className="max-w-2xl">
@@ -230,7 +230,7 @@ export function PricingPageContent({ locale }: { locale: AppLocale }) {
         </div>
       </section>
 
-      <section id="pricing-catalog" className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
+      <section id="pricing-catalog" className="mx-auto max-w-6xl px-5 py-8 md:px-8 md:py-12">
         <Reveal>
           <div className="max-w-2xl">
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
@@ -293,7 +293,7 @@ export function PricingPageContent({ locale }: { locale: AppLocale }) {
         </div>
       </section>
 
-      <section className="bg-primary py-14 text-primary-foreground">
+      <section className="bg-primary py-7 text-primary-foreground">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-7 px-5 md:flex-row md:items-center md:px-8">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-leaf">
