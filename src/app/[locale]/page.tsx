@@ -1,5 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
 import type { AppLocale } from "@/i18n/routing";
+import { HomeHashGuard } from "@/components/home-hash-guard";
 import { Hero } from "@/components/sections/hero";
 import { About } from "@/components/sections/about";
 import { Teachers } from "@/components/sections/teachers";
@@ -20,6 +21,7 @@ export default async function Home({
 
   return (
     <>
+      <HomeHashGuard />
       <Hero locale={l} />
       <About locale={l} />
       <Teachers locale={l} />

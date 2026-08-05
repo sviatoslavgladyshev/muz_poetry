@@ -4,6 +4,7 @@ import { CalendarDays, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { SectionLink } from "@/components/section-link";
 import type { StudioEvent } from "@/content/events";
 import { formatEventDate } from "@/content/events";
 import type { AppLocale } from "@/i18n/routing";
@@ -52,7 +53,7 @@ export async function EventCard({
         <h3 className="font-display text-xl italic text-primary">{event.title}</h3>
         <p className="flex-1 text-sm leading-relaxed text-foreground/75">{event.description}</p>
         <Button
-          render={<a href="#kontakty" />}
+          render={<SectionLink href="/#kontakty" />}
           nativeButton={false}
           className="mt-2 w-full bg-primary text-primary-foreground hover:bg-primary/90"
         >

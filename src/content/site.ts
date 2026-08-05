@@ -29,8 +29,8 @@ export const navLinks = [
 ] as const;
 
 export const primaryNavLinks = [
-  { href: "/#obuchenie", key: "directions" },
   { href: "/#mastera", key: "teachers" },
+  { href: "/#obuchenie", key: "directions" },
   { href: "/#klub", key: "club" },
   { href: "/#tseny", key: "pricing" },
   { href: "/#afisha", key: "afisha" },

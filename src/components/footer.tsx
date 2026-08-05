@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
+import { SectionLink } from "@/components/section-link";
 import { siteConfig, navLinks } from "@/content/site";
 import type { AppLocale } from "@/i18n/routing";
 
@@ -15,13 +15,13 @@ export async function Footer({ locale }: { locale: AppLocale }) {
         </p>
         <nav className="flex flex-wrap justify-center gap-x-5 gap-y-2">
           {navLinks.map((link) => (
-            <Link
+            <SectionLink
               key={link.href}
               href={link.href}
               className="transition-colors hover:text-candle"
             >
               {t(link.key)}
-            </Link>
+            </SectionLink>
           ))}
         </nav>
         <p className="text-center text-candle/45 md:text-right">{siteConfig.domain}</p>

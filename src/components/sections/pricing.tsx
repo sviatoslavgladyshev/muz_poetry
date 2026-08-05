@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/reveal";
+import { SectionLink } from "@/components/section-link";
 import {
   getPricingItem,
   pricingPreviewItemIds,
@@ -124,7 +125,7 @@ export function PricingPageContent({ locale }: { locale: AppLocale }) {
               <Reveal delay={180}>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button
-                    render={<Link href="/#kontakty" />}
+                    render={<SectionLink href="/#kontakty" />}
                     nativeButton={false}
                     size="lg"
                     className="bg-candle text-mahogany hover:bg-candle/90"
@@ -304,7 +305,7 @@ export function PricingPageContent({ locale }: { locale: AppLocale }) {
             </h2>
           </div>
           <Button
-            render={<Link href="/#kontakty" />}
+            render={<SectionLink href="/#kontakty" />}
             nativeButton={false}
             size="lg"
             className="bg-accent text-accent-foreground hover:bg-accent/90"
@@ -397,7 +398,7 @@ function RecommendedCard({
       )}
       <PriceLine item={item} className="mt-auto pt-8" compact dark={featured} />
       <Button
-        render={<Link href="/#kontakty" />}
+        render={<SectionLink href="/#kontakty" />}
         nativeButton={false}
         className={`mt-6 w-full ${
           featured
@@ -534,7 +535,7 @@ function CatalogOffer({ item, cta }: { item: PriceItem; cta: string }) {
       <div className="mt-auto flex flex-col gap-5 border-t border-border/80 pt-6 sm:flex-row sm:items-end sm:justify-between">
         <PriceLine item={item} compact />
         <Button
-          render={<Link href="/#kontakty" />}
+          render={<SectionLink href="/#kontakty" />}
           nativeButton={false}
           size="sm"
           variant="ghost"

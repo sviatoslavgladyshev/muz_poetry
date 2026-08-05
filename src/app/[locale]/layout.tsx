@@ -73,6 +73,18 @@ export default async function LocaleLayout({
       lang={locale}
       className={`${displayFont.variable} ${bodyFont.variable} h-full antialiased scroll-smooth`}
     >
+      <head>
+        {/*
+          Strip a leftover `#section` before the browser scrolls to it. In-page
+          nav no longer writes hashes; this only cleans stale bookmarks/refreshes
+          so `/ru/` opens at the hero again.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var p=location.pathname;if(!/\\/(ru|tt)\\/?$/.test(p))return;if(!location.hash)return;if(sessionStorage.getItem("mp-scroll-to-section"))return;history.replaceState(null,"",p+location.search);if("scrollRestoration" in history)history.scrollRestoration="manual";window.scrollTo(0,0);}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground font-body">
         <NextIntlClientProvider>
           <Header locale={locale as AppLocale} />

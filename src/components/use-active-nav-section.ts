@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "@/i18n/navigation";
+import { clearLocationHash } from "@/lib/scroll-to-section";
 
-/** Section ids watched for scrollspy on the homepage. */
+/** Section ids watched for scrollspy on the homepage — page order. */
 const HOME_SECTIONS = [
-  { id: "obuchenie", key: "directions" },
+  { id: "o-masterskoy", key: "about" },
   { id: "mastera", key: "teachers" },
+  { id: "obuchenie", key: "directions" },
   { id: "klub", key: "club" },
   { id: "tseny", key: "pricing" },
   { id: "afisha", key: "afisha" },
-  { id: "o-masterskoy", key: "about" },
   { id: "kontakty", key: "contacts" },
 ] as const;
 
@@ -40,6 +41,11 @@ export function useActiveNavSection(): NavSectionKey | null {
       return;
     }
 
+    /*
+      Hash cleanup for the address bar lives in `HomeHashGuard` (layout effect
+      + remembered cross-route targets). This hook only tracks the active item.
+    */
+
     const nodes = HOME_SECTIONS.map(({ id, key }) => {
       const el = document.getElementById(id);
       return el ? { el, key } : null;
@@ -59,6 +65,8 @@ export function useActiveNavSection(): NavSectionKey | null {
         const top = el.getBoundingClientRect().top + window.scrollY;
         if (top <= line) current = key;
       }
+
+      if (window.scrollY < 48) clearLocationHash();
 
       setActive((prev) => (prev === current ? prev : current));
     };

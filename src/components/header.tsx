@@ -1,6 +1,12 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import {
+  Fragment,
+  useEffect,
+  useRef,
+  useState,
+  type MouseEvent,
+} from "react";
 import { useTranslations } from "next-intl";
 import { CalendarPlus, Info, MapPin, Menu, Music2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,6 +35,10 @@ import {
   secondaryNavLinks,
 } from "@/content/site";
 import type { AppLocale } from "@/i18n/routing";
+import {
+  scrollToSectionId,
+  sectionIdFromHref,
+} from "@/lib/scroll-to-section";
 import { cn } from "@/lib/utils";
 
 function navLinkClass(active: boolean) {
@@ -38,6 +48,13 @@ function navLinkClass(active: boolean) {
       ? "text-primary"
       : "text-foreground/90 hover:text-primary",
   );
+}
+
+function handleSectionNav(event: MouseEvent<HTMLAnchorElement>, href: string) {
+  const id = sectionIdFromHref(href);
+  if (!id) return;
+  event.preventDefault();
+  scrollToSectionId(id);
 }
 
 export function Header({ locale }: { locale: AppLocale }) {
@@ -115,6 +132,7 @@ export function Header({ locale }: { locale: AppLocale }) {
                   href={link.href}
                   aria-current={active ? "true" : undefined}
                   className={navLinkClass(active)}
+                  onClick={(event) => handleSectionNav(event, link.href)}
                 >
                   {t(link.key)}
                 </Link>
@@ -150,7 +168,14 @@ export function Header({ locale }: { locale: AppLocale }) {
                     return (
                       <NavigationMenuLink
                         key={link.href}
-                        render={<Link href={link.href} />}
+                        render={
+                          <Link
+                            href={link.href}
+                            onClick={(event) =>
+                              handleSectionNav(event, link.href)
+                            }
+                          />
+                        }
                         data-active={active ? "" : undefined}
                         className={cn(
                           "gap-3 px-3 py-2.5 font-medium",
@@ -171,7 +196,12 @@ export function Header({ locale }: { locale: AppLocale }) {
         <div className="hidden h-full items-center gap-3 lg:flex">
           <LanguageSwitcher locale={locale} />
           <Button
-            render={<Link href="/#kontakty" />}
+            render={
+              <Link
+                href="/#kontakty"
+                onClick={(event) => handleSectionNav(event, "/#kontakty")}
+              />
+            }
             nativeButton={false}
             size="sm"
             className="bg-primary text-primary-foreground hover:bg-primary/90"
@@ -213,6 +243,9 @@ export function Header({ locale }: { locale: AppLocale }) {
                               ? "bg-secondary text-primary"
                               : "text-foreground/80",
                           )}
+                          onClick={(event) =>
+                            handleSectionNav(event, link.href)
+                          }
                         />
                       }
                     >
@@ -225,6 +258,9 @@ export function Header({ locale }: { locale: AppLocale }) {
                     <Link
                       href="/#kontakty"
                       className="mt-3 inline-flex items-center justify-center gap-2 rounded-md bg-primary px-3 py-3 text-center text-base font-semibold text-primary-foreground"
+                      onClick={(event) =>
+                        handleSectionNav(event, "/#kontakty")
+                      }
                     />
                   }
                 >

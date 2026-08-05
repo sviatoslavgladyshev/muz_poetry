@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/reveal";
-import { Link } from "@/i18n/navigation";
+import { SectionLink } from "@/components/section-link";
 
 export async function generateMetadata({
   params,
@@ -60,7 +60,7 @@ export default async function AfishaPage({
         <Reveal delay={220}>
           <div className="mt-12 text-center">
             <Button
-              render={<Link href="/#kontakty" />}
+              render={<SectionLink href="/#kontakty" />}
               nativeButton={false}
               size="lg"
               className="bg-primary text-primary-foreground hover:bg-primary/90"

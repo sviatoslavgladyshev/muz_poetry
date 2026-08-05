@@ -1,7 +1,9 @@
 "use client";
 
 import { ArrowRight, CalendarPlus } from "lucide-react";
+import type { MouseEvent } from "react";
 import { Button } from "@/components/ui/button";
+import { scrollToSectionId } from "@/lib/scroll-to-section";
 
 /**
  * The HTML layer of the hero: headline, supporting copy and calls to action.
@@ -21,6 +23,13 @@ export type DoorHeroCopy = {
   ctaAfisha: string;
   scrollHint: string;
 };
+
+function jumpTo(id: string) {
+  return (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    scrollToSectionId(id);
+  };
+}
 
 export function HeroCopyOverlay({ copy }: { copy: DoorHeroCopy }) {
   return (
@@ -66,7 +75,7 @@ export function HeroCopyOverlay({ copy }: { copy: DoorHeroCopy }) {
 
         <div className="mt-7 flex flex-col items-center gap-3 sm:flex-row">
           <Button
-            render={<a href="#kontakty" />}
+            render={<a href="#kontakty" onClick={jumpTo("kontakty")} />}
             nativeButton={false}
             size="lg"
             className="bg-primary px-5 text-primary-foreground shadow-[0_8px_24px_-8px_rgba(0,0,0,0.65)] hover:bg-primary/90"
@@ -75,7 +84,7 @@ export function HeroCopyOverlay({ copy }: { copy: DoorHeroCopy }) {
             {copy.ctaTrial}
           </Button>
           <Button
-            render={<a href="#afisha" />}
+            render={<a href="#afisha" onClick={jumpTo("afisha")} />}
             nativeButton={false}
             size="lg"
             variant="ghost"
