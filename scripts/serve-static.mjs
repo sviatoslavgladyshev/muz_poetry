@@ -6,10 +6,7 @@ import path from "node:path";
 const port = Number.parseInt(process.env.PORT ?? "3000", 10);
 const hostname = process.env.HOST ?? "0.0.0.0";
 const outDir = path.resolve("out");
-const basePath = (process.env.NEXT_PUBLIC_BASE_PATH ?? "/muz_poetry").replace(
-  /\/$/,
-  "",
-);
+const basePath = (process.env.NEXT_PUBLIC_BASE_PATH ?? "").replace(/\/$/, "");
 
 const contentTypes = new Map([
   [".css", "text/css; charset=utf-8"],

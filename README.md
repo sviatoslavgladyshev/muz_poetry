@@ -59,26 +59,20 @@ All in `public/images/`, generated as labeled SVG placeholders so the layout can
 
 `hero-studio`, `about-atelier`, `history-quartirnik`, `teacher-diana`, `teacher-placeholder-1`, `teacher-placeholder-2`, `direction-piano`, `direction-guitar`, `direction-ukulele`, `direction-vocal-pop`, `direction-vocal-academic`, `club-lecture`, `club-cinema`, `event-concert`, `event-kvartirnik`, `event-lecture`, `event-cinema`, `og-cover`.
 
-## Deploying to GitHub Pages
+## Deploying to Cloudflare Pages
 
-This repo ships a workflow at `.github/workflows/deploy.yml` that builds the static export and publishes it via GitHub Pages on every push to `main`.
+The site is configured for **`https://muzpoetry.ru`** (no `basePath`). Cloudflare Pages project: `muz-poetry`.
 
-**One-time setup (in the GitHub repo):** Settings → Pages → Build and deployment → Source → **GitHub Actions**. Without this, GitHub Pages falls back to serving the raw repo through Jekyll (which is why you'd otherwise just see a rendered `README.md`).
+Production deploys automatically when you push to `main` (GitHub connected in Cloudflare). Build command: `npm ci && npm run build`, output directory: `out`.
 
-The site is currently configured for **`https://<user>.github.io/muz_poetry/`**:
+Custom domains: `muzpoetry.ru` and `www.muzpoetry.ru` (managed in Workers & Pages → `muz-poetry` → Custom domains).
 
-- `next.config.ts` sets `basePath`/`assetPrefix` to `/muz_poetry`.
-- `public/.nojekyll` disables Jekyll processing (required — Jekyll ignores `_next/`, which would break every asset).
+Optional manual deploy from CI: workflow_dispatch on `.github/workflows/deploy.yml` (needs `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` secrets).
 
-### Moving to the custom domain (muzpoetry.ru)
-
-Once DNS for `muzpoetry.ru` points at GitHub Pages:
-
-1. In `next.config.ts`, set `basePath`/`assetPrefix` to `""` (empty).
-2. Add a `public/CNAME` file containing `muzpoetry.ru`.
-3. In Settings → Pages, set the custom domain to `muzpoetry.ru`.
-4. At your DNS provider, add the records GitHub specifies (typically 4 `A` records to GitHub's Pages IPs, or an `ALIAS`/`ANAME` record, plus `www` as a `CNAME` to `<user>.github.io`).
+Local preview: `npm run build && npm run serve`.
 
 ## Deploying elsewhere (Netlify, Vercel, any static host)
 
 `npm run build` outputs a plain static site in `./out/` — point any static host at that directory. No environment variables or server runtime needed.
+
+To publish under a subpath (e.g. GitHub project Pages at `/muz_poetry`), build with `NEXT_PUBLIC_BASE_PATH=/muz_poetry`.
