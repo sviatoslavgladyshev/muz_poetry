@@ -1,4 +1,5 @@
-const target = "/ru/";
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+const target = `${basePath}/ru/`;
 
 /*
   Static export can't issue a real 3xx, so the entry page is a tiny HTML document

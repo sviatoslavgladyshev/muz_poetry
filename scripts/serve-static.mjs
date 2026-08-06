@@ -6,6 +6,10 @@ import path from "node:path";
 const port = Number.parseInt(process.env.PORT ?? "3000", 10);
 const hostname = process.env.HOST ?? "0.0.0.0";
 const outDir = path.resolve("out");
+const basePath = (process.env.NEXT_PUBLIC_BASE_PATH ?? "/muz_poetry").replace(
+  /\/$/,
+  "",
+);
 
 const contentTypes = new Map([
   [".css", "text/css; charset=utf-8"],
@@ -44,9 +48,25 @@ async function findStaticFile(filePath) {
   }
 }
 
+function stripBasePath(urlPath) {
+  if (!basePath) {
+    return urlPath;
+  }
+
+  if (urlPath === basePath || urlPath === `${basePath}/`) {
+    return "/";
+  }
+
+  if (urlPath.startsWith(`${basePath}/`)) {
+    return urlPath.slice(basePath.length);
+  }
+
+  return urlPath;
+}
+
 const server = createServer(async (request, response) => {
   const url = new URL(request.url ?? "/", `http://${request.headers.host ?? "localhost"}`);
-  const filePath = resolveFilePath(url.pathname);
+  const filePath = resolveFilePath(stripBasePath(url.pathname));
   const staticFile = filePath ? await findStaticFile(filePath) : null;
 
   if (!staticFile) {
@@ -75,5 +95,8 @@ const server = createServer(async (request, response) => {
 });
 
 server.listen(port, hostname, () => {
-  console.log(`Serving static export at http://localhost:${port}/`);
+  const url = basePath
+    ? `http://localhost:${port}${basePath}/`
+    : `http://localhost:${port}/`;
+  console.log(`Serving static export at ${url}`);
 });
